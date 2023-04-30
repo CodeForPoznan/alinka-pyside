@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.10
+    commands:
+      - pip install poetry==1.4.0
+      - poetry install --with dev --no-interaction
+      - export ENV_PATH=`poetry env info -p`
+
+  build:
+    commands:
+      - ${ENV_PATH}/bin/python -m pytest .
+      - ${ENV_PATH}/bin/python -m black . --check
+      - ${ENV_PATH}/bin/python -m isort . --check
+      - ${ENV_PATH}/bin/python -m flake8 .
