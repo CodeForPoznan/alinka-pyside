@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    POETRY_VIRTUALENVS_CREATE: false
+
 phases:
   install:
     runtime-versions:
@@ -7,11 +11,10 @@ phases:
     commands:
       - pip install poetry==1.4.0
       - poetry install --with dev --no-interaction
-      - export ENV_PATH=`poetry env info -p`
 
   build:
     commands:
-      - ${ENV_PATH}/bin/python -m pytest .
-      - ${ENV_PATH}/bin/python -m black . --check
-      - ${ENV_PATH}/bin/python -m isort . --check
-      - ${ENV_PATH}/bin/python -m flake8 .
+      - pytest .
+      - black . --check
+      - isort . --check
+      - flake8 .
