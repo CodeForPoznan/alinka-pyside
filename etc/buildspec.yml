@@ -14,6 +14,7 @@ phases:
 
   build:
     commands:
+      - python -m flake8 --version
       - python -m pytest .
       - python -m black . --check
       - python -m isort . --check
