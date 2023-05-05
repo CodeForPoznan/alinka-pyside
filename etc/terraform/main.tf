@@ -8,6 +8,7 @@ terraform {
 }
 
 provider "aws" {
+  # You need replace it with profile which contains real AWS credentials, region
   profile = "codeforpoznan"
 }
 
