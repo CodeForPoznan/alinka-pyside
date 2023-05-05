@@ -19,6 +19,7 @@ black = "^22.10.0"
 factory-boy = "^3.2.1"
 faker = "^18.4.0"
 flake8 = "^5.0.4"
+flake8-pyproject = "^1.2.3"
 isort = "^5.10.1"
 pyinstaller = "^5.10.1"
 pytest = "^7.2.0"
@@ -39,6 +40,10 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = ["E203"]
 
 [tool.isort]
 profile="black"

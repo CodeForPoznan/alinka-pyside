@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  profile = "private"
+  profile = "codeforpoznan"
 }
 
 resource "aws_cloudwatch_log_group" "alinka-codebuild-pr" {
@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "codebuild_policy" {
 }
 
 resource "aws_iam_role_policy" "alinka_codebuild_pr_policy" {
-  name = "Alinka-codebuild-pr-policy"
+  name   = "Alinka-codebuild-pr-policy"
   role   = aws_iam_role.my_alinka_codebuild_pr_role.name
   policy = data.aws_iam_policy_document.codebuild_policy.json
 }
@@ -103,7 +103,7 @@ resource "aws_codebuild_project" "alinka_codebuild_pr_config" {
 
   logs_config {
     cloudwatch_logs {
-      group_name  = "alinka-codebuild-pr"
+      group_name = "alinka-codebuild-pr"
     }
   }
 
@@ -114,7 +114,7 @@ resource "aws_codebuild_project" "alinka_codebuild_pr_config" {
     buildspec       = "etc/buildspec.yml"
   }
 
-  source_version  = "refs/pull/*/head"
+  source_version = "refs/pull/*/head"
 
   tags = {
     Created = "Terraform"
