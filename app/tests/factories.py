@@ -100,7 +100,10 @@ class DecisionFactory(SQLAlchemyModelFactory):
     @lazy_attribute
     def period(self):
         if self.issue in [Issue.INDYWIDUALNE.value, Issue.INDYWIDUALNE_ROCZNE]:
-            return f"{date.today().strftime(DATE_FORMAT)} - {faker.future_date(end_date=timedelta(weeks=50)).strftime(DATE_FORMAT)}"
+            return (
+                f"{date.today().strftime(DATE_FORMAT)} -"
+                f" {faker.future_date(end_date=timedelta(weeks=50)).strftime(DATE_FORMAT)}"
+            )
         elif self.issue == Issue.SPECJALNE:
             return faker.random_choice(
                 ["pierwszego etapu edukacyjnego", "nauki w szkole ponadpodstawowej", "drugiego etapu edukacyjnego"]

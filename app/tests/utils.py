@@ -85,7 +85,10 @@ class FuzzySupportCenterKurator(BaseFuzzyAttribute):
             "Gorzowie Wlkp.",
             "Białej Podlaskiej",
         ]
-        return f"{factory_random.randgen.choice(city_genetive)}, {faker.street_address()}, {faker.postcode()} {faker.city()}"
+        return (
+            f"{factory_random.randgen.choice(city_genetive)}, {faker.street_address()},"
+            f" {faker.postcode()} {faker.city()}"
+        )
 
 
 class FuzzyMeetingMember(BaseFuzzyAttribute):
