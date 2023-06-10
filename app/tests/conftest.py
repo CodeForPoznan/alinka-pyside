@@ -1,5 +1,4 @@
 import copy
-from contextlib import contextmanager
 from unittest.mock import patch
 
 import pytest
@@ -11,12 +10,7 @@ from tests.fixtures import common_data
 engine = create_engine("sqlite:///:memory:")
 Base.metadata.create_all(engine)
 
-
-@contextmanager
-def db_session():
-    db_session = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine, expire_on_commit=False))
-    yield db_session
-    db_session.close()
+db_session = scoped_session(sessionmaker(bind=engine))
 
 
 @pytest.fixture
