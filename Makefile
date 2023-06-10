@@ -9,3 +9,6 @@ style:
 	black .
 	isort .
 	flake8 .
+
+start:
+	python app/main.py
