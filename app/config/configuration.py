@@ -5,10 +5,15 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    DB_FILE_NAME: str = "Alinka.db"
-    BASE_PATH: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    DOCUMENTS_PATH = os.path.join(BASE_PATH, "dokumenty")
-    DB_PATH = os.path.join(BASE_PATH, DB_FILE_NAME)
+    USER_HOME_DIR: str = os.path.expanduser("~")
+
+    DB_FILE_NAME: str = "alinka.db"
+    PERSISTENT_DATA_DIR: str = ".alinka"
+    DOCUMENT_DIR_NAME: str = "Alinka-dokumenty"
+
+    DOCUMENTS_PATH: str = os.path.join(USER_HOME_DIR, DOCUMENT_DIR_NAME)
+    PERSISTENT_DATA_PATH: str = os.path.join(USER_HOME_DIR, PERSISTENT_DATA_DIR)
+    DB_PATH: str = os.path.join(PERSISTENT_DATA_PATH, DB_FILE_NAME)
 
 
 @lru_cache

@@ -1,0 +1,8 @@
+[Desktop Entry]
+
+Type=Application
+Name=Alinka
+Comment=Aplikacja, która pomaga poradiom psychologiczno - pedagogicznym wydawać orzeczenia.
+Path=/opt/alinka
+Exec=/opt/alinka/alinka
+Icon=alinka

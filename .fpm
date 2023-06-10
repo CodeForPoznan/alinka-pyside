@@ -1,0 +1,6 @@
+-C package
+-s dir
+-t deb
+-n "Alinka"
+-v 0.1.0
+-p alinka.deb

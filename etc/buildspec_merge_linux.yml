@@ -1,0 +1,44 @@
+version: 0.2
+
+env:
+  variables:
+    POETRY_VIRTUALENVS_CREATE: false
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9
+    commands:
+      - apt update; apt install -y ruby libxkbcommon-x11-0 libegl1 libwayland-cursor0 libwayland-egl1 libgtk-3-0 libatk1.0-0
+      - export PATH=$PATH:/root/.gem/ruby/$(ruby --version | awk '{print $2}' | cut -d "." -f 1-2).0/bin
+      - gem install fpm --user-install
+      - cd /root/.pyenv
+      - git checkout -- .
+      - git clean -fd
+      - git pull
+      - pyenv install 3.10.9
+      - pyenv global 3.10.9
+      - cd -
+      - pip install poetry==1.4.0
+      - poetry install --with dev --no-interaction
+      - export ENV_PATH=`poetry env info -p`
+      - export ALINKA_VERSION=`poetry version --short`
+      - export INSTALLER_FILE_NAME="alinka-${ALINKA_VERSION}.deb"
+      - export PATH=$PATH:/root/.pyenv/versions/$(python --version | awk '{print $2}')/bin/
+
+  pre_build:
+    commands:
+      - python -m pytest .
+      - python -m black . --check
+      - python -m isort . --check
+      - python -m flake8 .
+
+  build:
+    commands:
+      - pyinstaller alinka.spec
+      - ./package.sh
+      - fpm -v ${ALINKA_VERSION} -p "alinka-${ALINKA_VERSION}.deb"
+
+artifacts:
+  files:
+    - ${INSTALLER_FILE_NAME}
