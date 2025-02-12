@@ -2,8 +2,8 @@ from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QGridLayout, QGroupBox, QPushButton, QWidget
 from widget.components import LabeledInputComponent
 
-from app.db.queries import create_school
-from app.schemas import SchoolData
+from db.queries import create_school
+from schemas import SchoolData
 
 
 class SchoolDataGroup(QGroupBox):

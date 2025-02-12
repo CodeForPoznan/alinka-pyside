@@ -2,7 +2,7 @@ from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QGridLayout, QGroupBox, QWidget
 from widget.components import LabeledInputComponent
 
-from app.schemas.document_schema import SupportCenterData
+from schemas.document_schema import SupportCenterData
 
 
 class SupportCenterDataGroup(QGroupBox):

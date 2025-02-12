@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
 
     command: bash -c "
-        cd /opt/app 
+        cd /opt/app
         && alembic upgrade head || exit 1
         && python3 main.py
       "

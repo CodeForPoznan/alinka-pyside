@@ -2,9 +2,9 @@ from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QFrame, QGroupBox, QHBoxLayout, QVBoxLayout, QWidget
 from widget.components import LabeledComboBoxComponent
 
-from app import rspo_client
-from app.constants.common import RSPOSchoolTypes, SchoolTypes
-from app.schemas.rspo_schema import BaseEntity, InstitutionRequestBody
+import rspo_client
+from constants.common import RSPOSchoolTypes, SchoolTypes
+from schemas.rspo_schema import BaseEntity, InstitutionRequestBody
 
 
 class SelectSchoolGroup(QGroupBox):

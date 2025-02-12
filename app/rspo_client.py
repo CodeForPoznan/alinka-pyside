@@ -6,8 +6,8 @@ from pydantic import TypeAdapter
 from pydantic.fields import FieldInfo
 from requests import request
 
-from app.config import settings
-from app.schemas.rspo_schema import (
+from config import settings
+from schemas.rspo_schema import (
     Commune,
     District,
     InstitutionDetails,

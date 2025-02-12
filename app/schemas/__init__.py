@@ -15,7 +15,7 @@ from schemas.document_schema import (
     SupportCenterData,
 )
 
-from app.schemas.rspo_schema import Province
+from schemas.rspo_schema import Province
 
 __all__ = [
     "AddressData",

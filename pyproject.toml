@@ -12,6 +12,7 @@ python = "3.10.9"
 SQLAlchemy = "2.0.4"
 pydantic-settings = "^2.5.2"
 alembic = "^1.13.2"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev]
 optional = true

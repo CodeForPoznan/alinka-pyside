@@ -1,7 +1,7 @@
 from PySide2.QtWidgets import QFrame, QHBoxLayout, QPushButton, QWidget
 
-from app.db.queries import upsert_support_center
-from app.schemas import SupportCenterData, SupportCenterDbSchema
+from db.queries import upsert_support_center
+from schemas import SupportCenterData, SupportCenterDbSchema
 
 
 class SettingsSupportCenterDataContainer(QFrame):
