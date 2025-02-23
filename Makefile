@@ -8,7 +8,7 @@ help: ## Show this help
 
 
 test: ## Run all unit tests
-	docker-compose -f docker-compose.test.yml run --rm app pytest .
+	docker-compose -f docker-compose.test.yml run --rm app pytest
 
 name=
 test-case: ## Run single test unit
@@ -22,10 +22,10 @@ run: ## Run application
 
 type=specjalne
 generate: ## Generate documents. Use `type=` params to create given type of document.
-	docker-compose run --rm app python app/create_documents.py --type ${type}
+	docker-compose run --rm app python alinka/create_documents.py --type ${type}
 
 populate_schools: ## Populate school db table with fixtures
-	docker-compose run app python app/scripts.py
+	docker-compose run app python alinka/scripts.py
 
 style: ## Run black, isort, flake8 linters
 	docker-compose run --rm app bash -c "black . && isort . && flake8 ."
@@ -46,7 +46,7 @@ bash:
 
 message=auto
 create-migration: ## Generate migration. Add `message` to migration, ie. `make create-migration message=my_message`
-	docker compose run --rm app bash -c "cd ./app && alembic revision --autogenerate -m \"$(message)\""
+	docker compose run --rm app bash -c "alembic revision --autogenerate -m \"$(message)\""
 
 migrate:
-	docker compose run --rm app bash -c "cd ./app && alembic upgrade head"
+	docker compose run --rm app bash -c "alembic upgrade head"

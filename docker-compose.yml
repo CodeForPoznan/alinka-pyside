@@ -8,16 +8,14 @@ services:
       dockerfile: Dockerfile
 
     command: bash -c "
-        cd /opt/app
-        && alembic upgrade head || exit 1
-        && python3 main.py
+        alembic upgrade head || exit 1
+        && python run.py
       "
 
     volumes:
-      - ".:/opt/"
+      - ".:/app/"
       - "/tmp/.X11-unix:/tmp/.X11-unix"
       - "./documents:/home/qtuser/Alinka-dokumenty"
       - "./:/home/qtuser/.alinka"
-      - "./statics:/opt/app/statics/"
 
     user: qtuser

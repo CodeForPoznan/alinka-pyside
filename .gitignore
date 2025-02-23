@@ -1,5 +1,6 @@
 dokumenty/
-documents/
+documents/*
+!documents/.gitkeep
 build/
 dist/
 package/

@@ -6,6 +6,6 @@ services:
       dockerfile: Dockerfile
 
     volumes:
-      - ".:/opt/"
+      - ".:/app/"
 
     user: qtuser

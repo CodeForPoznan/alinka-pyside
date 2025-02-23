@@ -14,12 +14,11 @@ RUN apt-get update && apt-get install -y build-essential python3-pip python3-dev
     pip install pip==23.0.1 poetry && \
     adduser --quiet --disabled-password qtuser && usermod -a -G audio qtuser && \
     export ALINKA_VERSION=`poetry version --short` && \
-    export INSTALLER_FILE_NAME="alinka-${ALINKA_VERSION}.deb" && \
-    mkdir /opt/app
+    export INSTALLER_FILE_NAME="alinka-${ALINKA_VERSION}.deb"
 
-WORKDIR /opt
+WORKDIR /app
 
-COPY ./app ./pyproject.toml ./poetry.lock /opt/
+COPY ./alinka ./pyproject.toml ./poetry.lock /app/
 
 RUN poetry install --no-interaction --no-root --with dev
 USER qtuser

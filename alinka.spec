@@ -6,11 +6,11 @@ block_cipher = None
 
 a = Analysis(
     [
-        'app/main.py',
-        'app/widget/actions.py',
-        'app/widget/main_window.py'
+        'run.py',
+        'alinka/widget/actions.py',
+        'alinka/widget/main_window.py'
     ],
-    pathex=['app'],
+    pathex=['alinka'],
     binaries=[],
     datas=[("statics", "statics")],
     hiddenimports=[],
