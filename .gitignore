@@ -1,14 +1,16 @@
-dokumenty/
-documents/*
-!documents/.gitkeep
+.volumes/data/*
+!.volumes/data/.gitkeep
+.volumes/documents/*
+!.volumes/documents/.gitkeep
+
+.pytest_cache/
+__pycache__/
+
 build/
 dist/
 package/
 help.spec
-.pytest_cache/
-__pycache__/
 *.deb
-*.db
 
 # pyenv
 .python-version

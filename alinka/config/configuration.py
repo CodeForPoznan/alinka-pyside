@@ -1,20 +1,20 @@
 import os
 from functools import lru_cache
 
+import platformdirs
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    USER_HOME_DIR: str = os.path.expanduser("~")
+    APP_NAME: str = "Alinka"
+    APP_AUTHOR: str = "Code for Poznań"
 
-    DB_FILE_NAME: str = "alinka.db"
-    PERSISTENT_DATA_DIR: str = ".alinka"
-    DOCUMENT_DIR_NAME: str = "Alinka-dokumenty"
+    DB_FILE_NAME: str = "alinka.sqlite"
+    DB_PATH: str = os.path.join(platformdirs.user_data_dir(appname=APP_NAME, appauthor=APP_AUTHOR), DB_FILE_NAME)
+
+    DOCUMENTS_PATH: str = os.path.join(platformdirs.user_documents_dir(), APP_NAME)
+
     RSPO_DOMAIN: str = "https://rspo.gov.pl/"
-
-    DOCUMENTS_PATH: str = os.path.join(USER_HOME_DIR, DOCUMENT_DIR_NAME)
-    PERSISTENT_DATA_PATH: str = os.path.join(USER_HOME_DIR, PERSISTENT_DATA_DIR)
-    DB_PATH: str = os.path.join(PERSISTENT_DATA_PATH, DB_FILE_NAME)
 
 
 @lru_cache

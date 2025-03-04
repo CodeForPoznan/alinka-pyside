@@ -15,7 +15,7 @@ services:
     volumes:
       - ".:/app/"
       - "/tmp/.X11-unix:/tmp/.X11-unix"
-      - "./documents:/home/qtuser/Alinka-dokumenty"
-      - "./:/home/qtuser/.alinka"
+      - "./.volumes/data:/home/qtuser/.local/share/Alinka"
+      - "./.volumes/documents:/home/qtuser/Documents/Alinka"
 
     user: qtuser

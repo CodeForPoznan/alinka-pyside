@@ -7,8 +7,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from alinka.config import settings
 from alinka.db.models import Base
 
-if not os.path.exists(settings.PERSISTENT_DATA_PATH):
-    os.mkdir(settings.PERSISTENT_DATA_PATH)
+db_dirname = os.path.dirname(settings.DB_PATH)
+if not os.path.exists(db_dirname):
+    os.makedirs(db_dirname)
 
 engine = create_engine(f"sqlite:///{settings.DB_PATH}")
 Base.metadata.create_all(engine)
