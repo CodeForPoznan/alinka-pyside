@@ -39,6 +39,16 @@ installer: ## Create installer
 	docker-compose run --rm -u root app ./package.sh
 	docker-compose run --rm -u root app fpm -v $(APP_VERSION) -p $(INSTALLER_FILE_NAME)
 
+# This is theoretical list definition
+# it hasn't been run even once yet, as I don't have Make installed on my Windows VM
+win-installer:
+#	as installing CairoSVG is nontrivial for time being I run it once and
+#	commiting ICO format to git repository
+#	poetry run python .\tools\svg_to_ico.py .\statics\alinka.svg .\statics\alinka.ico
+	poetry run pyinstaller alinka.spec --noconfirm
+# to run iscc you need to install Inno Setup 6 (see: https://jrsoftware.org/isdl.php)
+	ISCC.exe /DAppVersion="$(poetry version --short)" .\installer.iss
+
 installer-name: ## Display name of installer of current version of app
 	@echo $(INSTALLER_FILE_NAME)
 
