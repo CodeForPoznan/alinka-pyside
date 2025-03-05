@@ -20,7 +20,9 @@ class DocumentGenerator:
         self.document_name = document_name
         self.document_type = decision_type.value
         self.document_data = document_data
-        self.template = environment.get_template(os.path.join(self.document_type, "word", "document.xml"))
+        # Template always use forward slashes
+        # see: https://github.com/pallets/jinja/pull/1579
+        self.template = environment.get_template("/".join([self.document_type, "word", "document.xml"]))
         self.destination_path = os.path.join(destination_path, document_name)
 
     @property
