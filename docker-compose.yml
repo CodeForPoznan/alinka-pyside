@@ -7,10 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
 
-    command: bash -c "
-        alembic upgrade head || exit 1
-        && python run.py
-      "
+    command: python run.py
 
     volumes:
       - ".:/app/"

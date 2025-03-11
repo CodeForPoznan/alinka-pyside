@@ -9,6 +9,8 @@ from alinka.db.models import Base
 from tests.fixtures import common_data
 
 engine = create_engine("sqlite:///:memory:")
+# We may consider running Alembic migrations for tests
+# but it will require major change in how we setup & teardown test cases
 Base.metadata.create_all(engine)
 
 db_session = scoped_session(sessionmaker(bind=engine))

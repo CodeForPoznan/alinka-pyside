@@ -34,6 +34,7 @@ style-check:
 	docker-compose run --rm app bash -c "black . --check && isort . --check && flake8 ."
 
 installer: ## Create installer
+	docker-compose run --rm -u root app rm -rf dist/ build/ package/ $(INSTALLER_FILE_NAME)
 	docker-compose run --rm -u root app pyinstaller alinka.spec --noconfirm
 	docker-compose run --rm -u root app ./package.sh
 	docker-compose run --rm -u root app fpm -v $(APP_VERSION) -p $(INSTALLER_FILE_NAME)

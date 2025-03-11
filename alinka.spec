@@ -1,19 +1,28 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 block_cipher = None
-
 
 a = Analysis(
     [
         'run.py',
         'alinka/widget/actions.py',
-        'alinka/widget/main_window.py'
+        'alinka/widget/main_window.py',
     ],
-    pathex=['alinka'],
+    pathex=[],
     binaries=[],
-    datas=[("statics", "statics")],
-    hiddenimports=[],
+    datas=[
+        ("statics", "statics"),
+        # these data files are necessary to run Alembic migrations
+        # I was not able to put them as hidden imports as it looks like
+        # Alembic doesn't use standard Python import mechanism
+        ("alembic.ini", "."),
+        ('migrations/env.py', 'migrations'),
+        ('migrations/versions', 'migrations/versions'),
+    ],
+    hiddenimports=[
+        # required by Alembic's env.py
+        'logging.config',
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

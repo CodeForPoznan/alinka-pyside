@@ -7,6 +7,6 @@ def get_statics_resource_path(resource):
     if getattr(sys, "frozen", False):
         dirname = sys._MEIPASS
     else:
-        dirname = os.path.dirname(os.path.abspath(sys.argv[0]))
+        dirname = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     return os.path.join(dirname, "statics", resource)

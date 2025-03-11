@@ -4,7 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from alinka.config import settings
-from alinka.db.models import Base, Decision, School, SupportCenter  # noqa: F401
+from alinka.db.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
