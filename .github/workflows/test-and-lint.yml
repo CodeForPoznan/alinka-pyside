@@ -1,0 +1,20 @@
+name: Test and lint
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: build
+      run: |
+        make build
+    - name: lint
+      run: |
+        make style-check
+    - name: test
+      run: |
+        make test
