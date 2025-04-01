@@ -3,10 +3,11 @@ on:
   push:
     branches:
     - develop
+  workflow_dispatch:
 
 jobs:
   build-deb:
-    if: github.repository == 'CodeForPoznan/alinka-pyside'
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository == 'CodeForPoznan/alinka-pyside' }}
     runs-on: ubuntu-latest
     steps:
     - name: checkout
@@ -38,7 +39,7 @@ jobs:
         path: ${{ env.INSTALLER_FILE_NAME }}
 
   build-win:
-    if: github.repository == 'CodeForPoznan/alinka-pyside'
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository == 'CodeForPoznan/alinka-pyside' }}
     runs-on: windows-latest
     defaults:
       run:
@@ -58,6 +59,12 @@ jobs:
     - name: install Python dependencies
       run: |
         poetry install --no-interaction --no-root --with dev
+    - name: install Inno Setup 6
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -Uri "https://www.jrsoftware.org/download.php/is.exe" -OutFile "C:\InnoSetupInstaller.exe"
+        Start-Process "C:\InnoSetupInstaller.exe" -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART" -Wait
+        $env:Path += ";C:\Program Files (x86)\Inno Setup 6"
     - name: build PyInstaller package
       run: |
         poetry run pyinstaller alinka.spec --noconfirm
@@ -68,10 +75,9 @@ jobs:
         echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
         echo "INSTALLER_FILE_NAME=$INSTALLER_FILE_NAME" >> $GITHUB_ENV
     - name: build distribution package
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
-      with:
-        path: installer.iss
-        options: /DAppVersion=${{ env.APP_VERSION }}
+      shell: pwsh
+      run: |
+        ISCC.exe /DAppVersion="${{ env.APP_VERSION }}" ".\installer.iss"
     - name: publish distribution package
       uses: actions/upload-artifact@v4
       with:
