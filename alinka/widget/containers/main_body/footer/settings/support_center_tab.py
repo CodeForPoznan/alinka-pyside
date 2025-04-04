@@ -16,7 +16,7 @@ class SettingsSupportCenterDataContainer(QFrame):
 
     @property
     def support_center_data(self) -> SupportCenterData:
-        return self.parent.parent.parent.content_container.settings_container.support_center_data
+        return self.parent().parent().parent().content_container.settings_container.support_center_data
 
     def save_support_center_data(self) -> None:
         support_center_data = SupportCenterDbSchema(**self.support_center_data.model_dump())

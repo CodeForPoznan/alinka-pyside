@@ -23,26 +23,16 @@ class ApplicationFooterContainer(QFrame):
 
     @property
     def document_data(self):
-        return self.parent.parent.content_container.application_container.document_data
+        return self.parent.parent().content_container.application_container.document_data
 
     def validate_document_data(self) -> None:
         if not get_support_center_data():
             raise ValidationError()
 
     def print_documents(self) -> None:
-        try:
-            self.validate_document_data()
-            generate_and_save_decision(form_data=self.document_data, generate=True)
-        except Exception:
-            # to decide how we want handle this exception in separate ticket
-            # on handling exceptions
-            pass
+        self.validate_document_data()
+        generate_and_save_decision(form_data=self.document_data, generate=True)
 
     def save_document_data(self) -> None:
-        try:
-            self.validate_document_data()
-            generate_and_save_decision(form_data=self.document_data, generate=False)
-        except Exception:
-            # to decide how we want handle this exception in separate ticket
-            # on handling exceptions
-            pass
+        self.validate_document_data()
+        generate_and_save_decision(form_data=self.document_data, generate=False)
