@@ -141,7 +141,7 @@
         <w:pStyle w:val="childrenDetails"/>
       </w:pPr>
       <w:r>
-        <w:t>{{ school.school_description }}</w:t>
+        <w:t>{{ school_description }}</w:t>
       </w:r>
     </w:p>
     <w:p>
