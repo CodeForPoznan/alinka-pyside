@@ -20,5 +20,5 @@ alembic_cfg = config.Config(os.path.join(alembic_dirname, "alembic.ini"))
 
 command.upgrade(alembic_cfg, "head")
 
-engine = create_engine(f"sqlite:///{settings.DB_PATH}")
+engine = create_engine(f"sqlite:///{settings.DB_PATH}")  # noqa: E231
 db_session = scoped_session(sessionmaker(bind=engine))

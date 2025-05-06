@@ -86,8 +86,8 @@ class FuzzySupportCenterKurator(BaseFuzzyAttribute):
             "Białej Podlaskiej",
         ]
         return (
-            f"{factory_random.randgen.choice(city_genitive)}, {faker.street_address()},"
-            f" {faker.postcode()} {faker.city()}"
+            f"{factory_random.randgen.choice(city_genitive)}, {faker.street_address()}, "
+            f"{faker.postcode()} {faker.city()}"
         )
 
 
