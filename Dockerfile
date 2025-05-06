@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y build-essential python3-pip python3-dev
 
 WORKDIR /app
 
-COPY ./alinka ./pyproject.toml /app/
+COPY ./alinka ./pyproject.toml ./poetry.lock /app/
 
 RUN poetry install --no-interaction --no-root --with dev
 USER qtuser
