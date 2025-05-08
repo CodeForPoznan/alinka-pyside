@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, StrEnum
 
 RPSO_SUPPORT_CENTER_TYPE_ID = 48
 
@@ -108,7 +108,7 @@ RECIPIENT_DESCRIPTION_GENITIVE_MAPPER = {
 }
 
 
-class Reason(str, Enum):
+class Reason(StrEnum):
     NIESLYSZACE = "nieslyszace"
     SLABOSLYSZACE = "slaboslyszace"
     NIEWIDZACE = "niewidzace"
