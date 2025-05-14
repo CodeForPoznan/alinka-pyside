@@ -16,9 +16,7 @@ RUN echo "deb http://deb.debian.org/debian bullseye-backports main contrib non-f
 RUN apt-get update && apt-get install -y build-essential python3-pip python3-dev libxcb-cursor0 qt6-base-dev ruby && \
     gem install fpm --user-install && \
     pip install pip==23.0.1 poetry && \
-    adduser --quiet --disabled-password qtuser && usermod -a -G audio qtuser && \
-    export ALINKA_VERSION=`poetry version --short` && \
-    export INSTALLER_FILE_NAME="alinka-${ALINKA_VERSION}.deb"
+    adduser --quiet --disabled-password qtuser && usermod -a -G audio qtuser
 
 WORKDIR /app
 

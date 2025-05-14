@@ -1,8 +1,12 @@
-[tool.poetry]
-name = "alinka-pyside"
-version = "0.3.1"
+[project]
+name = "Alinka"
 description = "Application for Supporting Center for Children"
-authors = ["CodeForPoznań <hello@codeforpoznan.pl>"]
+authors = [{name = "CodeForPoznań", email = "hello@codeforpoznan.pl"}]
+license = {text = "MIT"}
+# base, ignored, version, that's required by Poetry
+# we will provide proper verion dynamically to our build pipelines
+version = "0.0.0"
+dynamic = ["version"]
 
 [tool.poetry.dependencies]
 Jinja2 = "^3.1.4"
