@@ -14,6 +14,7 @@ pydantic-settings = "^2.5.2"
 alembic = "^1.13.2"
 requests = "^2.32.3"
 platformdirs = "^4.3.6"
+sqlcipher3-binary = "^0.5.4"
 
 [tool.poetry.group.dev]
 optional = true

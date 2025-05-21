@@ -9,7 +9,7 @@ from alinka.db.models import Base
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option("sqlalchemy.url", f"sqlite:///{settings.DB_PATH}")
+config.set_main_option("sqlalchemy.url", settings.SQLALCHEMY_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -41,6 +41,7 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
+
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -66,7 +67,12 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            transactional_ddl=True,
+            transaction_per_migration=False,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
