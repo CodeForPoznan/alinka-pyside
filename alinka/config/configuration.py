@@ -17,9 +17,7 @@ class Settings(BaseSettings):
     RSPO_DOMAIN: str = "https://rspo.gov.pl/"
     DB_PASSPHRASE: str = "should_be_changed"
 
-    @property
-    def SQLALCHEMY_URL(self):
-        return f"sqlite+pysqlcipher://:{self.DB_PASSPHRASE}@/{self.DB_PATH}"
+    SQLALCHEMY_URL: str = f"sqlite+pysqlcipher://:{DB_PASSPHRASE}@/{DB_PATH}"
 
 
 @lru_cache
