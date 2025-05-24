@@ -15,7 +15,7 @@ if getattr(sys, "frozen", False):
         "logs",
         datetime.now().strftime("alinka_%Y-%m-%d_%H-%M-%S.log"),
     )
-    os.makedirs(os.path.dirname(logs_file))
+    os.makedirs(os.path.dirname(logs_file), exist_ok=True)
     sys.stdout = sys.stderr = open(logs_file, "w", encoding="utf-8")
 
 # We're pushing these import below, just to redirect
