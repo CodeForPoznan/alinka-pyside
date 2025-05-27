@@ -310,12 +310,12 @@ REASON_DESCRIPTION_ACCUSATIVE_LONG_MAPPER = {
 }
 
 
-class ActivityForm(str, Enum):
+class ActivityForm(StrEnum):
     INDYWIDUALNE = "indywidualne"
     ZESPOLOWE = "zespolowe"
 
 
-class RSPOSchoolTypes(str, Enum):
+class RSPOSchoolTypes(StrEnum):
     PRZEDSZKOLE = "Przedszkole"
 
 
