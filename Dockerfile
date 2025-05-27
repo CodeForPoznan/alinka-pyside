@@ -12,7 +12,7 @@ ENV PATH="${PATH}:/root/.gem/ruby/2.7.0/bin:/root/.local/share/gem/ruby/2.7.0/bi
 RUN apt-get update && apt-get install -y build-essential python3-pip python3-dev libxcb-cursor0 qt6-base-dev ruby && \
     gem install fpm --user-install && \
     pip install pip==25.1.1 poetry && \
-    adduser --quiet --disabled-password qtuser && usermod -a -G audio qtuser &&
+    adduser --quiet --disabled-password qtuser && usermod -a -G audio qtuser
 
 WORKDIR /app
 
