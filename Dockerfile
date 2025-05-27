@@ -10,7 +10,6 @@ ENV LIBGL_ALWAYS_INDIRECT=1
 ENV PATH="${PATH}:/root/.gem/ruby/3.1.0/bin:/root/.local/share/gem/ruby/3.1.0/bin"
 
 RUN adduser --quiet --disabled-password qtuser && usermod -a -G audio qtuser
-RUN mkdir -p /home/qtuser/.local/share/gem && chown -R qtuser:qtuser /home/qtuser/.local
 RUN apt-get update && apt-get install -y build-essential python3-pip python3-dev libxcb-cursor0 qt6-base-dev ruby && \
     gem install fpm --user-install && \
     pip install pip==25.1.1 poetry
