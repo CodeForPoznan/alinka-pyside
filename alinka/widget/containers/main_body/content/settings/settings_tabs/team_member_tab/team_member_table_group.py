@@ -18,6 +18,7 @@ class TeamMemberTableModel(QAbstractTableModel):
     def __init__(self):
         self.insert_row = None
         self.columns = TeamMember.__table__.columns.keys()
+        self.header_labels = ["id", "Imię i nazwisko", "Specjalizacja"]
         super().__init__()
 
     def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
@@ -36,7 +37,7 @@ class TeamMemberTableModel(QAbstractTableModel):
     def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole) -> object:
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
-                return self.columns[section]
+                return self.header_labels[section]
             if orientation == Qt.Vertical:
                 if self.unsaved_insert_row() and self.is_last_row(section):
                     return "*"
@@ -51,7 +52,7 @@ class TeamMemberTableModel(QAbstractTableModel):
             column_key = self.columns[index.column()]
             if self.unsaved_insert_row() and self.is_last_row(index):
                 return self.insert_row.get(column_key, "")
-            return get_team_members()[index.row()].dict()[column_key]
+            return get_team_members()[index.row()].model_dump()[column_key]
         return None
 
     def setData(self, index: QModelIndex, value: object, role: int = Qt.EditRole) -> bool:

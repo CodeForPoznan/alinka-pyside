@@ -21,6 +21,29 @@ class SettingsContainer(QTabWidget):
         self.currentChanged.connect(self.handle_footer_visibility)
 
     @property
+    def is_valid(self) -> bool:
+        return all(
+            tab.is_valid
+            for tab in [
+                self.support_center_tab_container,
+                self.schools_tab_container,
+                self.team_member_tab_container,
+            ]
+        )
+
+    @property
+    def error_message(self) -> str | None:
+        for tab in [
+            self.support_center_tab_container,
+            self.schools_tab_container,
+            self.team_member_tab_container,
+        ]:
+            if not tab.is_valid:
+                return tab.error_message
+
+        return None
+
+    @property
     def support_center_data(self):
         return self.support_center_tab_container.support_center_data
 

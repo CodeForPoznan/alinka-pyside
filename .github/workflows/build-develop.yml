@@ -1,0 +1,34 @@
+name: Build develop packages
+on:
+  push:
+    branches:
+    - develop
+  workflow_dispatch:
+
+jobs:
+  get-app-version:
+    runs-on: ubuntu-latest
+    outputs:
+      APP_VERSION: ${{ steps.get-application-verion.outputs.APP_VERSION }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - id: get-application-verion
+      name: get application version
+      run: |
+        APP_VERSION=$(make get-app-version)
+        echo "APP_VERSION=$APP_VERSION" >> $GITHUB_OUTPUT
+
+  build-deb:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository == 'CodeForPoznan/alinka-pyside' }}
+    uses: ./.github/workflows/_build-deb.yml
+    needs: get-app-version
+    with:
+      APP_VERSION: ${{ needs.get-app-version.outputs.APP_VERSION }}
+
+  build-win:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository == 'CodeForPoznan/alinka-pyside' }}
+    uses: ./.github/workflows/_build-win.yml
+    needs: get-app-version
+    with:
+        APP_VERSION: ${{ needs.get-app-version.outputs.APP_VERSION }}

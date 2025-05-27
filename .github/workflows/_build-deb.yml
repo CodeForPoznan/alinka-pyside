@@ -1,0 +1,44 @@
+name: Build deb
+
+on:
+  workflow_call:
+    inputs:
+      APP_VERSION:
+        required: true
+        type: string
+    outputs:
+      INSTALLER_FILE_NAME:
+        value: ${{ jobs.build.outputs.INSTALLER_FILE_NAME }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      APP_VERSION: ${{ inputs.APP_VERSION }}
+    outputs:
+      INSTALLER_FILE_NAME: ${{ steps.get-installer-file-name.outputs.INSTALLER_FILE_NAME }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - id: get-installer-file-name
+      name: get installer file name
+      run : |
+        INSTALLER_FILE_NAME="alinka-${APP_VERSION}.deb"
+        echo "INSTALLER_FILE_NAME=$INSTALLER_FILE_NAME" >> $GITHUB_ENV
+        echo "INSTALLER_FILE_NAME=$INSTALLER_FILE_NAME" >> $GITHUB_OUTPUT
+    - name: build working docker image
+      run: |
+        make build
+    - name: build distribution package
+      # we don't use currently Makefile here
+      # as we want to inject git has as version
+      # instead of relying on `poetry version`
+      run: |
+        docker compose run --rm -u root app pyinstaller alinka.spec --noconfirm
+        docker compose run --rm -u root app ./package.sh
+        docker compose run --rm -u root app fpm -v ${{ env.APP_VERSION }} -p ${{ env.INSTALLER_FILE_NAME }}
+    - name: publish distribution package
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.INSTALLER_FILE_NAME }}
+        path: ${{ env.INSTALLER_FILE_NAME }}

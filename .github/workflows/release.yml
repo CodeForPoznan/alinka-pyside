@@ -1,0 +1,69 @@
+name: Create release
+on:
+  workflow_dispatch:
+
+jobs:
+  get-app-version:
+    runs-on: ubuntu-latest
+    outputs:
+      APP_VERSION: ${{ steps.get-application-verion.outputs.APP_VERSION }}
+    steps:
+    - id: get-application-verion
+      name: get application version
+      run: |
+        APP_VERSION=$(date +"%Y.%m.%d")
+        echo "APP_VERSION=$APP_VERSION" >> $GITHUB_OUTPUT
+
+  tag:
+    runs-on: ubuntu-latest
+    needs: get-app-version
+    env:
+      APP_VERSION: ${{ needs.get-app-version.outputs.APP_VERSION }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: configure git
+        run: |
+          git config user.name "CodeForPoznanBot"
+          git config user.email "hello@codeforpoznan.pl"
+      - name: tag and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git tag $APP_VERSION
+          git push origin $APP_VERSION
+
+  build-deb:
+    uses: ./.github/workflows/_build-deb.yml
+    needs: get-app-version
+    with:
+      APP_VERSION: ${{ needs.get-app-version.outputs.APP_VERSION }}
+
+  build-win:
+    uses: ./.github/workflows/_build-win.yml
+    needs: get-app-version
+    with:
+        APP_VERSION: ${{ needs.get-app-version.outputs.APP_VERSION }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+    - get-app-version
+    - tag
+    - build-deb
+    - build-win
+    steps:
+      - name: download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - name: create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.get-app-version.outputs.APP_VERSION }}
+          prerelease: true
+          files: |
+            ${{ needs.build-deb.outputs.INSTALLER_FILE_NAME }}
+            ${{ needs.build-win.outputs.INSTALLER_FILE_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
