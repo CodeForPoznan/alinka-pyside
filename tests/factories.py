@@ -71,7 +71,7 @@ class DecisionFactory(SQLAlchemyModelFactory):
 
     issue = faker.enum(Issue).value
     activity_form = faker.enum(ActivityForm).value
-    decision_no = f"PPP.{datetime.now().strftime('%Y')}.AC.{faker.pyint(1,500)}"
+    decision_no = f"PPP.{datetime.now().strftime('%Y')}.AC.{faker.pyint(1, 500)}"
     application_date = faker.past_date(start_date="-15d")
     meeting_date = date.today()
     meeting_time = faker.time_object().isoformat()

@@ -1,0 +1,61 @@
+name: Build win
+
+on:
+  workflow_call:
+    inputs:
+      APP_VERSION:
+        required: true
+        type: string
+    outputs:
+      INSTALLER_FILE_NAME:
+        value: ${{ jobs.build.outputs.INSTALLER_FILE_NAME }}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      APP_VERSION: ${{ inputs.APP_VERSION }}
+    outputs:
+      INSTALLER_FILE_NAME: ${{ steps.get-installer-file-name.outputs.INSTALLER_FILE_NAME }}
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    - name: setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: setup Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 2.0.1
+        virtualenvs-create: true
+    - name: install Python dependencies
+      run: |
+        poetry install --no-interaction --no-root --with dev
+    - name: install Inno Setup 6
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -Uri "https://www.jrsoftware.org/download.php/is.exe" -OutFile "C:\InnoSetupInstaller.exe"
+        Start-Process "C:\InnoSetupInstaller.exe" -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART" -Wait
+        $env:Path += ";C:\Program Files (x86)\Inno Setup 6"
+    - name: build PyInstaller package
+      run: |
+        poetry run pyinstaller alinka.spec --noconfirm
+    - id: get-installer-file-name
+      name: get installer file name
+      run : |
+        INSTALLER_FILE_NAME="Alinka-${APP_VERSION}.exe"
+        echo "INSTALLER_FILE_NAME=$INSTALLER_FILE_NAME" >> $GITHUB_ENV
+        echo "INSTALLER_FILE_NAME=$INSTALLER_FILE_NAME" >> $GITHUB_OUTPUT
+    - name: build distribution package
+      shell: pwsh
+      run: |
+        ISCC.exe /DAppVersion="${{ env.APP_VERSION }}" ".\installer.iss"
+    - name: publish distribution package
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.INSTALLER_FILE_NAME }}
+        path: package/${{ env.INSTALLER_FILE_NAME }}

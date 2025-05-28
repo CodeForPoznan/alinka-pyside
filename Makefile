@@ -1,4 +1,4 @@
-APP_VERSION=$(shell docker compose run app poetry version --short)
+APP_VERSION=$(shell date +"%Y.%m.%d")-$(shell git rev-parse --short HEAD)
 INSTALLER_FILE_NAME="alinka-$(APP_VERSION).deb"
 
 .PHONY: build
@@ -15,7 +15,7 @@ test-case: ## Run single test unit
 	docker compose -f docker-compose.test.yml run --rm app pytest -k ${name}
 
 build: ## Build docker image
-	docker compose build --no-cache
+	docker compose build
 
 run: ## Run application
 	docker compose up
@@ -47,7 +47,10 @@ win-installer:
 #	poetry run python .\tools\svg_to_ico.py .\statics\alinka.svg .\statics\alinka.ico
 	poetry run pyinstaller alinka.spec --noconfirm
 # to run iscc you need to install Inno Setup 6 (see: https://jrsoftware.org/isdl.php)
-	ISCC.exe /DAppVersion="$(poetry version --short)" .\installer.iss
+	ISCC.exe /DAppVersion="$(APP_VERSION)" .\installer.iss
+
+get-app-version:
+	@echo $(APP_VERSION)
 
 installer-name: ## Display name of installer of current version of app
 	@echo $(INSTALLER_FILE_NAME)
