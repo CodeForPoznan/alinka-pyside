@@ -12,11 +12,11 @@ class SupportCenterDataGroup(QGroupBox):
     rspo: int | None = None
 
     def __init__(self, parent: QWidget):
-        super().__init__(title="Dane poradnii", parent=parent)
+        super().__init__(title="Dane poradni", parent=parent)
         layout = QGridLayout(self)
         layout.setAlignment(Qt.AlignTop)
 
-        self.name_nominative = LabeledInputComponent("Nazwa poradnii (mianownik)", self, min_lenght=100)
+        self.name_nominative = LabeledInputComponent("Nazwa poradni (mianownik)", self, min_lenght=100)
         layout.addWidget(self.name_nominative, 0, 0, 1, 2)
 
         self.name_genitive = LabeledInputComponent("Nazwa poradni (dopełniacz)", self, min_lenght=100)
