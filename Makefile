@@ -6,7 +6,6 @@ INSTALLER_FILE_NAME="alinka-$(APP_VERSION).deb"
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-
 test: ## Run all unit tests
 	docker compose -f docker-compose.test.yml run --rm app pytest
 
@@ -21,11 +20,11 @@ run: ## Run application
 	docker compose up
 
 type=specjalne
-generate: ## Generate documents. Use `type=` params to create given type of document.
-	docker compose run --rm app python alinka/create_documents.py --type ${type}
+create_documents: ## Create documents. Use `type=` params to create given type of document.
+	docker compose run --rm app python tools/create_documents.py --type ${type}
 
-populate_schools: ## Populate school db table with fixtures
-	docker compose run app python alinka/scripts.py
+populate_database: ## Populate DB tables using factories
+	docker compose run app python tools/populate_database.py
 
 style: ## Run black, isort, flake8 linters
 	docker compose run --rm app bash -c "black . && isort . && flake8 ."

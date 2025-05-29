@@ -1,13 +1,16 @@
 from datetime import date, datetime, timedelta
 
-from factory import lazy_attribute
+from factory import SelfAttribute, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 
+from alinka import rspo_client
 from alinka.constants import ActivityForm, Issue, Reason
+from alinka.constants.common import RPSO_SUPPORT_CENTER_TYPE_ID
 from alinka.db.models import Decision, SupportCenter
 from alinka.db.queries import db_session
-from tests.utils import (
+from alinka.schemas.rspo_schema import InstitutionRequestBody
+from tests.factories.atrributes import (
     FuzzyKlass,
     FuzzyMeetingMember,
     FuzzyProfession,
@@ -136,17 +139,42 @@ class SupportCenterFactory(SQLAlchemyModelFactory):
     class Meta:
         model = SupportCenter
         sqlalchemy_session = db_session
+        sqlalchemy_get_or_create = ("id",)
+        exclude = ("_rspo",)
 
-    province_id = faker.pyint(0, 1000)
-    district_id = faker.pyint(0, 1000)
-    rspo = faker.pyint(0, 10000)
-    name_nominative = FuzzySupportCenterNameNominative()
+    # This is first number used in autoincrement int
+    # alongside sqlalchemy_get_or_create it makes
+    # SupportCenter basically a singleton
+    id = 1
+
+    rspo = SelfAttribute("_rspo.id")
+    name_nominative = SelfAttribute("_rspo.name")
     name_genitive = FuzzySupportCenterNameGenitive()
     kurator = FuzzySupportCenterKurator()
-    address = faker.street_address()
-    town = faker.city()
-    postal_code = faker.postcode()
-    post = faker.city()
+    address = SelfAttribute("_rspo.address")
+    town = SelfAttribute("_rspo.town")
+    postal_code = SelfAttribute("_rspo.postal_code")
+    post = SelfAttribute("_rspo.post")
+
+    @lazy_attribute
+    def province_id(self):
+        return faker.random_element(rspo_client.list_provinces()).id
+
+    @lazy_attribute
+    def district_id(self):
+        return faker.random_element(rspo_client.list_districts(province_id=self.province_id)).id
+
+    @lazy_attribute
+    def _rspo(self):
+        return faker.random_element(
+            rspo_client.list_institutions(
+                body=InstitutionRequestBody(
+                    province_id=self.province_id,
+                    district_id=self.district_id,
+                    institution_type_ids=[RPSO_SUPPORT_CENTER_TYPE_ID],
+                )
+            ).items
+        )
 
     @lazy_attribute
     def institute_name(self):
