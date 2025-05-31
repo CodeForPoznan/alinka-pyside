@@ -6,11 +6,13 @@ import sys
 
 sys.path.insert(0, "")
 
+import random
+
 from sqlalchemy import insert
 
 from alinka.db.connection import db_session
 from alinka.db.models import School
-from tests.factories import SupportCenterFactory
+from tests.factories import SupportCenterFactory, TeamMemberFactory
 from tests.fixtures import schools
 
 GREEN = "\033[32m"
@@ -18,6 +20,7 @@ GREEN = "\033[32m"
 
 def populate_database():
     SupportCenterFactory()
+    TeamMemberFactory.create_batch(random.randint(3, 20))
 
     with db_session() as db:
         print(f"{GREEN}Dodaję szkoły do bazy danych.")

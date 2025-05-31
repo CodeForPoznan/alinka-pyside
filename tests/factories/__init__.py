@@ -1,14 +1,15 @@
 import random
 from datetime import date, datetime, timedelta
 
-from factory import LazyAttribute, lazy_attribute
+from factory import Faker as factory_faker
+from factory import LazyAttribute, fuzzy, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 
 from alinka import rspo_client
 from alinka.constants import ActivityForm, Issue, Reason
 from alinka.constants.common import RPSO_SUPPORT_CENTER_TYPE_ID
-from alinka.db.models import Decision, SupportCenter
+from alinka.db.models import Decision, SupportCenter, TeamMember
 from alinka.db.queries import db_session
 from alinka.schemas.rspo_schema import InstitutionRequestBody
 from tests.factories.atrributes import (
@@ -25,6 +26,7 @@ from tests.factories.atrributes import (
 
 DATE_FORMAT = "%m/%d/%Y"
 faker = Faker(locale="pl_PL")
+factory_faker._DEFAULT_LOCALE = "pl_PL"
 
 
 class DecisionFactory(SQLAlchemyModelFactory):
@@ -193,3 +195,28 @@ class SupportCenterFactory(SQLAlchemyModelFactory):
     @lazy_attribute
     def institute_name(self):
         return f"Zespół Orzekający przy {self.name_genitive}"
+
+
+class TeamMemberFactory(SQLAlchemyModelFactory):
+    class Meta:
+        model = TeamMember
+        sqlalchemy_session = db_session
+
+    # I was thinking about using just
+    # name = factory.faker("name")
+    # but it by default chooses from formats with prefixes
+    # so sometimes I was getting "pan Tomasz M." and I want to
+    # avoid "pan" here
+    @lazy_attribute
+    def name(self):
+        return f"{faker.first_name()} {faker.last_name()}"
+
+    function = fuzzy.FuzzyChoice(
+        [
+            "logopeda",
+            "pedagog",
+            "psycholog",
+            "socjoterapeuta",
+            "tyflopedagog",
+        ]
+    )
