@@ -1,6 +1,7 @@
+import random
 from datetime import date, datetime, timedelta
 
-from factory import SelfAttribute, lazy_attribute
+from factory import LazyAttribute, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 
@@ -147,34 +148,47 @@ class SupportCenterFactory(SQLAlchemyModelFactory):
     # SupportCenter basically a singleton
     id = 1
 
-    rspo = SelfAttribute("_rspo.id")
-    name_nominative = SelfAttribute("_rspo.name")
+    district_id = LazyAttribute(lambda o: o._rspo["district_id"])
+    rspo = LazyAttribute(lambda o: o._rspo["id"])
+    name_nominative = LazyAttribute(lambda o: o._rspo["name"])
     name_genitive = FuzzySupportCenterNameGenitive()
     kurator = FuzzySupportCenterKurator()
-    address = SelfAttribute("_rspo.address")
-    town = SelfAttribute("_rspo.town")
-    postal_code = SelfAttribute("_rspo.postal_code")
-    post = SelfAttribute("_rspo.post")
+    address = LazyAttribute(lambda o: o._rspo["address"])
+    town = LazyAttribute(lambda o: o._rspo["town"])
+    postal_code = LazyAttribute(lambda o: o._rspo["postal_code"])
+    post = LazyAttribute(lambda o: o._rspo["post"])
 
     @lazy_attribute
     def province_id(self):
         return faker.random_element(rspo_client.list_provinces()).id
 
     @lazy_attribute
-    def district_id(self):
-        return faker.random_element(rspo_client.list_districts(province_id=self.province_id)).id
-
-    @lazy_attribute
     def _rspo(self):
-        return faker.random_element(
-            rspo_client.list_institutions(
+        """
+        As we encountered discrticts without any RSPO, instead of choosing random district
+        and then choosing random RSPO from that disctrict only, we shuffle district from provnce
+        and then we settle with first district, that contains at least one RSOP.
+        """
+        districts = rspo_client.list_districts(province_id=self.province_id)
+        random.shuffle(districts)
+
+        for district in districts:
+            rspos = rspo_client.list_institutions(
                 body=InstitutionRequestBody(
                     province_id=self.province_id,
-                    district_id=self.district_id,
+                    district_id=district.id,
                     institution_type_ids=[RPSO_SUPPORT_CENTER_TYPE_ID],
                 )
             ).items
-        )
+            if len(rspos) > 0:
+                # rspos contains list of Pydantic's Institution type
+                # but we need to provide district for LazyAttribute
+                # so simples we can do is to dump Institution to dict
+                # and expand that dict
+                return {
+                    "district_id": district.id,
+                    **faker.random_element(rspos).dict(),
+                }
 
     @lazy_attribute
     def institute_name(self):
