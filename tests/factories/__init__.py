@@ -2,16 +2,19 @@ import random
 from datetime import date, datetime, timedelta
 
 from factory import Faker as factory_faker
-from factory import LazyAttribute, fuzzy, lazy_attribute
+from factory import LazyAttribute, SelfAttribute, fuzzy, lazy_attribute
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 
 from alinka import rspo_client
 from alinka.constants import ActivityForm, Issue, Reason
 from alinka.constants.common import RPSO_SUPPORT_CENTER_TYPE_ID
-from alinka.db.models import Decision, SupportCenter, TeamMember
+from alinka.db.models import Decision, School, SupportCenter, TeamMember
 from alinka.db.queries import db_session
 from alinka.schemas.rspo_schema import InstitutionRequestBody
+from alinka.widget.containers.main_body.content.settings.settings_tabs.schools_tab.select_school_group import (
+    SelectSchoolGroup,
+)
 from tests.factories.atrributes import (
     FuzzyKlass,
     FuzzyMeetingMember,
@@ -220,3 +223,44 @@ class TeamMemberFactory(SQLAlchemyModelFactory):
             "tyflopedagog",
         ]
     )
+
+
+class SchoolFactory(SQLAlchemyModelFactory):
+    class Meta:
+        model = School
+        sqlalchemy_session = db_session
+        exclude = ("_rspo",)
+
+    rspo_id = SelfAttribute("_rspo.id")
+    rspo_type_id = SelfAttribute("_rspo.type.id")
+    parent_organisation_name = SelfAttribute("_rspo.parent_organisation_name")
+    name = SelfAttribute("_rspo.name")
+    address = SelfAttribute("_rspo.address")
+    town = SelfAttribute("_rspo.town")
+    postal_code = SelfAttribute("_rspo.postal_code")
+    post = SelfAttribute("_rspo.post")
+
+    @lazy_attribute
+    def _rspo(self):
+        province = faker.random_element(rspo_client.list_provinces())
+        district = faker.random_element(rspo_client.list_districts(province_id=province.id))
+        rspo_id = faker.random_element(
+            rspo_client.list_institutions(
+                body=InstitutionRequestBody(
+                    province_id=province.id,
+                    district_id=district.id,
+                    # these ids are basically cached ouptut of
+                    # get_instytution_type_ids for all SchoolTypes
+                    institution_type_ids=[1, 21, 82, 3, 90, 93, 94, 14, 17, 15, 19, 20, 16, 18],
+                )
+            ).items
+        ).id
+
+        return rspo_client.get_institution(rspo_id=rspo_id)
+
+    @lazy_attribute
+    def type(self):
+        # this is really terrible, to use QT widget code in factory, but AFAIK
+        # this is only place we have that logic - in future we should move that
+        # to model or schema layer
+        return SelectSchoolGroup.get_school_type_from_school_data(self._rspo.type)

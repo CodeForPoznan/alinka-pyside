@@ -8,25 +8,22 @@ sys.path.insert(0, "")
 
 import random
 
-from sqlalchemy import insert
+from tqdm import trange
 
 from alinka.db.connection import db_session
-from alinka.db.models import School
-from tests.factories import SupportCenterFactory, TeamMemberFactory
-from tests.fixtures import schools
-
-GREEN = "\033[32m"
+from tests.factories import SchoolFactory, SupportCenterFactory, TeamMemberFactory
 
 
 def populate_database():
+    print("Generate support center")
     SupportCenterFactory()
-    TeamMemberFactory.create_batch(random.randint(3, 20))
-
-    with db_session() as db:
-        print(f"{GREEN}Dodaję szkoły do bazy danych.")
-        db.execute(insert(School), schools)
-        db.commit()
-        print(f"{GREEN}Szkoły zostały dodane.")
+    print("Generate team memebrs")
+    for _ in trange(random.randint(3, 20)):
+        TeamMemberFactory()
+    print("Generate schools")
+    for _ in trange(random.randint(3, 100)):
+        SchoolFactory()
+    db_session.commit()
 
 
 if __name__ == "__main__":

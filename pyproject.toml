@@ -34,6 +34,7 @@ pytest = "^7.2.0"
 cairosvg = "^2.7.1"
 pillow = "^11.1.0"
 pdbpp = "^0.11.6"
+tqdm = "^4.67.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
