@@ -1,8 +1,15 @@
 import random
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 
 from factory import Faker as factory_faker
-from factory import LazyAttribute, SelfAttribute, fuzzy, lazy_attribute
+from factory import (
+    LazyAttribute,
+    Maybe,
+    SelfAttribute,
+    SubFactory,
+    fuzzy,
+    lazy_attribute,
+)
 from factory.alchemy import SQLAlchemyModelFactory
 from faker import Faker
 
@@ -16,18 +23,15 @@ from alinka.widget.containers.main_body.content.settings.settings_tabs.schools_t
     SelectSchoolGroup,
 )
 from tests.factories.atrributes import (
-    FuzzyKlass,
-    FuzzyMeetingMember,
-    FuzzyProfession,
-    FuzzySchoolName,
-    FuzzySchoolParentOrganisation,
-    FuzzySchoolType,
     FuzzySupportCenterKurator,
     FuzzySupportCenterNameGenitive,
-    FuzzySupportCenterNameNominative,
+    NoPrefixFullName,
+    full_name_generative,
 )
 
 DATE_FORMAT = "%m/%d/%Y"
+now = datetime.now(timezone.utc)
+
 faker = Faker(locale="pl_PL")
 factory_faker._DEFAULT_LOCALE = "pl_PL"
 
@@ -36,55 +40,164 @@ class DecisionFactory(SQLAlchemyModelFactory):
     class Meta:
         model = Decision
         sqlalchemy_session = db_session
+        exclude = (
+            "create_new_school",
+            "_school",
+            "_second_parent_exists",
+            "_support_center",
+            "create_new_meeting_members",
+        )
 
-    child_full_name = faker.name()
-    child_full_name_gen = faker.name()
-    child_town = faker.city()
-    child_address = faker.street_address()
-    child_postal_code = faker.postcode()
-    child_pesel = faker.pesel()
-    child_birth_date = faker.date_this_decade()
-    child_birth_place = faker.city()
-    child_student = faker.pybool()
-    klass = FuzzyKlass()
-    profession = FuzzyProfession()
+    created_at = fuzzy.FuzzyDateTime(
+        start_dt=now - timedelta(days=365),
+        end_dt=now,
+    )
 
-    school_parent_organisation = FuzzySchoolParentOrganisation()
-    school_type = FuzzySchoolType()
-    school_name = FuzzySchoolName()
-    school_address = faker.street_address()
-    school_town = faker.city()
-    school_postal_code = faker.postcode()
-    school_post = faker.city()
+    child_full_name = NoPrefixFullName()
+    child_full_name_gen = LazyAttribute(lambda obj: full_name_generative(obj.child_full_name))
+    child_town = factory_faker("city")
+    child_address = factory_faker("street_address")
+    child_postal_code = factory_faker("postcode")
+    child_pesel = factory_faker("pesel")
+    child_birth_date = fuzzy.FuzzyDate(
+        start_date=now.date() - timedelta(days=18 * 350),
+        # This ensures that child is older then decision itself
+        end_date=now.date() - timedelta(days=350),
+    )
+    child_birth_place = factory_faker("city")
+    child_student = fuzzy.FuzzyChoice(choices=[True, False])
+    # this should also support None at some point
+    klass = fuzzy.FuzzyInteger(1, 8)
+    # tis should also support None at some point
+    profession = factory_faker("job")
 
-    address_child_checkbox = faker.pybool()
-    address_first_parent_checkbox = faker.pybool()
-    first_parent_full_name = faker.name()
-    first_parent_full_name_gen = faker.name()
-    first_parent_address = faker.street_address()
-    first_parent_town = faker.city()
-    first_parent_postal_code = faker.postcode()
-    second_parent_full_name = faker.name()
-    second_parent_full_name_gen = faker.name()
-    second_parent_address = faker.street_address()
-    second_parent_town = faker.city()
-    second_parent_postal_code = faker.postcode()
+    create_new_school = False
+    school_parent_organisation = SelfAttribute("_school.parent_organisation_name")
+    school_type = SelfAttribute("_school.type")
+    school_name = SelfAttribute("_school.name")
+    school_address = SelfAttribute("_school.address")
+    school_town = SelfAttribute("_school.town")
+    school_postal_code = SelfAttribute("_school.postal_code")
+    school_post = SelfAttribute("_school.post")
 
-    support_center_name_nominative = FuzzySupportCenterNameNominative()
-    support_center_name_genitive = FuzzySupportCenterNameGenitive()
-    support_center_kurator = FuzzySupportCenterKurator()
-    support_center_address = faker.street_address()
-    support_center_town = faker.city()
-    support_center_postal_code = faker.postcode()
-    support_center_post = faker.city()
+    _second_parent_exists = fuzzy.FuzzyChoice(choices=[True, False])
+    address_child_checkbox = fuzzy.FuzzyChoice(choices=[True, False])
+    address_first_parent_checkbox = Maybe(
+        "_second_parent_exists",
+        yes_declaration=fuzzy.FuzzyChoice(choices=[True, False]),
+        no_declaration=False,
+    )
 
-    issue = faker.enum(Issue).value
-    activity_form = faker.enum(ActivityForm).value
-    decision_no = f"PPP.{datetime.now().strftime('%Y')}.AC.{faker.pyint(1, 500)}"
-    application_date = faker.past_date(start_date="-15d")
-    meeting_date = date.today()
-    meeting_time = faker.time_object().isoformat()
-    meeting_members = FuzzyMeetingMember()
+    first_parent_full_name = NoPrefixFullName()
+    first_parent_full_name_gen = LazyAttribute(lambda obj: full_name_generative(obj.first_parent_full_name))
+    # for unknown reason these 2 values are nullable=False
+    first_parent_address = factory_faker("street_address")
+    first_parent_town = factory_faker("city")
+    first_parent_postal_code = Maybe(
+        "address_child_checkbox",
+        yes_declaration=None,
+        no_declaration=factory_faker("postcode"),
+    )
+
+    second_parent_full_name = Maybe(
+        "_second_parent_exists",
+        yes_declaration=NoPrefixFullName(),
+        no_declaration=None,
+    )
+    second_parent_full_name_gen = Maybe(
+        "_second_parent_exists",
+        yes_declaration=LazyAttribute(lambda obj: full_name_generative(obj.second_parent_full_name)),
+        no_declaration=None,
+    )
+    second_parent_address = Maybe(
+        "address_first_parent_checkbox",
+        yes_declaration=None,
+        no_declaration=factory_faker("street_address"),
+    )
+    second_parent_town = Maybe(
+        "address_first_parent_checkbox",
+        yes_declaration=None,
+        no_declaration=factory_faker("city"),
+    )
+    second_parent_postal_code = Maybe(
+        "address_first_parent_checkbox",
+        yes_declaration=None,
+        no_declaration=factory_faker("postcode"),
+    )
+
+    # if we will move that factory bellow SupportCenterFactory
+    # we may used direct reference here
+    _support_center = SubFactory("tests.factories.SupportCenterFactory")
+    support_center_name_nominative = SelfAttribute("_support_center.name_nominative")
+    support_center_name_genitive = SelfAttribute("_support_center.name_genitive")
+    support_center_kurator = SelfAttribute("_support_center.kurator")
+    support_center_address = SelfAttribute("_support_center.address")
+    support_center_town = SelfAttribute("_support_center.town")
+    support_center_postal_code = SelfAttribute("_support_center.postal_code")
+    support_center_post = SelfAttribute("_support_center.post")
+    support_center_institute_name = SelfAttribute("_support_center.institute_name")
+
+    issue = fuzzy.FuzzyChoice(choices=[i.value for i in Issue])
+    activity_form = fuzzy.FuzzyChoice(choices=[i.value for i in ActivityForm])
+
+    create_new_meeting_members = False
+
+    @lazy_attribute
+    def meeting_members(self):
+        desired_members = random.randint(3, 6)
+
+        if self.create_new_meeting_members:
+            members = TeamMemberFactory.create_batch(desired_members)
+        else:
+            with DecisionFactory._meta.sqlalchemy_session() as db:
+                desired_members = min(desired_members, db.query(TeamMember).count())
+                members = random.sample(
+                    db.query(TeamMember).all(),
+                    desired_members,
+                )
+
+        return [
+            {
+                "name": member.name,
+                "function": member.function,
+            }
+            for member in members
+        ]
+
+    @lazy_attribute
+    def modified_at(self):
+        return fuzzy.FuzzyDateTime(
+            start_dt=self.created_at,
+            end_dt=now,
+        ).fuzz()
+
+    @lazy_attribute
+    def meeting_date(self):
+        return fuzzy.FuzzyDate(
+            start_date=self.modified_at - timedelta(weeks=2),
+            end_date=self.modified_at + timedelta(weeks=2),
+        ).fuzz()
+
+    @lazy_attribute
+    def meeting_time(self):
+        """
+        Lets limit ourselelves to working hours and 5-minute increment.
+        """
+        return time(
+            hour=random.randint(7, 20),
+            minute=random.randint(0, 59 // 5) * 5,
+        ).isoformat()
+
+    @lazy_attribute
+    def application_date(self):
+        return fuzzy.FuzzyDate(
+            start_date=self.meeting_date - timedelta(days=90),
+            end_date=self.meeting_date,
+        ).fuzz()
+
+    @lazy_attribute
+    def decision_no(self):
+        return f"PPP.{self.meeting_date.strftime('%Y')}.AC.{random.randint(1, 500)}"
 
     @lazy_attribute
     def reasons(self):
@@ -128,8 +241,11 @@ class DecisionFactory(SQLAlchemyModelFactory):
             return ""
 
     @lazy_attribute
-    def support_center_institute_name(self):
-        return f"Zespół Orzekający przy {self.support_center_name_genitive}"
+    def _school(self):
+        if self.create_new_school:
+            return SchoolFactory()
+        with DecisionFactory._meta.sqlalchemy_session() as db:
+            return random.choice(db.query(School).all())
 
     @classmethod
     def _save(cls, model_class, session, args, kwargs):
@@ -205,15 +321,7 @@ class TeamMemberFactory(SQLAlchemyModelFactory):
         model = TeamMember
         sqlalchemy_session = db_session
 
-    # I was thinking about using just
-    # name = factory.faker("name")
-    # but it by default chooses from formats with prefixes
-    # so sometimes I was getting "pan Tomasz M." and I want to
-    # avoid "pan" here
-    @lazy_attribute
-    def name(self):
-        return f"{faker.first_name()} {faker.last_name()}"
-
+    name = NoPrefixFullName()
     function = fuzzy.FuzzyChoice(
         [
             "logopeda",

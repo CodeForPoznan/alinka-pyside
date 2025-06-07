@@ -11,7 +11,12 @@ import random
 from tqdm import trange
 
 from alinka.db.connection import db_session
-from tests.factories import SchoolFactory, SupportCenterFactory, TeamMemberFactory
+from tests.factories import (
+    DecisionFactory,
+    SchoolFactory,
+    SupportCenterFactory,
+    TeamMemberFactory,
+)
 
 
 def populate_database():
@@ -23,6 +28,16 @@ def populate_database():
     print("Generate schools")
     for _ in trange(random.randint(3, 100)):
         SchoolFactory()
+
+    # we have something wrong in the way
+    # we manage DB sessions, so I had to commit
+    # here before DecisionFactory will start
+    # choosing Schools and TeamMembers
+    db_session.commit()
+
+    print("Generate decisions")
+    for _ in trange(random.randint(10, 1000)):
+        DecisionFactory()
     db_session.commit()
 
 

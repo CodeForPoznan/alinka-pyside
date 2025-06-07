@@ -13,8 +13,11 @@ from tests.fixtures import decision_data
 
 class TestQuery:
     def setup_method(self):
-        DecisionFactory()
-        DecisionFactory()
+        DecisionFactory.create_batch(
+            2,
+            create_new_school=True,
+            create_new_meeting_members=True,
+        )
         self.decision_data = decision_data.copy()
         self.decision_1, self.decision_2 = get_decisions_list_from_db()
 
@@ -79,5 +82,9 @@ class TestQuery:
 
         assert get_support_center_data()
 
+
+class TestQueryWithoutDecisions:
+    # It was moved here, as running DecisionFactory
+    # creates SupportCenter
     def test_get_support_center__not_exists(self):
         assert not get_support_center_data()
