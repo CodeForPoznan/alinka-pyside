@@ -26,7 +26,7 @@ from tests.factories.atrributes import (
     FuzzySupportCenterKurator,
     FuzzySupportCenterNameGenitive,
     NoPrefixFullName,
-    full_name_generative,
+    full_name_genitive,
 )
 
 DATE_FORMAT = "%m/%d/%Y"
@@ -54,7 +54,7 @@ class DecisionFactory(SQLAlchemyModelFactory):
     )
 
     child_full_name = NoPrefixFullName()
-    child_full_name_gen = LazyAttribute(lambda obj: full_name_generative(obj.child_full_name))
+    child_full_name_gen = LazyAttribute(lambda obj: full_name_genitive(obj.child_full_name))
     child_town = factory_faker("city")
     child_address = factory_faker("street_address")
     child_postal_code = factory_faker("postcode")
@@ -89,7 +89,7 @@ class DecisionFactory(SQLAlchemyModelFactory):
     )
 
     first_parent_full_name = NoPrefixFullName()
-    first_parent_full_name_gen = LazyAttribute(lambda obj: full_name_generative(obj.first_parent_full_name))
+    first_parent_full_name_gen = LazyAttribute(lambda obj: full_name_genitive(obj.first_parent_full_name))
     # for unknown reason these 2 values are nullable=False
     first_parent_address = factory_faker("street_address")
     first_parent_town = factory_faker("city")
@@ -106,7 +106,7 @@ class DecisionFactory(SQLAlchemyModelFactory):
     )
     second_parent_full_name_gen = Maybe(
         "_second_parent_exists",
-        yes_declaration=LazyAttribute(lambda obj: full_name_generative(obj.second_parent_full_name)),
+        yes_declaration=LazyAttribute(lambda obj: full_name_genitive(obj.second_parent_full_name)),
         no_declaration=None,
     )
     second_parent_address = Maybe(

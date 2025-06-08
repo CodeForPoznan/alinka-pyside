@@ -5,9 +5,9 @@ from faker import Faker
 faker = Faker(locale="pl_PL")
 
 
-def full_name_generative(nominative):
+def full_name_genitive(nominative):
     """
-    We would like to create some simple logic here to swich case.
+    We would like to create some simple logic here to swich grammatical case.
     """
     return nominative
 
