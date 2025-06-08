@@ -85,7 +85,6 @@ class TestQuery:
 
         assert get_support_center_data()
 
-
     @pytest.mark.parametrize(
         "filter_by, expected_ids", [("7411", [3, 5]), ("xx", [3, 4]), ("abc", [3, 5]), (None, [1, 2, 3, 4, 5])]
     )
