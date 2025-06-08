@@ -62,4 +62,4 @@ create-migration: ## Generate migration. Add `message` to migration, ie. `make c
 	docker compose run --rm app bash -c "alembic revision --autogenerate -m \"$(message)\""
 
 check-migrations:
-	docker compose run --rm app bash -c "alembic check"
+	docker compose run --rm app bash -c "alembic upgrade head && alembic check"
