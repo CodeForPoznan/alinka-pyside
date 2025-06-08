@@ -10,17 +10,21 @@ from alinka.db.queries import (
     upsert_support_center,
 )
 from alinka.schemas.db_schema import SupportCenterDbSchema
-from tests.factories import DecisionFactory, SupportCenterFactory
+from tests.factories import decision_factory, support_center_factory
 from tests.fixtures import decision_data
 
 
+@pytest.mark.usefixtures("mocked_db_session")
 class TestQuery:
-    def setup_method(self):
-        DecisionFactory.create_batch(
-            2,
-            create_new_school=True,
-            create_new_meeting_members=True,
-        )
+    @pytest.fixture(autouse=True)
+    def setup_method(self, mocked_db_session):
+        with mocked_db_session() as db:
+            decision_factory(db).create_batch(
+                2,
+                create_new_school=True,
+                create_new_meeting_members=True,
+            )
+            db.commit()
         self.decision_data = decision_data.copy()
         self.decision_1, self.decision_2 = get_decisions_list_from_db()
 
@@ -60,8 +64,10 @@ class TestQuery:
         support_center = upsert_support_center(support_center_data.model_dump())
         assert support_center.name_nominative == support_center_data.name_nominative
 
-    def test_upsert_support_center__existing(self):
-        SupportCenterFactory()
+    def test_upsert_support_center__existing(self, mocked_db_session):
+        with mocked_db_session() as db:
+            support_center_factory(db)()
+            db.commit()
 
         support_center_data = SupportCenterDbSchema(
             province_id=5,
@@ -80,18 +86,23 @@ class TestQuery:
         support_center = upsert_support_center(support_center_data.model_dump())
         assert support_center.name_nominative == support_center_data.name_nominative
 
-    def test_get_support_center__exists(self):
-        SupportCenterFactory()
+    def test_get_support_center__exists(self, mocked_db_session):
+        with mocked_db_session() as db:
+            support_center_factory(db)()
+            db.commit()
 
         assert get_support_center_data()
 
     @pytest.mark.parametrize(
         "filter_by, expected_ids", [("7411", [3, 5]), ("xx", [3, 4]), ("abc", [3, 5]), (None, [1, 2, 3, 4, 5])]
     )
-    def test_get_decisions_by_pesel_child_name(self, filter_by, expected_ids):
-        DecisionFactory(child_full_name="Xxxxabc", child_pesel="74112442575")
-        DecisionFactory(child_full_name="xxx", child_pesel="94111076597")
-        DecisionFactory(child_full_name="abc", child_pesel="74110952166")
+    def test_get_decisions_by_pesel_child_name(self, filter_by, expected_ids, mocked_db_session):
+        with mocked_db_session() as db:
+            DecisionFactory = decision_factory(db)
+            DecisionFactory(child_full_name="Xxxxabc", child_pesel="74112442575")
+            DecisionFactory(child_full_name="xxx", child_pesel="94111076597")
+            DecisionFactory(child_full_name="abc", child_pesel="74110952166")
+            db.commit()
 
         result = filter_decisions_by_pesel_child_name(filter_by)
         assert [r.id for r in result] == expected_ids
