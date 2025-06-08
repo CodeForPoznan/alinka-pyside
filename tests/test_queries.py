@@ -86,12 +86,6 @@ class TestQuery:
         assert get_support_center_data()
 
 
-class TestQueryWithoutDecisions:
-    # It was moved here, as running DecisionFactory
-    # creates SupportCenter
-    def test_get_support_center__not_exists(self):
-        assert not get_support_center_data()
-
     @pytest.mark.parametrize(
         "filter_by, expected_ids", [("7411", [3, 5]), ("xx", [3, 4]), ("abc", [3, 5]), (None, [1, 2, 3, 4, 5])]
     )
@@ -102,3 +96,10 @@ class TestQueryWithoutDecisions:
 
         result = filter_decisions_by_pesel_child_name(filter_by)
         assert [r.id for r in result] == expected_ids
+
+
+class TestQueryWithoutDecisions:
+    # It was moved here, as running DecisionFactory
+    # creates SupportCenter
+    def test_get_support_center__not_exists(self):
+        assert not get_support_center_data()
