@@ -47,9 +47,8 @@ def create_decision_in_db(decision_data: dict) -> DecisionDbSchema:
 
 def update_decision_in_db(decision_id: int, decision_data: dict) -> DecisionDbSchema:
     with db_session() as db:
-        decision_id = (
-            db.query(Decision).filter(Decision.id == decision_id).update(decision_data, synchronize_session="auto")
-        )
+        db.query(Decision).filter(Decision.id == decision_id).update(decision_data, synchronize_session="auto")
+        db.commit()
         decision = db.query(Decision).filter(Decision.id == decision_id).one()
         return DecisionDbSchema.model_validate(decision)
 

@@ -58,7 +58,7 @@ class ApplicationContainer(QTabWidget):
         support_center_data = SupportCenterData(**support_center_data.model_dump())
 
         return DocumentData(
-            id=1,
+            id=self.id,
             file_no=self.child_tab_container.general_data_group.file_no.text,
             decision_no=self.child_tab_container.general_data_group.decision_no.text,
             child=self.child_tab_container.child_data,
@@ -75,3 +75,6 @@ class ApplicationContainer(QTabWidget):
             meeting_data=self.meeting_tab_container.meeting_data,
             support_center=support_center_data,
         )
+
+    def set_document_data_id(self, decision_id: int) -> None:
+        self.id = decision_id

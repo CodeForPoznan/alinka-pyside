@@ -3,7 +3,7 @@ from alinka.docx import generate_documents
 from alinka.schemas import DecisionDbSchema, DocumentData
 
 
-def generate_and_save_decision(form_data: DocumentData, generate: bool = False) -> None:
+def generate_and_save_decision(form_data: DocumentData, generate: bool = False) -> DecisionDbSchema:
     child = form_data.child
     school = form_data.school
     applicant_1 = form_data.applicants[0]
@@ -11,7 +11,7 @@ def generate_and_save_decision(form_data: DocumentData, generate: bool = False) 
     support_center = form_data.support_center
     meeting_data = form_data.meeting_data
     decision_data = DecisionDbSchema(
-        id=None,
+        id=form_data.id,
         child_full_name=child.full_name,
         child_full_name_gen=child.full_name_gen,
         child_address=child.address,
@@ -65,9 +65,11 @@ def generate_and_save_decision(form_data: DocumentData, generate: bool = False) 
         file_no=form_data.file_no,
     )
     if decision_data.id:
-        decision = update_decision_in_db(decision_data.model_dump())
+        decision = update_decision_in_db(decision_id=decision_data.id, decision_data=decision_data.model_dump())
     else:
         decision = create_decision_in_db(decision_data.model_dump())
 
     if generate:
         generate_documents(decision.id)
+
+    return decision
