@@ -12,33 +12,36 @@ from tqdm import trange
 
 from alinka.db.connection import db_session
 from tests.factories import (
-    DecisionFactory,
-    SchoolFactory,
-    SupportCenterFactory,
-    TeamMemberFactory,
+    decision_factory,
+    school_factory,
+    support_center_factory,
+    team_member_factory,
 )
 
 
 def populate_database():
-    print("Generate support center")
-    SupportCenterFactory()
-    print("Generate team memebrs")
-    for _ in trange(random.randint(3, 20)):
-        TeamMemberFactory()
-    print("Generate schools")
-    for _ in trange(random.randint(3, 100)):
-        SchoolFactory()
+    with db_session() as db:
+        DecisionFactory = decision_factory(db)
+        SchoolFactory = school_factory(db)
+        SupportCenterFactory = support_center_factory(db)
+        TeamMemberFactory = team_member_factory(db)
 
-    # we have something wrong in the way
-    # we manage DB sessions, so I had to commit
-    # here before DecisionFactory will start
-    # choosing Schools and TeamMembers
-    db_session.commit()
+        print("Generate support center")
+        SupportCenterFactory()
 
-    print("Generate decisions")
-    for _ in trange(random.randint(10, 1000)):
-        DecisionFactory()
-    db_session.commit()
+        print("Generate team memebrs")
+        for _ in trange(random.randint(3, 20)):
+            TeamMemberFactory()
+
+        print("Generate schools")
+        for _ in trange(random.randint(3, 100)):
+            SchoolFactory()
+
+        print("Generate decisions")
+        for _ in trange(random.randint(10, 1000)):
+            DecisionFactory()
+
+        db.commit()
 
 
 if __name__ == "__main__":
