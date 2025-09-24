@@ -1,7 +1,6 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QGroupBox, QPushButton, QWidget
+from PySide6.QtWidgets import QGridLayout, QGroupBox, QWidget
 
-from alinka.db.queries import create_school
 from alinka.schemas import SchoolData
 from alinka.widget.components import LabeledInputComponent
 
@@ -33,13 +32,6 @@ class SchoolDataGroup(QGroupBox):
         self.post = LabeledInputComponent("Poczta", self)
         layout.addWidget(self.postal_code, 4, 0)
         layout.addWidget(self.post, 4, 1)
-
-        add_remove_applicant_btn = QPushButton("Dodaj szkołę do listy")
-        add_remove_applicant_btn.clicked.connect(self.add_school)
-        layout.addWidget(add_remove_applicant_btn, 5, 0, 1, 2)
-
-    def add_school(self):
-        create_school(self.school_data.model_dump(exclude=("full_address", "description")))
 
     @property
     def school_data(self) -> SchoolData:

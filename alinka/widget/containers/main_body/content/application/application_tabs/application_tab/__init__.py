@@ -156,3 +156,14 @@ class ApplicationTabContainer(QWidget):
     def error_message(self) -> str | None:
         # Should be implemented in https://github.com/CodeForPoznan/alinka-pyside/issues/92
         return None
+
+    def clear(self):
+        self.application_date.date_input.clear()
+        self.application_subject.combobox.setCurrentIndex(-1)
+        self.application_reason.combobox.setCurrentIndex(-1)
+        self.application_reason_2.combobox.setCurrentIndex(-1)
+        self.application_reason_2.setFixedHeight(0)
+        self._activity_form.combobox.setCurrentIndex(-1)
+        self._activity_form.setFixedHeight(0)
+        self._activity_form.combobox.setEnabled(False)
+        self.application_period.combobox.setCurrentIndex(-1)

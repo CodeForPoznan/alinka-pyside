@@ -14,7 +14,7 @@ from alinka.schemas import (
 
 def get_decisions_list_from_db() -> list[DecisionDbSchema]:
     with db_session() as db:
-        decisions = db.query(Decision).all()
+        decisions = db.query(Decision).order_by(Decision.created_at.desc()).all()
         return [DecisionDbSchema.model_validate(decision) for decision in decisions]
 
 
@@ -26,6 +26,7 @@ def filter_decisions_by_pesel_child_name(filter_by: str | None) -> list[Decision
         decisions = (
             db.query(Decision)
             .filter(or_(Decision.child_full_name.contains(filter_by), Decision.child_pesel.contains(filter_by)))
+            .order_by(Decision.created_at.desc())
             .all()
         )
         return [DecisionDbSchema.model_validate(decision) for decision in decisions]
@@ -72,6 +73,12 @@ def get_schools() -> list[SchoolDbSchema]:
     with db_session() as db:
         schools = db.query(School).all()
         return [SchoolDbSchema.model_validate(s) for s in schools]
+
+
+def check_if_any_school_exists() -> bool:
+    with db_session() as db:
+        any_school = db.query(School).first()
+        return bool(any_school)
 
 
 def upsert_support_center(support_center_data: dict) -> SupportCenterDbSchema:
@@ -126,3 +133,5 @@ def delete_team_member(team_member_id: int) -> None:
         stmt = delete(TeamMember).where(TeamMember.id == team_member_id)
         db.execute(stmt)
         db.commit()
+
+    return get_team_members()

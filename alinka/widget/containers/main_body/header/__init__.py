@@ -13,6 +13,10 @@ class HeaderContainer(QFrame):
         self.header_content.setText(message)
         self.header_content.setStyleSheet("color: red;")
 
+    def set_success_message(self, message: str):
+        self.header_content.setText(message)
+        self.header_content.setStyleSheet("color: green;")
+
     def clear_error_message(self):
         self.header_content.setText("")
         self.header_content.setStyleSheet("")

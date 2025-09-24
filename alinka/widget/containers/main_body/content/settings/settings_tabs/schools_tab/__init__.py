@@ -1,6 +1,9 @@
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
+from alinka.db.queries import check_if_any_school_exists
+
 from .school_data_group import SchoolDataGroup
+from .school_list_group import SchoolListGroup
 from .select_school_group import SelectSchoolGroup
 
 
@@ -15,14 +18,15 @@ class SchoolTabContainer(QWidget):
         self.school_data_group = SchoolDataGroup(self)
         layout.addWidget(self.school_data_group)
 
+        self.school_list = SchoolListGroup(self)
+        layout.addWidget(self.school_list)
+
     @property
     def is_valid(self) -> bool:
-        # this method should be implemented in next iteration
-        # ticket https://github.com/CodeForPoznan/alinka-pyside/issues/89
-        return True
+        return check_if_any_school_exists()
 
     @property
     def error_message(self) -> str | None:
-        # this method should be implemented in next iteration
-        # ticket https://github.com/CodeForPoznan/alinka-pyside/issues/89
+        if not self.is_valid:
+            return "Brak dodanej szkoły w ustawieniach. Dodaj szkołę, aby utworzyć nowy wniosek."
         return None

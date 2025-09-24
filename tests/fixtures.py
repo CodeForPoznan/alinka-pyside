@@ -47,9 +47,9 @@ meeting_data = {
     "date": "2019-07-15",
     "time": "16:00",
     "members": [
-        {"name": "Antoni Stąsz-Lebieź", "function": "przewodniczący zespołu"},
-        {"name": "mgr Leonia Witek-Konuś", "function": "psycholog, tyflopedagog"},
-        {"name": "mgr Eleonora Roseveelt", "function": "socjoterapeuta, tyflopedagog"},
+        {"id": 1, "name": "Antoni Stąsz-Lebieź", "function": "przewodniczący zespołu"},
+        {"id": 2, "name": "mgr Leonia Witek-Konuś", "function": "psycholog, tyflopedagog"},
+        {"id": 3, "name": "mgr Eleonora Roseveelt", "function": "socjoterapeuta, tyflopedagog"},
     ],
 }
 
@@ -137,8 +137,8 @@ decision_data = {
     "meeting_date": date(2023, 4, 19),
     "meeting_time": "8:15",
     "meeting_members": [
-        {"name": "Julian Oleksa", "function": "logopeda, pedagog"},
-        {"name": "Natan Kulisz", "function": "tyflopedagog, logopeda"},
-        {"name": "Kaja Nesterowicz", "function": "tyflopedagog, psycholog"},
+        {"id": 1, "name": "Julian Oleksa", "function": "logopeda, pedagog"},
+        {"id": 2, "name": "Natan Kulisz", "function": "tyflopedagog, logopeda"},
+        {"id": 3, "name": "Kaja Nesterowicz", "function": "tyflopedagog, psycholog"},
     ],
 }

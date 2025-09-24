@@ -70,6 +70,6 @@ def generate_and_save_decision(form_data: DocumentData, generate: bool = False) 
         decision = create_decision_in_db(decision_data.model_dump())
 
     if generate:
-        generate_documents(decision.id)
+        generate_documents(decision.id, destination_path)
 
     return decision

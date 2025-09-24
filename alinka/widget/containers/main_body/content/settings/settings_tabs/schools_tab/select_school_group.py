@@ -4,10 +4,10 @@ from PySide6.QtWidgets import QFrame, QGroupBox, QHBoxLayout, QVBoxLayout, QWidg
 from alinka import rspo_client
 from alinka.constants.common import RSPOSchoolTypes, SchoolTypes
 from alinka.schemas.rspo_schema import BaseEntity, InstitutionRequestBody
-from alinka.widget.components import LabeledComboBoxComponent
+from alinka.widget.components import LabeledComboBoxComponent, ValidationMixin
 
 
-class SelectSchoolGroup(QGroupBox):
+class SelectSchoolGroup(QGroupBox, ValidationMixin):
     def __init__(self, parent: QWidget):
         super().__init__(title="Wybierz szkołę", parent=parent)
         self.parent = parent
@@ -18,37 +18,56 @@ class SelectSchoolGroup(QGroupBox):
 
         location_frame_layout = QHBoxLayout(location_frame)
         location_frame_layout.setContentsMargins(0, 0, 0, 0)
-        self.province_combobox = LabeledComboBoxComponent("Województwo", location_frame)
+        self.province_combobox = LabeledComboBoxComponent("Województwo", location_frame, required=True)
         self.province_combobox.combobox.setPlaceholderText("Wybierz z listy....")
-        self.province_combobox.combobox.currentTextChanged.connect(self.populate_districts_cb)
+        self.province_combobox.combobox.currentTextChanged.connect(self.populate_districts_combobox)
+
         provinces = rspo_client.list_provinces()
         for province in provinces:
             self.province_combobox.combobox.addItem(province.name, province.id)
 
-        self.district_combobox = LabeledComboBoxComponent("Powiat", location_frame)
+        self.district_combobox = LabeledComboBoxComponent("Powiat", location_frame, required=True)
         self.district_combobox.combobox.setPlaceholderText("Wybierz z listy....")
-        self.district_combobox.combobox.currentTextChanged.connect(self.populate_commune_cb)
+        self.district_combobox.combobox.currentTextChanged.connect(self.populate_commune_combobox)
         location_frame_layout.addWidget(self.province_combobox)
         location_frame_layout.addWidget(self.district_combobox)
 
-        self.commune_combobox = LabeledComboBoxComponent("Gmina", self)
+        self.commune_combobox = LabeledComboBoxComponent("Gmina", self, required=True)
         self.commune_combobox.combobox.setPlaceholderText("Wybierz z listy....")
         self.commune_combobox.combobox.currentTextChanged.connect(self.clear_school_types)
         layout.addWidget(location_frame)
         layout.addWidget(self.commune_combobox)
 
-        self.school_type_combobox = LabeledComboBoxComponent("Rodzaj szkoły", self)
+        self.school_type_combobox = LabeledComboBoxComponent("Rodzaj szkoły", self, required=True)
         self.school_type_combobox.combobox.setPlaceholderText("Wybierz rodzaj szkoły...")
         self.school_type_combobox.combobox.addItems(SchoolTypes.values())
-        self.school_type_combobox.combobox.currentTextChanged.connect(self.populate_schools_cb)
+        self.school_type_combobox.combobox.currentTextChanged.connect(self.populate_schools_combobox)
         layout.addWidget(self.school_type_combobox)
 
-        self.schools_combobox = LabeledComboBoxComponent("Szkoła", self)
+        self.schools_combobox = LabeledComboBoxComponent("Szkoła", self, required=True)
         self.schools_combobox.combobox.setPlaceholderText("Wybierz szkołę...")
         self.schools_combobox.combobox.currentTextChanged.connect(self.populate_school_data)
         layout.addWidget(self.schools_combobox)
 
-    def populate_districts_cb(self):
+        self.required_fields = [
+            self.province_combobox,
+            self.district_combobox,
+            self.commune_combobox,
+            self.school_type_combobox,
+            self.schools_combobox,
+        ]
+
+        self.connect_field_clear_handlers(self.required_fields)
+
+    def validate_required_fields(self) -> bool:
+        """Validate required fields and highlight missing ones"""
+        return super().validate_required_fields(self.required_fields)
+
+    def clear_highlights(self):
+        """Clear highlighting from all fields"""
+        super().clear_highlights(self.required_fields)
+
+    def populate_districts_combobox(self):
         selected_province_id = self.province_combobox.combobox.currentData()
         self.district_combobox.combobox.clear()
         self.commune_combobox.combobox.clear()
@@ -59,7 +78,7 @@ class SelectSchoolGroup(QGroupBox):
         for district in districts:
             self.district_combobox.combobox.addItem(district.name, district.id)
 
-    def populate_commune_cb(self):
+    def populate_commune_combobox(self):
         selected_province_id = self.province_combobox.combobox.currentData()
         selected_district_id = self.district_combobox.combobox.currentData()
         self.commune_combobox.combobox.clear()
@@ -104,7 +123,7 @@ class SelectSchoolGroup(QGroupBox):
     def clear_school_types(self):
         self.school_type_combobox.combobox.setCurrentIndex(-1)
 
-    def populate_schools_cb(self):
+    def populate_schools_combobox(self):
         self.schools_combobox.combobox.clear()
         selected_province_id = self.province_combobox.combobox.currentData()
         selected_district_id = self.district_combobox.combobox.currentData()

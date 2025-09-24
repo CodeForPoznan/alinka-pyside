@@ -61,5 +61,5 @@ message=auto
 create-migration: ## Generate migration. Add `message` to migration, ie. `make create-migration message=my_message`
 	docker compose run --rm app bash -c "alembic revision --autogenerate -m \"$(message)\""
 
-migrate:
-	docker compose run --rm app bash -c "alembic upgrade head"
+check-migrations:
+	docker compose -f docker-compose.test.yml run --rm app bash -c "mkdir -p ~/.local/share/Alinka/ && alembic upgrade head && alembic check"

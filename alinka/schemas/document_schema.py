@@ -9,8 +9,8 @@ from alinka.constants import ActivityForm, Issue, Reason
 class AddressData(BaseModel):
     address: str
     town: str | None
-    postal_code: str
-    post: str
+    postal_code: str | None
+    post: str | None
 
     @computed_field
     def full_address(self) -> str:
@@ -63,6 +63,7 @@ class SchoolData(AddressData):
 
 
 class MeetingMemberData(BaseModel):
+    id: int
     name: str = Field(..., examples=["Krystyna Czarnecka"])
     function: str = Field(..., examples=["psycholog", "logopeda"])
 

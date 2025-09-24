@@ -94,7 +94,7 @@ class TestQuery:
         DecisionFactory(child_full_name="abc", child_pesel="74110952166")
 
         result = filter_decisions_by_pesel_child_name(filter_by)
-        assert [r.id for r in result] == expected_ids
+        assert set([r.id for r in result]) == set(expected_ids)
 
 
 class TestQueryWithoutDecisions:

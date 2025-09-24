@@ -1,6 +1,7 @@
 from .db_schema import (
     DecisionDbSchema,
     SchoolDbSchema,
+    StudentData,
     SupportCenterDbSchema,
     TeamMemberDbCreateSchema,
     TeamMemberDbSchema,
@@ -28,6 +29,7 @@ __all__ = [
     "Province",
     "SchoolData",
     "SchoolDbSchema",
+    "StudentData",
     "SupportCenterData",
     "SupportCenterDbSchema",
     "TeamMemberDbCreateSchema",

@@ -1,4 +1,12 @@
-from sqlalchemy import Boolean, Column, Date, DateTime, Integer, String
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Date,
+    DateTime,
+    Integer,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.sqlite import JSON
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.sql import func
@@ -86,6 +94,8 @@ class School(Base):
     town = Column(String(128), nullable=False)
     postal_code = Column(String(12), nullable=False)
     post = Column(String(128), nullable=False)
+
+    __table_args__ = (UniqueConstraint("rspo_id", name="uq_school_rspo_id"),)
 
 
 class SupportCenter(Base):

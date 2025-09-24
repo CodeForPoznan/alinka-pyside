@@ -145,19 +145,20 @@ class DecisionFactory(SQLAlchemyModelFactory):
     @lazy_attribute
     def meeting_members(self):
         desired_members = random.randint(3, 6)
+        db = DecisionFactory._meta.sqlalchemy_session()
 
         if self.create_new_meeting_members:
             members = TeamMemberFactory.create_batch(desired_members)
         else:
-            with DecisionFactory._meta.sqlalchemy_session() as db:
-                desired_members = min(desired_members, db.query(TeamMember).count())
-                members = random.sample(
-                    db.query(TeamMember).all(),
-                    desired_members,
-                )
-
+            desired_members = min(desired_members, db.query(TeamMember).count())
+            members = random.sample(
+                db.query(TeamMember).all(),
+                desired_members,
+            )
+        db.commit()
         return [
             {
+                "id": member.id,
                 "name": member.name,
                 "function": member.function,
             }

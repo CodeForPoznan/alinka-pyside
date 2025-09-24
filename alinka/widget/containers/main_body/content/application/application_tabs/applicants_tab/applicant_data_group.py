@@ -27,6 +27,14 @@ class ApplicantDataGroup(QGroupBox):
         layout.addWidget(self.postal_code, 3, 0)
         layout.addWidget(self.post, 3, 1)
 
+    def populate_applicant_data(self, applicant_data: PersonalData) -> None:
+        self.full_name.text = applicant_data.full_name
+        self.full_name_gen.text = applicant_data.full_name_gen
+        self.address.text = applicant_data.address
+        self.town.text = applicant_data.town
+        self.postal_code.text = applicant_data.postal_code
+        self.post.text = applicant_data.post
+
     def clear(self) -> None:
         self.full_name.clear()
         self.full_name_gen.clear()

@@ -63,7 +63,7 @@ class DecisionDbSchema(BaseDbSchema):
     application_date: date
     meeting_date: date
     meeting_time: str
-    meeting_members: list[dict[str, str]]
+    meeting_members: list[dict[str, int | str]]
 
     file_no: str | None = None
 
@@ -102,3 +102,13 @@ class TeamMemberDbCreateSchema(BaseDbSchema):
 
 class TeamMemberDbSchema(TeamMemberDbCreateSchema):
     id: int
+
+
+class StudentData(BaseModel):
+    id: int
+    full_name: str
+    address: str
+    town: str
+    postal_code: str
+    post: str
+    pesel: str

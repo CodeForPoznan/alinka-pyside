@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QFileDialog, QFrame, QHBoxLayout, QPushButton, QWidget
 
+from alinka.config import settings
 from alinka.schemas.db_schema import DecisionDbSchema
 from alinka.widget.actions import generate_and_save_decision
 
@@ -16,7 +17,6 @@ class ApplicationFooterContainer(QFrame):
         self.save_btn = QPushButton("Zapisz", self)
         self.save_btn.clicked.connect(self.on_save_btn_clicked)
         layout.addWidget(self.print_btn)
-        layout.addWidget(self.save_btn)
 
         self.setVisible(visible)
 

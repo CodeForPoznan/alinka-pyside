@@ -20,14 +20,14 @@ class SelectSupportCenterGroup(QGroupBox):
         location_frame_layout.setContentsMargins(0, 0, 0, 0)
         self.province_combobox = LabeledComboBoxComponent("Województwo", location_frame)
         self.province_combobox.combobox.setPlaceholderText("Wybierz z listy....")
-        self.province_combobox.combobox.currentTextChanged.connect(self.populate_districts_cb)
+        self.province_combobox.combobox.currentTextChanged.connect(self.populate_districts_combobox)
         provinces = rspo_client.list_provinces()
         for province in provinces:
             self.province_combobox.combobox.addItem(province.name, province.id)
 
         self.district_combobox = LabeledComboBoxComponent("Powiat", location_frame)
         self.district_combobox.combobox.setPlaceholderText("Wybierz z listy....")
-        self.district_combobox.combobox.currentTextChanged.connect(self.populate_support_centers_cb)
+        self.district_combobox.combobox.currentTextChanged.connect(self.populate_support_centers_combobox)
         location_frame_layout.addWidget(self.province_combobox)
         location_frame_layout.addWidget(self.district_combobox)
 
@@ -37,7 +37,7 @@ class SelectSupportCenterGroup(QGroupBox):
         layout.addWidget(location_frame)
         layout.addWidget(self.support_center_combobox)
 
-    def populate_districts_cb(self):
+    def populate_districts_combobox(self):
         selected_province_id = self.province_combobox.combobox.currentData()
         self.district_combobox.combobox.clear()
         self.support_center_combobox.combobox.clear()
@@ -45,7 +45,7 @@ class SelectSupportCenterGroup(QGroupBox):
         for district in districts:
             self.district_combobox.combobox.addItem(district.name, district.id)
 
-    def populate_support_centers_cb(self):
+    def populate_support_centers_combobox(self):
         selected_province_id = self.province_combobox.combobox.currentData()
         selected_district_id = self.district_combobox.combobox.currentData()
         self.support_center_combobox.combobox.clear()

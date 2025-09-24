@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGroupBox, QHBoxLayout
 
+from alinka.schemas import DocumentData
 from alinka.widget.components import LabeledInputComponent
 
 
@@ -25,3 +26,11 @@ class GeneralDataGroupContainer(QGroupBox):
                 return component.error_message
 
         return None
+
+    def clear(self) -> None:
+        self.decision_no.clear()
+        self.file_no.clear()
+
+    def populate_data(self, document_data: DocumentData) -> None:
+        self.decision_no.text = document_data.decision_no
+        self.file_no.text = document_data.file_no

@@ -58,6 +58,7 @@ def convert_raw_documents_data(raw_documents_data: DecisionDbSchema) -> Document
         full_name_gen=raw_documents_data.child_full_name_gen,
         pesel=raw_documents_data.child_pesel,
         profession=raw_documents_data.profession,
+        klass=raw_documents_data.klass,
         birth_date=raw_documents_data.child_birth_date,
         birth_place=raw_documents_data.child_birth_place,
     )
@@ -93,6 +94,7 @@ def convert_raw_documents_data(raw_documents_data: DecisionDbSchema) -> Document
         reasons=raw_documents_data.reasons,
         activity_form=raw_documents_data.activity_form,
         decision_no=raw_documents_data.decision_no,
+        file_no=raw_documents_data.file_no,
         school=school_data,
         applicants=get_applicants_data(raw_documents_data),
         application_date=raw_documents_data.application_date,

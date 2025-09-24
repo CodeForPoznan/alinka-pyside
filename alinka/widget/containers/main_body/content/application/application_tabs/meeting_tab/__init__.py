@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 
 from alinka.db.queries import get_team_members
 from alinka.schemas import MeetingData, MeetingMemberData
+from alinka.schemas.document_schema import DocumentData
 from alinka.widget.components import (
     LabeledComboBoxComponent,
     LabeledDateComponent,
@@ -30,6 +31,9 @@ class MeetingTabContainer(QWidget):
         self.model = QStandardItemModel()
         self.model.itemChanged.connect(self.item_changed)
         self.listView = QListView(self.meeting_member_group)
+
+        self.populate_meeting_members()
+
         self.listView.setModel(self.model)
         meeting_member_group_layout.addWidget(self.listView)
 
@@ -48,11 +52,13 @@ class MeetingTabContainer(QWidget):
         layout.addWidget(self.meeting_leader)
         layout.addWidget(meeting_datetime_frame)
 
-    def populate_meeting_members(self):
+    def populate_meeting_members(self, meeting_members: list[MeetingMemberData] | None = None) -> None:
+        self.model.clear()
         for meeting_member_data in self.get_meeting_members_data():
             item = QStandardItem(meeting_member_data["name"])
             item.setData(meeting_member_data["id"])
             item.setCheckable(True)
+            item.setCheckState(Qt.CheckState.Unchecked)
             self.model.appendRow(item)
 
     def showEvent(self, event):
@@ -79,7 +85,9 @@ class MeetingTabContainer(QWidget):
         meeting_member = list(
             filter(lambda meeting_member: meeting_member["id"] == meeting_member_id, meeting_members_data)
         )[0]
-        return MeetingMemberData(name=meeting_member["name"], function=meeting_member["function"])
+        return MeetingMemberData(
+            id=meeting_member["id"], name=meeting_member["name"], function=meeting_member["function"]
+        )
 
     @property
     def meeting_data(self) -> MeetingData:
@@ -106,3 +114,17 @@ class MeetingTabContainer(QWidget):
     def error_message(self) -> str | None:
         # Should be implemented in https://github.com/CodeForPoznan/alinka-pyside/issues/93
         return None
+
+    def clear(self):
+        self.meeting_leader.combobox.setCurrentIndex(-1)
+        self.meeting_date.date_input.setDate(QDate.currentDate())
+        self.meeting_time.clear()
+        self.model.clear()
+
+    def populate_data(self, document_data: DocumentData) -> None:
+        self.clear()
+        meeting_data = document_data.meeting_data
+        self.meeting_date.date_input.setDate(meeting_data.date)
+        self.meeting_time.text = meeting_data.time
+        self.populate_meeting_members(meeting_data.members)
+        self.meeting_leader.combobox.setCurrentText(meeting_data.members[0].name)

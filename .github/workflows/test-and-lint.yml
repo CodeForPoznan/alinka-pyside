@@ -18,3 +18,6 @@ jobs:
     - name: test
       run: |
         make test
+    - name: check missing migrations
+      run: |
+        make check-migrations

@@ -43,13 +43,13 @@ class Institution(BaseEntity):
     postal_code: str = Field(..., validation_alias="hqAddressZipCode")
     post: str = Field(..., validation_alias="hqAddressPostal")
     town: str = Field(..., validation_alias=AliasPath("hqAddressLocality", "name"))
-    street: str = Field(..., validation_alias="hqAddressStreet")
+    street: str | None = Field(None, validation_alias="hqAddressStreet")
     building_no: str = Field(..., validation_alias="hqAddressBuildingNr")
 
     @computed_field
     @property
     def address(self) -> str:
-        return f"{self.street} {self.building_no}"
+        return f"{self.street or self.town} {self.building_no}"
 
 
 class InstitutionRequestBody(BaseModel):

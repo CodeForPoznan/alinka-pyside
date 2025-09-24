@@ -2,14 +2,15 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from alinka.db.queries import get_school_by_name
-from alinka.schemas import ChildData, SchoolData, SchoolDbSchema
+from alinka.schemas import ChildData, DocumentData, SchoolData, SchoolDbSchema
+from alinka.widget.components import ValidationMixin
 
 from .child_data_group import ChildDataGroupContainer
 from .general_data_group import GeneralDataGroupContainer
 from .school_data_group import SchoolDataGroupContainer
 
 
-class ChildDataTabContainer(QWidget):
+class ChildDataTabContainer(QWidget, ValidationMixin):
     def __init__(self, parent: QWidget):
         super().__init__(parent)
         layout = QVBoxLayout(self)
@@ -22,6 +23,23 @@ class ChildDataTabContainer(QWidget):
         layout.addWidget(self.child_data_group)
         layout.addWidget(self.school_data_group)
 
+        self.validation_groups = [self.school_data_group, self.child_data_group]
+
+    def validate_required_fields(self) -> bool:
+        """Validate all validation groups and highlight missing fields"""
+        is_valid = True
+
+        for group in self.validation_groups:
+            if not group.validate_required_fields():
+                is_valid = False
+
+        return is_valid
+
+    def clear_highlights(self):
+        """Clear highlighting from all validation groups"""
+        for group in self.validation_groups:
+            group.clear_highlights()
+
     @property
     def is_valid(self) -> bool:
         return all(
@@ -30,9 +48,8 @@ class ChildDataTabContainer(QWidget):
 
     @property
     def error_message(self) -> str | None:
-        for container in [self.general_data_group, self.child_data_group, self.school_data_group]:
-            if not container.is_valid:
-                return container.error_message
+        if not self.is_valid:
+            return "Uzupełnij formularz"
         return None
 
     @property
@@ -54,7 +71,15 @@ class ChildDataTabContainer(QWidget):
     @property
     def school_data(self) -> SchoolData:
         selected_school_name = self.school_data_group.school.combobox.currentText()
+
+        if not selected_school_name or selected_school_name.strip() == "":
+            raise ValueError("No school selected. Please select a school from the dropdown.")
+
         school: SchoolDbSchema = get_school_by_name(selected_school_name)
+
+        if not school:
+            raise ValueError(f"School '{selected_school_name}' not found in database.")
+
         return SchoolData(
             address=school.address,
             town=school.town,
@@ -64,3 +89,13 @@ class ChildDataTabContainer(QWidget):
             type=school.type,
             parent_organisation=school.parent_organisation_name,
         )
+
+    def clear(self) -> None:
+        self.general_data_group.clear()
+        self.child_data_group.clear()
+        self.school_data_group.clear()
+
+    def populate_data(self, document_data: DocumentData) -> None:
+        self.general_data_group.populate_data(document_data)
+        self.child_data_group.populate_data(document_data)
+        self.school_data_group.populate_data(document_data)
