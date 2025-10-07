@@ -40,7 +40,8 @@ jobs:
       run: |
         Invoke-WebRequest -Uri "https://www.jrsoftware.org/download.php/is.exe" -OutFile "C:\InnoSetupInstaller.exe"
         Start-Process "C:\InnoSetupInstaller.exe" -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART" -Wait
-        $env:Path += ";C:\Program Files (x86)\Inno Setup 6"
+        $env:PATH += ";C:\Program Files (x86)\Inno Setup 6"
+        "PATH=$env:PATH" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
     - name: build PyInstaller package
       run: |
         poetry run pyinstaller alinka.spec --noconfirm
