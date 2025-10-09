@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 
 child_data = {
     "full_name": "Wiktor Rzeźniczak",
@@ -84,8 +84,8 @@ common_data = {
 
 decision_data = {
     "id": 1,
-    "created_at": datetime(2023, 4, 19, 19, 21, 9),
-    "modified_at": datetime(2023, 4, 19, 19, 21, 9),
+    "created_at": datetime(2023, 4, 19, 19, 21, 9, tzinfo=timezone.utc),
+    "modified_at": datetime(2023, 4, 19, 19, 21, 9, tzinfo=timezone.utc),
     "child_full_name": "Oliwier Gierach",
     "child_full_name_gen": "Oliwiera Gierach",
     "child_address": "ul. Słowianska 10",
@@ -132,9 +132,9 @@ decision_data = {
     "reasons": ["znacznie_utrudniajacy"],
     "activity_form": "indywidualne",
     "decision_no": "PPP.2023.AC.224",
-    "application_date": date(2023, 4, 5),
+    "application_date": datetime(2023, 4, 5, tzinfo=timezone.utc),
     "file_no": "4455",
-    "meeting_date": date(2023, 4, 19),
+    "meeting_date": datetime(2023, 4, 19, tzinfo=timezone.utc),
     "meeting_time": "8:15",
     "meeting_members": [
         {"id": 1, "name": "Julian Oleksa", "function": "logopeda, pedagog"},

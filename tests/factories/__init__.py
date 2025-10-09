@@ -309,7 +309,7 @@ class SupportCenterFactory(SQLAlchemyModelFactory):
                 # and expand that dict
                 return {
                     "district_id": district.id,
-                    **faker.random_element(rspos).dict(),
+                    **faker.random_element(rspos).model_dump(),
                 }
 
     @lazy_attribute
@@ -359,7 +359,7 @@ class SchoolFactory(SQLAlchemyModelFactory):
                     province_id=province.id,
                     district_id=district.id,
                     # these ids are basically cached ouptut of
-                    # get_instytution_type_ids for all SchoolTypes
+                    # get_institution_type_ids for all SchoolTypes
                     institution_type_ids=[1, 21, 82, 3, 90, 93, 94, 14, 17, 15, 19, 20, 16, 18],
                 )
             ).items

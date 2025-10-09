@@ -92,7 +92,7 @@ class SelectSchoolGroup(QGroupBox, ValidationMixin):
             self.commune_combobox.combobox.addItem(commune.name, commune.id)
 
     @staticmethod
-    def get_instytution_type_ids(school_type: SchoolTypes | None) -> list[int]:
+    def get_institution_type_ids(school_type: SchoolTypes | None) -> list[int]:
         institution_types = rspo_client.list_institution_types()
         match school_type:
             case SchoolTypes.PRZEDSZKOLE.value:
@@ -129,7 +129,7 @@ class SelectSchoolGroup(QGroupBox, ValidationMixin):
         selected_district_id = self.district_combobox.combobox.currentData()
         selected_commune_id = self.commune_combobox.combobox.currentData()
         selected_school_type = self.school_type_combobox.combobox.currentText()
-        institution_type_ids = self.get_instytution_type_ids(selected_school_type)
+        institution_type_ids = self.get_institution_type_ids(selected_school_type)
         if not all([selected_province_id, selected_district_id, selected_commune_id]):
             return
         self.schools = rspo_client.list_institutions(
