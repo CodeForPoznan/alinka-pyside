@@ -1,11 +1,5 @@
 # Alinka PySide
 
-## Development
-
-If you're using Docker Compose (or Linux in general) for development, be aware
-that Waylaynd as Windows System is causing issues and it would be wise
-to switch X11 (see procedure in https://apploye.com/help/switch-from-wayland-to-xorg-ubuntu/).
-
 ## Release 
 To make a release please follow instruction
 1. Go to "Actions" tab and run "Crate release" workflow (additional instructions [here](https://docs.github.com/en/actions/how-tos/managing-workflow-runs-and-deployments/managing-workflow-runs/manually-running-a-workflow#running-a-workflow)).

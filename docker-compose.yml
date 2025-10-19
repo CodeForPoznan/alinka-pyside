@@ -1,7 +1,11 @@
 services:
   app:
     environment:
-      - DISPLAY=$DISPLAY
+    # X11 (legacy)
+    - DISPLAY=$DISPLAY
+    # Wayland
+    - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+    - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
     container_name: alinka-linux
     build:
       context: .
@@ -10,9 +14,14 @@ services:
     command: python run.py
 
     volumes:
-      - ".:/app/"
-      - "/tmp/.X11-unix:/tmp/.X11-unix"
-      - "./.volumes/data:/home/qtuser/.local/share/Alinka"
-      - "./.volumes/documents:/home/qtuser/Documents/Alinka"
+    # source code
+    - ".:/app/"
+    # X11 (legacy)
+    - "/tmp/.X11-unix:/tmp/.X11-unix"
+    # Wayland
+    - "${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}"
+    # data
+    - "./.volumes/data:/home/qtuser/.local/share/Alinka"
+    - "./.volumes/documents:/home/qtuser/Documents/Alinka"
 
     user: qtuser
