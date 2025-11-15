@@ -139,6 +139,7 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
     def clear(self):
         self.table_view.clearSelection()
+        self.school_type.remove_selection()
 
     @property
     def school_data(self) -> SchoolData | None:

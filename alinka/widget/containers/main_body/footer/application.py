@@ -22,8 +22,12 @@ class ApplicationFooterContainer(QFrame):
         self.cancel_btn.clicked.connect(self.cancel_application)
         self.print_btn = QPushButton("Drukuj dokumenty", self)
         self.print_btn.clicked.connect(self.print_documents)
-        layout.addWidget(self.cancel_btn)
-        layout.addWidget(self.print_btn)
+        self.clear_application_btn = QPushButton("Wyczyść formularz", self)
+        self.clear_application_btn.setStyleSheet("background-color: red; color: white;")
+        self.clear_application_btn.clicked.connect(self.clear_application)
+        layout.addWidget(self.clear_application_btn, stretch=1)
+        layout.addWidget(self.cancel_btn, stretch=1)
+        layout.addWidget(self.print_btn, stretch=3)
 
         self.setVisible(visible)
 
@@ -93,3 +97,6 @@ class ApplicationFooterContainer(QFrame):
         self.content_container = self.footer_container.main_body_container.content_container
         self.content_container.main_body_container.header_container.set_info_message("Tworzenie dokumentu anulowane")
         self.redirect_to_browser()
+
+    def clear_application(self):
+        self.content_container.application_container.clear()
