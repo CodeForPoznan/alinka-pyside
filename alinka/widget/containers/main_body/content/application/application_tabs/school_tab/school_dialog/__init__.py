@@ -14,11 +14,9 @@ class SchoolDialog(ValidationMixin, QDialog):
         super().__init__(parent)
         self.setWindowTitle(title)
         self.setModal(True)
-        
+
         # Enable maximize button and make dialog resizable
-        self.setWindowFlags(
-            Qt.Window | Qt.WindowMaximizeButtonHint | Qt.WindowCloseButtonHint
-        )
+        self.setWindowFlags(Qt.Window | Qt.WindowMaximizeButtonHint | Qt.WindowCloseButtonHint)
         self.setSizeGripEnabled(True)
 
         layout = QVBoxLayout(self)

@@ -47,9 +47,7 @@ class SelectSupportCenterGroup(ValidationMixin, QGroupBox):
                 )
             )
             for support_center in self.support_centers.items:
-                self.support_center_combobox.addItem(
-                    support_center.name, support_center.rspo_id
-                )
+                self.support_center_combobox.addItem(support_center.name, support_center.rspo_id)
             # Explicitly enable the combobox after adding items
             self.support_center_combobox.combobox.setEnabled(True)
         except Exception as e:

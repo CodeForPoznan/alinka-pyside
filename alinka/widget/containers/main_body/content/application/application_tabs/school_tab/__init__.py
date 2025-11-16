@@ -81,9 +81,7 @@ class HandleSchoolFrame(ValidationMixin, QFrame):
         selected_school = self.get_selected_school()
         if not selected_school:
             return
-        dialog = SchoolDialog(
-            self, "Edytuj szkołę", school_data=selected_school
-        )
+        dialog = SchoolDialog(self, "Edytuj szkołę", school_data=selected_school)
         if dialog.exec():
             self.school_list_changed.emit()
 
@@ -106,23 +104,17 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         layout.setAlignment(Qt.AlignTop)
         layout.setSpacing(8)
 
-        self.school_type = LabeledComboBoxComponent(
-            "Rodzaj Szkoły", self, 300, required=True, static=True
-        )
+        self.school_type = LabeledComboBoxComponent("Rodzaj Szkoły", self, 300, required=True, static=True)
         self.school_type.combobox.setPlaceholderText("Wybierz z listy...")
         # Empty option for "no selection"
         self.school_type.addItem("")
         self.school_type.addItems(SchoolTypes.values())
         # Explicitly enable after adding items
         self.school_type.combobox.setEnabled(True)
-        self.school_type.combobox.currentTextChanged.connect(
-            self.populate_school_list
-        )
+        self.school_type.combobox.currentTextChanged.connect(self.populate_school_list)
 
         self.model = QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(
-            ["Nazwa Szkoły", "Typ Szkoły", "Adres", "Miejscowość"]
-        )
+        self.model.setHorizontalHeaderLabels(["Nazwa Szkoły", "Typ Szkoły", "Adres", "Miejscowość"])
 
         self.table_view = QTableView(self)
         self.table_view.setModel(self.model)
@@ -130,9 +122,7 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         self.table_view.setSelectionBehavior(QTableView.SelectRows)
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.resizeColumnsToContents()
-        self.table_view.selectionModel().selectionChanged.connect(
-            self.selection_changed
-        )
+        self.table_view.selectionModel().selectionChanged.connect(self.selection_changed)
 
         # Add modern styling to match the meeting tab
         self.table_view.setStyleSheet(
@@ -183,14 +173,12 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         self.populate_school_list()
 
         self.handle_school_frame = HandleSchoolFrame(self)
-        self.handle_school_frame.school_list_changed.connect(
-            self.populate_school_list
-        )
+        self.handle_school_frame.school_list_changed.connect(self.populate_school_list)
 
         layout.addWidget(self.school_type)
         layout.addWidget(self.table_view)
         layout.addWidget(self.handle_school_frame)
-        
+
         # Add stretch to push all content to the top
         layout.addStretch()
 
@@ -215,11 +203,7 @@ class SchoolTabContainer(ValidationMixin, QWidget):
     def populate_school_list(self):
         self.model.setRowCount(0)
         school_type = self.school_type.combobox.currentText()
-        schools = (
-            get_schools()
-            if not school_type
-            else filter_schools_by_type(school_type)
-        )
+        schools = get_schools() if not school_type else filter_schools_by_type(school_type)
         for school in schools:
             row = [
                 QStandardItem(school.name),
