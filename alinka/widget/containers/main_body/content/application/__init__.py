@@ -1,6 +1,4 @@
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette
-from PySide6.QtWidgets import QStyleFactory, QTabWidget, QWidget
+from PySide6.QtWidgets import QTabWidget, QWidget
 
 from alinka.constants.common import INVALID_FORM_MESSAGE, INVALID_TAB_TOOLTIP_MESSAGE
 from alinka.db.queries import get_support_center_data

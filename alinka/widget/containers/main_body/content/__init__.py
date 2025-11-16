@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QScrollArea, QSizePolicy, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QScrollArea, QVBoxLayout, QWidget
 
 from alinka.widget.components import ValidationMixin
 from alinka.widget.toast import show_validation_error
