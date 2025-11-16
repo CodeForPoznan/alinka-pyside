@@ -116,6 +116,5 @@ class ChildDataGroupContainer(ValidationMixin, QGroupBox):
         return all([c.validate() for c in self.components])
 
     def clear_validation_state(self) -> None:
-        # Clear validation for child components only
         for c in self.components:
             c.clear_validation_state()

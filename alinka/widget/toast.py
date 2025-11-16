@@ -28,7 +28,6 @@ def show_toast(
     if not main_window:
         return None
 
-    # Create toast
     toast = Toast(main_window)
     toast.setAlwaysOnMainScreen(False)
     toast.setDuration(duration)
@@ -36,7 +35,6 @@ def show_toast(
     # Set position to TOP_RIGHT using the library's built-in positioning
     toast.setPosition(ToastPosition.TOP_RIGHT)
 
-    # Set minimum width to ensure messages are fully readable
     toast.setMinimumWidth(400)
 
     # Apply minimal stylesheet - let pyqt-toast handle most styling

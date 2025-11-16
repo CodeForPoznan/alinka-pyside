@@ -21,14 +21,12 @@ class ApplicationFooterContainer(QFrame):
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(12)
 
-        # Business logic: add cancel button (from origin/develop)
         self.cancel_btn = QPushButton("Anuluj", self)
         self.cancel_btn.clicked.connect(self.cancel_application)
         layout.addWidget(self.cancel_btn)
 
         layout.addStretch()
 
-        # UI: better styling for print button (from current branch)
         self.print_btn = QPushButton("Drukuj dokumenty", self)
         self.print_btn.clicked.connect(self.print_documents)
         self.print_btn.setFixedWidth(200)
@@ -56,12 +54,10 @@ class ApplicationFooterContainer(QFrame):
     def validate_document_data(self) -> None:
         if not self.content_container.validate_basic_settings():
             error_message = self.content_container.settings_container.error_message
-            # UI: Use modern toast validation (from current branch)
             show_validation_error(self.window(), error_message)
             return
         if not self.content_container.validate_application():
             error_message = self.content_container.application_container.error_message
-            # UI: Use modern toast validation (from current branch)
             show_validation_error(self.window(), error_message)
             return
 
@@ -79,9 +75,7 @@ class ApplicationFooterContainer(QFrame):
             return
 
         generate_and_save_decision(form_data=self.document_data, generate=True, destination_path=destination_path)
-        # UI: Use modern toast for success message (from current branch)
         show_success(self.window(), "Dokumenty zostały wygenerowane pomyślnie")
-        # Business logic: Proper cleanup and navigation (from origin/develop)
         self.redirect_to_browser()
 
     def cancel_application(self) -> None:

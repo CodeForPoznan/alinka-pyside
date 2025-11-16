@@ -223,7 +223,6 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
         )
 
     def clear_validation_state(self):
-        # Clear validation for child components only
         self.application_date.clear_validation_state()
         self.application_subject.clear_validation_state()
         self.application_reason.clear_validation_state()
