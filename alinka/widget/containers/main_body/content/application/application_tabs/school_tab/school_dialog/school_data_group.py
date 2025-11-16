@@ -15,6 +15,9 @@ class SchoolDataGroup(ValidationMixin, QGroupBox):
         self.parent = parent
         layout = QGridLayout(self)
         layout.setAlignment(Qt.AlignTop)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(5)
+
         self.name = LabeledInputComponent("Nazwa", self, required=True)
         layout.addWidget(self.name, 0, 0, 1, 2)
 

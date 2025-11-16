@@ -78,12 +78,13 @@ class LabeledInputComponent(ValidationMixin, QFrame):
         self.is_required = required
         super().__init__(parent)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)
-        layout.setSpacing(8)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(4)
         label = QLabel(text=text, parent=self)
         label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.line_edit = QLineEdit(self)
-        self.line_edit.setMinimumHeight(36)
+        self.line_edit.setMinimumHeight(32)
+        self.line_edit.setStyleSheet("padding: 6px;")
         if min_length:
             self.line_edit.setMinimumWidth(min_length)
 
@@ -396,7 +397,7 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
 
         provinces = rspo_client.list_provinces()
         for province in provinces:
-            self.province_combobox.combobox.addItem(province.name, province.id)
+            self.province_combobox.addItem(province.name, province.id)
 
         self.district_combobox = LabeledComboBoxComponent("Powiat", self, required=True)
         self.district_combobox.combobox.setPlaceholderText("Wybierz z listy...")
@@ -418,7 +419,7 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
             return
         districts = rspo_client.list_districts(province_id=self.province_id)
         for district in districts:
-            self.district_combobox.combobox.addItem(district.name, district.id)
+            self.district_combobox.addItem(district.name, district.id)
 
     def on_province_changed(self):
         """

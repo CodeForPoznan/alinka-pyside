@@ -20,7 +20,7 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
         super().__init__(title="Wybierz szkołę", parent=parent)
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
-        layout.setSpacing(8)
+        layout.setSpacing(5)
         layout.setContentsMargins(10, 10, 10, 10)
 
         self.province_district_group = SelectProvinceDistrictGroup(self)
@@ -35,6 +35,8 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
         self.school_type_combobox = LabeledComboBoxComponent("Rodzaj szkoły", self, required=True, static=True)
         self.school_type_combobox.combobox.setPlaceholderText("Wybierz rodzaj szkoły...")
         self.school_type_combobox.addItems(SchoolTypes.values())
+        # Explicitly enable after adding items
+        self.school_type_combobox.combobox.setEnabled(True)
         self.school_type_combobox.combobox.currentTextChanged.connect(self.populate_schools_combobox)
         layout.addWidget(self.school_type_combobox)
 

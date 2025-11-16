@@ -32,7 +32,8 @@ class HandleSchoolFrame(ValidationMixin, QFrame):
         super().__init__(parent)
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(10, 8, 10, 8)
+        layout.setSpacing(8)
 
         self.add_school_btn = QPushButton("Dodaj", self)
         self.add_school_btn.clicked.connect(self.add_new_school)
@@ -40,6 +41,32 @@ class HandleSchoolFrame(ValidationMixin, QFrame):
         self.edit_school_btn.clicked.connect(self.edit_school)
         self.remove_school_btn = QPushButton("Usuń", self, enabled=False)
         self.remove_school_btn.clicked.connect(self.remove_school)
+
+        # Apply green styling to match the app theme
+        button_style = """
+            QPushButton {
+                background-color: #10b981;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 6px 16px;
+                font-weight: 500;
+                min-height: 32px;
+            }
+            QPushButton:hover {
+                background-color: #059669;
+            }
+            QPushButton:pressed {
+                background-color: #047857;
+            }
+            QPushButton:disabled {
+                background-color: #d1d5db;
+                color: #9ca3af;
+            }
+        """
+        self.add_school_btn.setStyleSheet(button_style)
+        self.edit_school_btn.setStyleSheet(button_style)
+        self.remove_school_btn.setStyleSheet(button_style)
 
         layout.addWidget(self.add_school_btn)
         layout.addWidget(self.edit_school_btn)
@@ -54,7 +81,9 @@ class HandleSchoolFrame(ValidationMixin, QFrame):
         selected_school = self.get_selected_school()
         if not selected_school:
             return
-        dialog = SchoolDialog(self, "Edytuj szkołę", school_data=selected_school)
+        dialog = SchoolDialog(
+            self, "Edytuj szkołę", school_data=selected_school
+        )
         if dialog.exec():
             self.school_list_changed.emit()
 
@@ -75,15 +104,25 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         self.application_container = parent
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
+        layout.setSpacing(8)
 
-        self.school_type = LabeledComboBoxComponent("Rodzaj Szkoły", self, 300, required=True, static=True)
+        self.school_type = LabeledComboBoxComponent(
+            "Rodzaj Szkoły", self, 300, required=True, static=True
+        )
         self.school_type.combobox.setPlaceholderText("Wybierz z listy...")
-        self.school_type.combobox.addItem("")  # Empty option for "no selection"
-        self.school_type.combobox.addItems(SchoolTypes.values())
-        self.school_type.combobox.currentTextChanged.connect(self.populate_school_list)
+        # Empty option for "no selection"
+        self.school_type.addItem("")
+        self.school_type.addItems(SchoolTypes.values())
+        # Explicitly enable after adding items
+        self.school_type.combobox.setEnabled(True)
+        self.school_type.combobox.currentTextChanged.connect(
+            self.populate_school_list
+        )
 
         self.model = QStandardItemModel()
-        self.model.setHorizontalHeaderLabels(["Nazwa Szkoły", "Typ Szkoły", "Adres", "Miejscowość"])
+        self.model.setHorizontalHeaderLabels(
+            ["Nazwa Szkoły", "Typ Szkoły", "Adres", "Miejscowość"]
+        )
 
         self.table_view = QTableView(self)
         self.table_view.setModel(self.model)
@@ -91,18 +130,69 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         self.table_view.setSelectionBehavior(QTableView.SelectRows)
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.resizeColumnsToContents()
-        self.table_view.selectionModel().selectionChanged.connect(self.selection_changed)
+        self.table_view.selectionModel().selectionChanged.connect(
+            self.selection_changed
+        )
+
+        # Add modern styling to match the meeting tab
+        self.table_view.setStyleSheet(
+            """
+            QTableView {
+                outline: none;
+                background-color: white;
+                gridline-color: #e2e8f0;
+                border: 1px solid #e2e8f0;
+                border-radius: 4px;
+            }
+            QTableView[validationState="invalid"] {
+                border: 2px solid #ef4444;
+                background-color: #fef2f2;
+            }
+            QTableView[validationState="valid"] {
+                border: 2px solid #10b981;
+            }
+            QTableView::item {
+                padding: 8px;
+                border-bottom: 1px solid #e2e8f0;
+                min-height: 28px;
+            }
+            QTableView::item:selected {
+                background-color: #dcfce7;
+                color: black;
+            }
+            QTableView::item:hover {
+                background-color: #f3f4f6;
+            }
+            QHeaderView::section {
+                background-color: #f9fafb;
+                padding: 8px;
+                border: none;
+                border-bottom: 2px solid #e2e8f0;
+                border-right: 1px solid #e2e8f0;
+                font-weight: 600;
+                color: #374151;
+            }
+            QHeaderView::section:last {
+                border-right: none;
+            }
+        """
+        )
 
         header = self.table_view.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Stretch)
         self.populate_school_list()
 
         self.handle_school_frame = HandleSchoolFrame(self)
-        self.handle_school_frame.school_list_changed.connect(self.populate_school_list)
+        self.handle_school_frame.school_list_changed.connect(
+            self.populate_school_list
+        )
 
         layout.addWidget(self.school_type)
         layout.addWidget(self.table_view)
         layout.addWidget(self.handle_school_frame)
+        
+        # Add stretch to push all content to the top
+        layout.addStretch()
 
     def selection_changed(self):
         is_selected = bool(self.get_selected_school())
@@ -125,7 +215,11 @@ class SchoolTabContainer(ValidationMixin, QWidget):
     def populate_school_list(self):
         self.model.setRowCount(0)
         school_type = self.school_type.combobox.currentText()
-        schools = get_schools() if not school_type else filter_schools_by_type(school_type)
+        schools = (
+            get_schools()
+            if not school_type
+            else filter_schools_by_type(school_type)
+        )
         for school in schools:
             row = [
                 QStandardItem(school.name),
@@ -175,15 +269,18 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
     def display_validation_result(self, validation_result: bool) -> None:
         if validation_result:
-            self.toggle_highlight("lightgreen")
+            self.table_view.setProperty("validationState", "valid")
         else:
-            self.toggle_highlight("mistyrose")
+            self.table_view.setProperty("validationState", "invalid")
+        self.table_view.style().unpolish(self.table_view)
+        self.table_view.style().polish(self.table_view)
 
     def toggle_highlight(self, color: str | None) -> None:
-        if color:
-            self.table_view.setStyleSheet(f"QTableView {{ background-color: {color}; }}")
-        else:
-            self.table_view.setStyleSheet("")
+        # Keep this method for compatibility but it's no longer used
+        # Validation now uses the property-based approach
+        pass
 
     def clear_validation_state(self):
-        self.toggle_highlight(None)
+        self.table_view.setProperty("validationState", "")
+        self.table_view.style().unpolish(self.table_view)
+        self.table_view.style().polish(self.table_view)
