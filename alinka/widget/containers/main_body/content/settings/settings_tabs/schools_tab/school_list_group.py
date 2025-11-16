@@ -1,6 +1,13 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
-from PySide6.QtWidgets import QGroupBox, QHeaderView, QSizePolicy, QTableView, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QGroupBox,
+    QHeaderView,
+    QSizePolicy,
+    QTableView,
+    QVBoxLayout,
+    QWidget,
+)
 
 from alinka.db.queries import get_schools
 from alinka.widget.components import ValidationMixin
@@ -20,17 +27,17 @@ class SchoolListGroup(ValidationMixin, QGroupBox):
         self.table_view = QTableView(self)
         self.table_view.setModel(self.model)
         self.table_view.setEditTriggers(QTableView.NoEditTriggers)
-        
+
         self.table_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.table_view.setMinimumHeight(200)  # Ensure minimum height for multiple rows
-        
+
         self.table_view.setAlternatingRowColors(True)
         self.table_view.setShowGrid(True)
-        
+
         header = self.table_view.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Stretch)  # Auto-stretch to fill available width
         header.setStretchLastSection(True)
-        
+
         self.table_view.verticalHeader().setDefaultSectionSize(32)
 
         layout.addWidget(self.table_view)

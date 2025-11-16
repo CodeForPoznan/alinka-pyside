@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette
-from PySide6.QtWidgets import QTabWidget, QWidget, QStyleFactory
+from PySide6.QtWidgets import QStyleFactory, QTabWidget, QWidget
 
 from alinka.constants.common import INVALID_FORM_MESSAGE, INVALID_TAB_TOOLTIP_MESSAGE
 from alinka.db.queries import get_support_center_data
@@ -19,8 +19,7 @@ from .application_tabs import (
 
 
 class ApplicationContainer(ValidationMixin, QTabWidget):
-    def __init__(self, parent: QWidget, content_container,
-                 visible: bool = False):
+    def __init__(self, parent: QWidget, content_container, visible: bool = False):
         super().__init__(parent)
         self.content_container = content_container
         self.id = None
@@ -28,7 +27,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         # custom tab bar for validation highlighting
         custom_tab_bar = ValidationTabBar(self)
         self.setTabBar(custom_tab_bar)
-        
+
         # Track invalid tabs persistently
         self._invalid_tabs = set()
 
@@ -73,7 +72,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
     def clear_validation_state(self) -> None:
         """Clear validation error messages and field highlighting.
-        
+
         Note: This does not clear tab-level validation state (red tabs with icon).
         Tab validation state is only cleared when tabs actually become valid
         or when the form is reset.
@@ -91,29 +90,23 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
     def validate_previous_tab(self, new_index: int) -> None:
         """Validate the previous tab when switching tabs"""
         previous_tab = self.widget(self.previous_tab_index)
-        
+
         if not previous_tab.validate():
             tab_name = self.tabText(self.previous_tab_index)
             self._invalid_tabs.add(self.previous_tab_index)
             self._update_invalid_tabs_display()
-            
-            show_validation_error(
-                self.window(),
-                INVALID_FORM_MESSAGE,
-                tab_names=[tab_name]
-            )
+
+            show_validation_error(self.window(), INVALID_FORM_MESSAGE, tab_names=[tab_name])
         else:
             self._invalid_tabs.discard(self.previous_tab_index)
             self._update_invalid_tabs_display()
-            
+
             if not self._invalid_tabs:
-                header_container = (
-                    self.content_container.main_body_container.header_container
-                )
+                header_container = self.content_container.main_body_container.header_container
                 header_container.clear_message()
 
         current_tab = self.widget(new_index)
-        
+
         if not current_tab.validate():
             self._invalid_tabs.add(new_index)
             self._update_invalid_tabs_display()
@@ -126,11 +119,11 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
     def _update_invalid_tabs_display(self) -> None:
         """Update the visual display of invalid tabs"""
         invalid_list = sorted(list(self._invalid_tabs))
-        
+
         custom_tab_bar = self.tabBar()
         if isinstance(custom_tab_bar, ValidationTabBar):
             custom_tab_bar.set_invalid_tabs(invalid_list)
-        
+
         # Update tooltips
         for index in range(self.count()):
             if index in self._invalid_tabs:
@@ -157,28 +150,24 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         """Clear invalid state from all tabs"""
         self._invalid_tabs.clear()
         self._update_invalid_tabs_display()
-    
+
     def validate(self) -> bool:
         # First validate all tabs
         validation_results = [tab.validate() for tab in self.containers]
-        
+
         if not all(validation_results):
             # Collect all invalid tab names and indices
             invalid_tabs = []
             invalid_indices = []
-            for index, (_, is_valid) in enumerate(
-                zip(self.containers, validation_results)
-            ):
+            for index, (_, is_valid) in enumerate(zip(self.containers, validation_results)):
                 if not is_valid:
                     tab_name = self.tabText(index)
                     invalid_tabs.append(tab_name)
                     invalid_indices.append(index)
-            
+
             self.mark_invalid_tabs(invalid_indices)
-            
-            show_validation_error(
-                self.window(), self.error_message, tab_names=invalid_tabs
-            )
+
+            show_validation_error(self.window(), self.error_message, tab_names=invalid_tabs)
             return False
         else:
             # SUCCESS - clear any remaining invalid markers
@@ -188,30 +177,23 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
     @property
     def document_data(self) -> DocumentData:
         support_center_data = get_support_center_data()
-        support_center_data = SupportCenterData(
-            **support_center_data.model_dump()
-        )
+        support_center_data = SupportCenterData(**support_center_data.model_dump())
 
         return DocumentData(
             id=1,
             file_no=self.child_tab_container.general_data_group.file_no.text,
-            decision_no=self.child_tab_container.general_data_group
-            .decision_no.text,
+            decision_no=self.child_tab_container.general_data_group.decision_no.text,
             child=self.child_tab_container.child_data,
             school=self.school_tab_container.school_data,
             applicants=self.applicants_tab_container.applicants,
-            is_first_parent_address_different=self.applicants_tab_container
-            .is_first_parent_address_different,
-            is_second_parent_address_different=self.applicants_tab_container
-            .is_second_parent_address_different,
+            is_first_parent_address_different=self.applicants_tab_container.is_first_parent_address_different,
+            is_second_parent_address_different=self.applicants_tab_container.is_second_parent_address_different,
             issue=self.application_tab_container.issue,
             period=self.application_tab_container.period,
             reasons=self.application_tab_container.reasons,
             activity_form=self.application_tab_container.activity_form,
-            application_no=self.child_tab_container.general_data_group
-            .decision_no.text,
-            application_date=self.application_tab_container.application_date
-            .date_input.date().toPython(),
+            application_no=self.child_tab_container.general_data_group.decision_no.text,
+            application_date=self.application_tab_container.application_date.date_input.date().toPython(),
             meeting_data=self.meeting_tab_container.meeting_data,
             support_center=support_center_data,
         )

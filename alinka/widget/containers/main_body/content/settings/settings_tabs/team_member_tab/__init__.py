@@ -12,22 +12,20 @@ class TeamMemberTabContainer(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(10)
         layout.setAlignment(Qt.AlignTop)
-        
+
         self.team_members_table_group = TeamMemberTableGroup(self)
         layout.addWidget(self.team_members_table_group, 0)
-        
+
         # Connect signal to refresh meeting tab when team members change
-        self.team_members_table_group.table_model.memberChanged.connect(
-            self._refresh_meeting_tab
-        )
-        
+        self.team_members_table_group.table_model.memberChanged.connect(self._refresh_meeting_tab)
+
         # Add przewodniczący section below table
         self.przewodniczacy_group = QGroupBox("Przewodniczący zespołu", self)
         przewodniczacy_layout = QVBoxLayout(self.przewodniczacy_group)
         layout.addWidget(self.przewodniczacy_group, 0)
-        
+
         layout.addStretch()  # Push content to top
-    
+
     def _refresh_meeting_tab(self):
         """Refresh the meeting tab when team members change."""
         try:

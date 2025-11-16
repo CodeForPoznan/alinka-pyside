@@ -54,10 +54,12 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
             line_edit.setPlaceholderText("np. 24 miesiące")
             line_edit.setStyleSheet("QLineEdit { color: #64748b; }")
         # Hide the dropdown arrow to make it look like a text input
-        self.application_period.combobox.setStyleSheet("""
+        self.application_period.combobox.setStyleSheet(
+            """
             QComboBox::drop-down { width: 0px; border: none; }
             QComboBox::down-arrow { image: none; border: none; }
-        """)
+        """
+        )
         layout.addWidget(self.application_date)
         layout.addWidget(self.application_subject)
         layout.addWidget(self.application_reason)

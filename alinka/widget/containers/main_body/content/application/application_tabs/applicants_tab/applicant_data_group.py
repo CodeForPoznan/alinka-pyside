@@ -61,7 +61,7 @@ class ParentAddressFrame(ValidationMixin, QFrame):
         """Validate address components."""
         for component in self.components:
             component.validate()
-        
+
         is_valid = self.is_valid
         self.display_validation_result(is_valid)
         return is_valid
@@ -83,12 +83,8 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
         layout.setAlignment(Qt.AlignTop)
         layout.setSpacing(8)
         layout.setContentsMargins(10, 10, 10, 10)
-        self.full_name = LabeledInputComponent(
-            "Imię i nazwisko", self, 200, required=True
-        )
-        self.full_name_gen = LabeledInputComponent(
-            "Imię i nazwisko (dopełniacz)", self, 200, required=True
-        )
+        self.full_name = LabeledInputComponent("Imię i nazwisko", self, 200, required=True)
+        self.full_name_gen = LabeledInputComponent("Imię i nazwisko (dopełniacz)", self, 200, required=True)
         layout.addWidget(self.full_name, 0, 0)
         layout.addWidget(self.full_name_gen, 0, 1)
 
@@ -99,7 +95,7 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
 
         self.address_frame = ParentAddressFrame(self)
         layout.addWidget(self.address_frame, 2, 0, 1, 2)
-        
+
         # Set initial visibility
         self.setVisible(initial_visible)
 
@@ -136,21 +132,21 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
     @property
     def is_valid(self) -> bool:
         """Check if the applicant data group is valid.
-        
+
         Checks actual field values regardless of Qt visibility state.
         """
         if not self.full_name.is_valid or not self.full_name_gen.is_valid:
             return False
-        
+
         if self.address_checkbox.is_checked:
             address_components = [
                 self.address_frame.address,
                 self.address_frame.town,
                 self.address_frame.postal_code,
-                self.address_frame.post
+                self.address_frame.post,
             ]
             return all(component.text for component in address_components)
-        
+
         return True
 
     @property
@@ -162,7 +158,7 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
                 return self.full_name.error_message
             if not self.full_name_gen.is_valid:
                 return self.full_name_gen.error_message
-            
+
             # Check address fields if checkbox is checked
             if self.address_checkbox.is_checked:
                 if not self.address_frame.address.text:
@@ -180,11 +176,11 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
         # Validate individual name components
         self.full_name.validate()
         self.full_name_gen.validate()
-        
+
         # Validate address components if checkbox is checked
         if self.address_checkbox.is_checked:
             self.address_frame.validate()
-        
+
         # Overall validation
         is_valid = self.is_valid
         self.display_validation_result(is_valid)

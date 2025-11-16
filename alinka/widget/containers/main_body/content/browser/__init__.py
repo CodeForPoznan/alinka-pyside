@@ -87,7 +87,7 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
         header.setSectionResizeMode(1, QHeaderView.Interactive)
         header.setSectionResizeMode(2, QHeaderView.Interactive)
         header.setSectionResizeMode(3, QHeaderView.Interactive)
-        
+
         header.setMinimumSectionSize(150)
         header.resizeSection(1, 150)
         header.resizeSection(2, 250)

@@ -17,7 +17,7 @@ from alinka.constants.common import CHOOSE_FROM_LIST_MESSAGE
 
 class NoScrollComboBox(QComboBox):
     """QComboBox that ignores mouse wheel events to prevent accidental changes."""
-    
+
     def wheelEvent(self, event):
         """Ignore wheel events to prevent scrolling through options."""
         event.ignore()
@@ -175,7 +175,7 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.combobox.currentTextChanged.connect(self.clear_validation_state)
         layout.addWidget(label)
         layout.addWidget(self.combobox)
-        
+
         # Initialize combobox state
         self._update_combobox_state()
 
@@ -214,19 +214,19 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
     def addItems(self, items: list[str]) -> None:
         self.combobox.addItems(items)
         self._update_combobox_state()
-    
+
     def addItem(self, text: str, userData=None) -> None:
         """Wrapper for combobox.addItem that also updates state."""
         self.combobox.addItem(text, userData)
         self._update_combobox_state()
-    
+
     def _update_combobox_state(self) -> None:
         """Enable/disable combobox based on whether it has selectable items."""
         # If combobox is editable, always keep it enabled (user can type)
         if self.combobox.isEditable():
             self.combobox.setEnabled(True)
             return
-        
+
         # Count items excluding the invitation item if present
         item_count = self.combobox.count()
         if self.is_unselectable and item_count > 0:
@@ -234,10 +234,10 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
             has_selectable_items = item_count > 1
         else:
             has_selectable_items = item_count > 0
-        
+
         # Disable if no selectable items, enable otherwise
         self.combobox.setEnabled(has_selectable_items)
-        
+
         # If disabled and empty, set placeholder-like text
         if not has_selectable_items and not self.is_unselectable:
             # This will be handled by the stylesheet or we could add a
@@ -320,28 +320,30 @@ class LabeledDateComponent(ValidationMixin, QFrame):
         self.date_input = QDateEdit(self)
         self.date_input.setMinimumHeight(36)
         self.date_input.setCalendarPopup(True)
-        
+
         # Disable mouse wheel scrolling
         self.date_input.setFocusPolicy(Qt.StrongFocus)
         self.date_input.installEventFilter(self)
-        
+
         # Set Polish locale for calendar
         from PySide6.QtCore import QLocale
+
         polish_locale = QLocale(QLocale.Polish, QLocale.Poland)
         self.date_input.setLocale(polish_locale)
-        
+
         # Style the calendar widget immediately after creation
         calendar = self.date_input.calendarWidget()
         if calendar:
             self._style_calendar(calendar)
-        
+
         layout.addWidget(label)
         layout.addWidget(self.date_input)
-    
+
     def _style_calendar(self, calendar):
         """Apply aggressive styling to calendar widget."""
         # Set stylesheet on the calendar widget
-        calendar.setStyleSheet("""
+        calendar.setStyleSheet(
+            """
             QCalendarWidget QTableView {
                 selection-background-color: #14b8a6 !important;
                 selection-color: white !important;
@@ -355,26 +357,29 @@ class LabeledDateComponent(ValidationMixin, QFrame):
                 background-color: #14b8a6 !important;
                 color: white !important;
             }
-        """)
-        
+        """
+        )
+
         # Find the table view in the calendar and style it directly
         from PySide6.QtWidgets import QTableView
+
         table_view = calendar.findChild(QTableView)
         if table_view:
             # Use QPalette for more reliable color setting
-            from PySide6.QtGui import QPalette, QColor
+            from PySide6.QtGui import QColor, QPalette
+
             palette = table_view.palette()
             palette.setColor(QPalette.Highlight, QColor("#14b8a6"))
             palette.setColor(QPalette.HighlightedText, QColor("white"))
             table_view.setPalette(palette)
-    
+
     def showEvent(self, event):
         """Apply calendar styling when widget is shown."""
         super().showEvent(event)
         calendar = self.date_input.calendarWidget()
         if calendar:
             self._style_calendar(calendar)
-    
+
     def eventFilter(self, obj, event):
         """Filter wheel events to prevent scrolling."""
         if event.type() == event.Type.Wheel and obj == self.date_input:
@@ -445,15 +450,9 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
             self.province_combobox.combobox.setEnabled(True)
             print(f"Error loading provinces: {e}")
 
-        self.district_combobox = LabeledComboBoxComponent(
-            "Powiat", self, required=True
-        )
-        self.district_combobox.combobox.setPlaceholderText(
-            "Wybierz z listy..."
-        )
-        self.district_combobox.combobox.currentTextChanged.connect(
-            self.on_district_changed
-        )
+        self.district_combobox = LabeledComboBoxComponent("Powiat", self, required=True)
+        self.district_combobox.combobox.setPlaceholderText("Wybierz z listy...")
+        self.district_combobox.combobox.currentTextChanged.connect(self.on_district_changed)
         location_frame_layout.addWidget(self.province_combobox)
         location_frame_layout.addWidget(self.district_combobox)
 
@@ -470,9 +469,7 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         if not self.province_id:
             return
         try:
-            districts = rspo_client.list_districts(
-                province_id=self.province_id
-            )
+            districts = rspo_client.list_districts(province_id=self.province_id)
             for district in districts:
                 self.district_combobox.addItem(district.name, district.id)
         except Exception as e:

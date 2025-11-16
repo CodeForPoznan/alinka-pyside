@@ -10,14 +10,7 @@ from alinka.widget.components import LabeledInputComponent, ValidationMixin
 
 
 class MemberDialog(ValidationMixin, QDialog):
-    def __init__(
-        self,
-        parent,
-        title,
-        _id: int | None = None,
-        name: str | None = None,
-        function: str | None = None
-    ):
+    def __init__(self, parent, title, _id: int | None = None, name: str | None = None, function: str | None = None):
         super().__init__(parent)
         self.setWindowTitle(title)
         self.setModal(True)
@@ -32,13 +25,9 @@ class MemberDialog(ValidationMixin, QDialog):
         inputs_frame = QHBoxLayout()
         inputs_frame.setSpacing(20)
         self.id = _id
-        self.member_name = LabeledInputComponent(
-            "Imię i nazwisko", self, required=True
-        )
+        self.member_name = LabeledInputComponent("Imię i nazwisko", self, required=True)
         self.member_name.text = name
-        self.member_function = LabeledInputComponent(
-            "Funkcja", self, required=True
-        )
+        self.member_function = LabeledInputComponent("Funkcja", self, required=True)
         self.member_function.text = function
         inputs_frame.addWidget(self.member_name)
         inputs_frame.addWidget(self.member_function)
@@ -47,7 +36,7 @@ class MemberDialog(ValidationMixin, QDialog):
         buttons_frame = QHBoxLayout()
         buttons_frame.setSpacing(12)
         buttons_frame.addStretch()
-        
+
         self.save_btn = QPushButton("Zapisz", self)
         self.save_btn.setMinimumWidth(120)
         self.save_btn.setMinimumHeight(35)
@@ -56,7 +45,8 @@ class MemberDialog(ValidationMixin, QDialog):
         self.cancel_btn.setMinimumHeight(35)
 
         # Apply green theme styling
-        self.save_btn.setStyleSheet("""
+        self.save_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #10b981;
                 color: white;
@@ -71,9 +61,11 @@ class MemberDialog(ValidationMixin, QDialog):
             QPushButton:pressed {
                 background-color: #047857;
             }
-        """)
-        
-        self.cancel_btn.setStyleSheet("""
+        """
+        )
+
+        self.cancel_btn.setStyleSheet(
+            """
             QPushButton {
                 background-color: #e5e7eb;
                 color: #374151;
@@ -88,7 +80,8 @@ class MemberDialog(ValidationMixin, QDialog):
             QPushButton:pressed {
                 background-color: #9ca3af;
             }
-        """)
+        """
+        )
 
         self.save_btn.clicked.connect(self.accept)
         self.cancel_btn.clicked.connect(self.reject)

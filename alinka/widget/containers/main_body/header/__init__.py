@@ -7,12 +7,12 @@ class HeaderContainer(QFrame):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(10, 8, 10, 8)
         layout.setSpacing(8)
-        
+
         self.breadcrumb_label = QLabel("", self)
         self.breadcrumb_label.setProperty("breadcrumb", "true")
-        
+
         self.header_content = QLabel("", self)
-        
+
         layout.addWidget(self.breadcrumb_label)
         layout.addStretch()
         layout.addWidget(self.header_content)

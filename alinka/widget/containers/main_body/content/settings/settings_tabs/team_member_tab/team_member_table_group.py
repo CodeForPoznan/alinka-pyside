@@ -23,7 +23,7 @@ from alinka.widget.components import ValidationMixin
 class TeamMemberTableModel(QAbstractTableModel):
     memberAdded = Signal()  # Signal emitted when a new member is successfully added
     memberChanged = Signal()  # Signal emitted when team members list changes
-    
+
     def __init__(self):
         self.insert_row = None
         self.columns = TeamMember.__table__.columns.keys()
@@ -153,13 +153,14 @@ class TeamMemberTableGroup(ValidationMixin, QGroupBox):
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.table.hideColumn(0)  # Hide ID column
-        
+
         # Enable alternating row colors and grid lines for better visibility
         self.table.setAlternatingRowColors(True)
         self.table.setShowGrid(True)
-        
+
         # Make borders visible with stylesheet (single border, not double)
-        self.table.setStyleSheet("""
+        self.table.setStyleSheet(
+            """
             QTableView {
                 border: 1px solid #94a3b8;  /* Single border */
                 gridline-color: #cbd5e1;  /* Lighter gridlines */
@@ -177,8 +178,9 @@ class TeamMemberTableGroup(ValidationMixin, QGroupBox):
                 font-weight: bold;
                 font-size: 13px;
             }
-        """)
-        
+        """
+        )
+
         # Set row height for better readability but don't limit table height
         self.table.verticalHeader().setDefaultSectionSize(40)  # Taller rows for better readability
         # Set reasonable minimum height

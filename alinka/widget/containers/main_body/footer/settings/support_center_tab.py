@@ -12,10 +12,10 @@ class SettingsSupportCenterDataContainer(QFrame):
         self.setVisible(visible)
         layout = QHBoxLayout(self)
         layout.setContentsMargins(9, 9, 9, 9)
-        
+
         # Add stretch to push button to the right
         layout.addStretch()
-        
+
         self.save_btn = QPushButton("Zapisz dane poradni", self)
         self.save_btn.clicked.connect(self.save_support_center_data)
         self.save_btn.setFixedWidth(200)

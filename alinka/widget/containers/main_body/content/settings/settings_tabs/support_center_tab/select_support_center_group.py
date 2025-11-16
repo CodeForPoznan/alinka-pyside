@@ -28,7 +28,7 @@ class SelectSupportCenterGroup(ValidationMixin, QGroupBox):
         self.support_center_combobox.combobox.currentTextChanged.connect(self.populate_support_center_data)
         layout.addWidget(self.province_district_group)
         layout.addWidget(self.support_center_combobox)
-        
+
         self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
 
     def populate_support_centers_combobox(self):
@@ -47,9 +47,7 @@ class SelectSupportCenterGroup(ValidationMixin, QGroupBox):
                 )
             )
             for support_center in self.support_centers.items:
-                self.support_center_combobox.combobox.addItem(
-                    support_center.name, support_center.rspo_id
-                )
+                self.support_center_combobox.combobox.addItem(support_center.name, support_center.rspo_id)
         except Exception as e:
             error_msg = "Błąd ładowania poradni - sprawdź połączenie"
             self.support_center_combobox.combobox.setPlaceholderText(error_msg)
@@ -58,15 +56,10 @@ class SelectSupportCenterGroup(ValidationMixin, QGroupBox):
             print(f"Error loading support centers: {e}")
 
     def populate_support_center_data(self):
-        selected_support_center_rspo = (
-            self.support_center_combobox.combobox.currentData()
-        )
+        selected_support_center_rspo = self.support_center_combobox.combobox.currentData()
         if not selected_support_center_rspo:
             return
-        support_center = [
-            sc for sc in self.support_centers.items
-            if sc.rspo_id == selected_support_center_rspo
-        ][0]
+        support_center = [sc for sc in self.support_centers.items if sc.rspo_id == selected_support_center_rspo][0]
         self.support_center_tab.support_center_data_group.populate_fields(
             province_id=self.province_district_group.province_id,
             district_id=self.province_district_group.district_id,

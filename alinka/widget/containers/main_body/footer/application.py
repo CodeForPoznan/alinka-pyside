@@ -20,14 +20,14 @@ class ApplicationFooterContainer(QFrame):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(12)
-        
+
         # Business logic: add cancel button (from origin/develop)
         self.cancel_btn = QPushButton("Anuluj", self)
         self.cancel_btn.clicked.connect(self.cancel_application)
         layout.addWidget(self.cancel_btn)
-        
+
         layout.addStretch()
-        
+
         # UI: better styling for print button (from current branch)
         self.print_btn = QPushButton("Drukuj dokumenty", self)
         self.print_btn.clicked.connect(self.print_documents)

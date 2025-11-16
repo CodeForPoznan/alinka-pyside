@@ -1,11 +1,12 @@
+from pyqttoast import Toast, ToastPosition, ToastPreset
 from PySide6.QtWidgets import QApplication
-from pyqttoast import Toast, ToastPreset, ToastPosition
-
 
 DEFAULT_TOAST_DURATION = 4000
 
 
-def show_toast(parent, message: str, toast_type: str = "info", duration: int = DEFAULT_TOAST_DURATION, title: str | None = None):
+def show_toast(
+    parent, message: str, toast_type: str = "info", duration: int = DEFAULT_TOAST_DURATION, title: str | None = None
+):
     """
     Show a toast notification.
 
@@ -31,7 +32,7 @@ def show_toast(parent, message: str, toast_type: str = "info", duration: int = D
     toast = Toast(main_window)
     toast.setAlwaysOnMainScreen(False)
     toast.setDuration(duration)
-    
+
     # Set position to TOP_RIGHT using the library's built-in positioning
     toast.setPosition(ToastPosition.TOP_RIGHT)
 
@@ -39,7 +40,8 @@ def show_toast(parent, message: str, toast_type: str = "info", duration: int = D
     toast.setMinimumWidth(400)
 
     # Apply minimal stylesheet - let pyqt-toast handle most styling
-    toast.setStyleSheet("""
+    toast.setStyleSheet(
+        """
         QLabel {
             color: white;
         }
@@ -54,7 +56,8 @@ def show_toast(parent, message: str, toast_type: str = "info", duration: int = D
         QPushButton:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-    """)
+    """
+    )
 
     # Set title if provided
     if title:
@@ -75,7 +78,7 @@ def show_toast(parent, message: str, toast_type: str = "info", duration: int = D
 
     # Show the toast
     toast.show()
-    
+
     return toast
 
 
@@ -113,5 +116,5 @@ def show_validation_error(parent, message: str, tab_names: list[str] | None = No
     if tab_names:
         tabs_text = ", ".join(tab_names)
         title = f"Błąd walidacji ({tabs_text})"
-    
+
     return show_error(parent, message, title=title)

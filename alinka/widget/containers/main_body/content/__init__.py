@@ -17,30 +17,30 @@ class ContentContainer(ValidationMixin, QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
-        
+
         # Create scroll area for content
         self.scroll_area = QScrollArea(self)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setFrameShape(QFrame.NoFrame)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        
+
         # Create content widget
         self.content_widget = QWidget()
         self.content_layout = QVBoxLayout(self.content_widget)
         self.content_layout.setContentsMargins(10, 10, 10, 10)
         self.content_layout.setSpacing(10)
-        
+
         self.application_container = ApplicationContainer(self.content_widget, self, visible=False)
         self.settings_container = SettingsContainer(self.content_widget, self, visible=False)
         self.browser_container = BrowserContainer(self.content_widget, self, visible=True)
-        
+
         self.content_layout.addWidget(self.application_container)
         self.content_layout.addWidget(self.settings_container)
         self.content_layout.addWidget(self.browser_container)
-        
+
         self.scroll_area.setWidget(self.content_widget)
         layout.addWidget(self.scroll_area)
-        
+
         # Initialize breadcrumb for default view (browser)
         self.main_body_container.header_container.set_breadcrumb("Wyszukaj dokument")
 
@@ -67,9 +67,7 @@ class ContentContainer(ValidationMixin, QFrame):
             self.settings_container.mark_invalid_tabs(invalid_indices)
 
             show_validation_error(
-                self.window(),
-                error_message,
-                tab_names=invalid_tab_names if invalid_tab_names else None
+                self.window(), error_message, tab_names=invalid_tab_names if invalid_tab_names else None
             )
             self.sidebar_menu_container.create_documents_btn.setEnabled(False)
             self.show_settings_container()
@@ -107,7 +105,7 @@ class ContentContainer(ValidationMixin, QFrame):
         self.sidebar_menu_container.search_child_btn.setEnabled(False)
         self.sidebar_menu_container.settings_btn.setEnabled(False)
         self.sidebar_menu_container.create_documents_btn.setEnabled(False)
-        
+
         header_container = self.main_body_container.header_container
         self.settings_container.setVisible(False)
         self.application_container.setVisible(True)

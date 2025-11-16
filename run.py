@@ -28,7 +28,7 @@ from alinka.widget.main_window import MainWindow
 app = QApplication(sys.argv)
 
 # Apply qt-material light teal theme as default
-apply_stylesheet(app, theme='light_teal_500.xml', invert_secondary=True)
+apply_stylesheet(app, theme="light_teal_500.xml", invert_secondary=True)
 
 window = MainWindow()
 window.showMaximized()

@@ -21,9 +21,7 @@ class MainWindow(QWidget):
 
         # Apply validation and custom overrides on top of qt-material
         # This ensures validation highlighting and custom styles override
-        custom_styles = (
-            get_validation_stylesheet() + get_custom_overrides_stylesheet()
-        )
+        custom_styles = get_validation_stylesheet() + get_custom_overrides_stylesheet()
         self.setStyleSheet(custom_styles)
 
         central_widget = CentralWidget(self)
@@ -32,5 +30,5 @@ class MainWindow(QWidget):
         layout.setSpacing(0)
         layout.addWidget(central_widget)
         self.setWindowIcon(icon)
-        
+
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)

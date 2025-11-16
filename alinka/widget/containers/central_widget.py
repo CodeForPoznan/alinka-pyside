@@ -12,10 +12,10 @@ class CentralWidget(QWidget):
         layout.setSpacing(10)
         self.side_bar = SidebarMenu(self)
         self.main_body = MainBody(self)
-        
+
         # Set size policies for proper resizing
         self.side_bar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         self.main_body.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        
+
         layout.addWidget(self.side_bar)
         layout.addWidget(self.main_body)

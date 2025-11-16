@@ -53,15 +53,13 @@ class SidebarMenuContainer(QFrame):
         self.settings_btn.clicked.connect(self.show_settings)
         self.button_group.addButton(self.settings_btn)
         layout.addWidget(self.settings_btn, 0, Qt.AlignHCenter)
-        
+
         layout.addStretch(1)
-        
+
         logo_label = QLabel(self)
         logo_pixmap = QPixmap("./statics/alinka.svg")
         if not logo_pixmap.isNull():
-            scaled_pixmap = logo_pixmap.scaled(
-                120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation
-            )
+            scaled_pixmap = logo_pixmap.scaled(120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             logo_label.setPixmap(scaled_pixmap)
             logo_label.setAlignment(Qt.AlignCenter)
             layout.addWidget(logo_label, 0, Qt.AlignHCenter)

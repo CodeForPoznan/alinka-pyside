@@ -10,13 +10,13 @@ class SettingsTeamMembersContainer(QFrame):
         self.setVisible(visible)
         layout = QHBoxLayout(self)
         layout.setContentsMargins(9, 9, 9, 9)
-        
+
         layout.addStretch()
 
         self.add_new_member_btn = QPushButton("Dodaj", self)
         self.add_new_member_btn.clicked.connect(self.add_new_member)
         self.add_new_member_btn.setFixedWidth(120)
-        
+
         self.remove_selected_member_btn = QPushButton("Usuń", self)
         self.remove_selected_member_btn.setEnabled(False)
         self.remove_selected_member_btn.clicked.connect(self.remove_selected_member)
@@ -32,7 +32,7 @@ class SettingsTeamMembersContainer(QFrame):
         )
         row_count = table_model.rowCount()
         table_model.insertRow(row_count)
-    
+
     def _on_member_added(self):
         """Show toast when a team member is successfully added."""
         show_success(self.window(), "Członek zespołu został dodany")

@@ -122,9 +122,9 @@ class HandleMemberFrame(ValidationMixin, QFrame):
     def get_selected_member(self) -> MeetingMemberData | None:
         # Navigate to MeetingTabContainer (parent of parent)
         parent_widget = self.parent()
-        if parent_widget and hasattr(parent_widget, 'parent'):
+        if parent_widget and hasattr(parent_widget, "parent"):
             meeting_tab_container = parent_widget.parent()
-            if not hasattr(meeting_tab_container, 'selected_members_id'):
+            if not hasattr(meeting_tab_container, "selected_members_id"):
                 return None
             selected_members_id = meeting_tab_container.selected_members_id
             if len(selected_members_id) != 1:
@@ -148,23 +148,24 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         meeting_member_group_layout.setAlignment(Qt.AlignTop)
         meeting_member_group_layout.setContentsMargins(10, 5, 10, 5)
         meeting_member_group_layout.setSpacing(5)
-        
+
         self.model = QStandardItemModel()
         self.model.itemChanged.connect(self.item_changed)
         self.listView = QListView(self.meeting_member_group)
         self.listView.setModel(self.model)
         self.listView.setAlternatingRowColors(True)
-        
+
         # Disable editing but allow checkbox interaction
         self.listView.setEditTriggers(QListView.NoEditTriggers)
-        
+
         # Make checkboxes more visible and user-friendly with borders
         self.listView.setSpacing(2)
         self.listView.setWordWrap(False)
         self.listView.setUniformItemSizes(True)
-        
+
         # Add visible borders and styling
-        self.listView.setStyleSheet("""
+        self.listView.setStyleSheet(
+            """
             QListView {
                 outline: none;
                 background-color: white;
@@ -208,27 +209,22 @@ class MeetingTabContainer(ValidationMixin, QWidget):
                 background-color: white;
                 border: 2px solid #059669;
             }
-        """)
-        
+        """
+        )
+
         # Set reasonable height for up to 7 team members
         self.listView.setMinimumHeight(80)
         self.listView.setMaximumHeight(280)
-        self.listView.setSizePolicy(
-            QSizePolicy.Expanding, QSizePolicy.Preferred
-        )
+        self.listView.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         # Add the handle member frame with buttons
         self.handle_member_frame = HandleMemberFrame(self.meeting_member_group)
-        self.handle_member_frame.team_member_changed.connect(
-            self.populate_meeting_members
-        )
+        self.handle_member_frame.team_member_changed.connect(self.populate_meeting_members)
 
         meeting_member_group_layout.addWidget(self.listView, 0)
         meeting_member_group_layout.addWidget(self.handle_member_frame)
 
-        self.meeting_leader = LabeledComboBoxComponent(
-            "Przewodniczący zespołu", self, unselectable=True
-        )
+        self.meeting_leader = LabeledComboBoxComponent("Przewodniczący zespołu", self, unselectable=True)
 
         self.meeting_datetime_frame = MeetingDatetimeFrame(self)
         self.meeting_date = self.meeting_datetime_frame.meeting_date
@@ -237,10 +233,10 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         layout.addWidget(self.meeting_datetime_frame)
         layout.addWidget(self.meeting_member_group)
         layout.addWidget(self.meeting_leader)
-        
+
         # Add stretch to push all content to the top and prevent empty space
         layout.addStretch()
-        
+
         # Populate after all widgets are initialized
         self.populate_meeting_members()
 
@@ -253,22 +249,17 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             if item.checkState() == Qt.CheckState.Checked
         ]
 
-    def populate_meeting_members(
-        self, meeting_members: list[MeetingMemberData] | None = None
-    ) -> None:
+    def populate_meeting_members(self, meeting_members: list[MeetingMemberData] | None = None) -> None:
         # Store current selection
-        selected_ids = self.selected_members_id if hasattr(self, 'model') else []
-        
+        selected_ids = self.selected_members_id if hasattr(self, "model") else []
+
         # Temporarily disconnect to avoid multiple signals during population
         self.model.itemChanged.disconnect(self.item_changed)
-        
+
         self.model.clear()
         for meeting_member_data in self.get_meeting_members_data():
             # Display format: "Name - Function"
-            display_text = (
-                f"{meeting_member_data['name']} - "
-                f"{meeting_member_data['function']}"
-            )
+            display_text = f"{meeting_member_data['name']} - " f"{meeting_member_data['function']}"
             item = QStandardItem(display_text)
             item.setData(meeting_member_data["id"])
             item.setCheckable(True)
@@ -279,18 +270,16 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             else:
                 item.setCheckState(Qt.CheckState.Unchecked)
             self.model.appendRow(item)
-        
+
         # Reconnect the signal
         self.model.itemChanged.connect(self.item_changed)
-        
+
         # Manually trigger item_changed to update button states
         self.item_changed()
-        
+
         # Update the cached IDs
         current_team_members_data = self.get_meeting_members_data()
-        self._last_team_members_ids = {
-            tm["id"] for tm in current_team_members_data
-        }
+        self._last_team_members_ids = {tm["id"] for tm in current_team_members_data}
 
     def refresh_team_members(self):
         """Force refresh of team members list (called from settings when members change)"""
@@ -303,7 +292,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         # Only refresh if team members have changed
         current_team_members_data = self.get_meeting_members_data()
         current_ids = {tm["id"] for tm in current_team_members_data}
-        
+
         if current_ids != self._last_team_members_ids:
             # Team members have changed, need to refresh
             self.model.clear()
@@ -315,13 +304,9 @@ class MeetingTabContainer(ValidationMixin, QWidget):
     def item_changed(self):
         # Update edit/remove button states
         selected_count = len(self.selected_members_id)
-        self.handle_member_frame.edit_member_btn.setEnabled(
-            selected_count == 1
-        )
-        self.handle_member_frame.remove_member_btn.setEnabled(
-            selected_count == 1
-        )
-        
+        self.handle_member_frame.edit_member_btn.setEnabled(selected_count == 1)
+        self.handle_member_frame.remove_member_btn.setEnabled(selected_count == 1)
+
         # Update meeting leader dropdown
         self.meeting_leader.clear_options()
         for row_index in range(0, self.model.rowCount()):
@@ -348,7 +333,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         meeting_members = list()
         # Get the selected leader's ID from the combobox
         leader_id = self.meeting_leader.combobox.currentData()
-        
+
         for row_index in range(0, self.model.rowCount()):
             member = self.model.item(row_index)
             if member.checkState() == Qt.CheckState.Unchecked:
@@ -361,9 +346,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
                 meeting_members.append(meeting_member_data)
 
         return MeetingData(
-            members=meeting_members,
-            date=self.meeting_date.date_input.date().toPython(),
-            time=self.meeting_time.text
+            members=meeting_members, date=self.meeting_date.date_input.date().toPython(), time=self.meeting_time.text
         )
 
     def clear(self):

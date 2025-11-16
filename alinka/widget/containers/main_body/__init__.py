@@ -18,13 +18,12 @@ class MainBody(ValidationMixin, QFrame):
         self.header_container = HeaderContainer(self)
         self.content_container = ContentContainer(self)
         self.footer_container = FooterContainer(self)
-        
+
         # Set size policies for proper resizing
         self.header_container.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.content_container.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.footer_container.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        
+
         layout.addWidget(self.header_container)
         layout.addWidget(self.content_container)
         layout.addWidget(self.footer_container)
-        

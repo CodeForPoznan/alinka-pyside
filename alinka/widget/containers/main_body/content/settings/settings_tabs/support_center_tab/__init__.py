@@ -13,9 +13,9 @@ class SupportCenterTabContainer(ValidationMixin, QWidget):
         super().__init__(parent)
         self.settings_container = parent
         layout = QVBoxLayout(self)
-        layout.setSpacing(2) 
+        layout.setSpacing(2)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setAlignment(Qt.AlignTop) 
+        layout.setAlignment(Qt.AlignTop)
 
         self.select_support_center_group = SelectSupportCenterGroup(self)
         self.support_center_data_group = SupportCenterDataGroup(self)

@@ -24,9 +24,7 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
 
         self.commune_combobox = LabeledComboBoxComponent("Gmina", self, required=True)
         self.commune_combobox.combobox.setPlaceholderText("Wybierz z listy...")
-        self.commune_combobox.combobox.currentTextChanged.connect(
-            self.clear_schools
-        )
+        self.commune_combobox.combobox.currentTextChanged.connect(self.clear_schools)
         layout.addWidget(self.province_district_group)
         layout.addWidget(self.commune_combobox)
 
@@ -91,14 +89,9 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
             return
 
         try:
-            communes = rspo_client.list_communes(
-                province_id=selected_province_id,
-                district_id=selected_district_id
-            )
+            communes = rspo_client.list_communes(province_id=selected_province_id, district_id=selected_district_id)
             for commune in communes:
-                self.commune_combobox.combobox.addItem(
-                    commune.name, commune.id
-                )
+                self.commune_combobox.combobox.addItem(commune.name, commune.id)
         except Exception as e:
             # If we can't load communes, show error and enable manual entry
             error_msg = "Błąd ładowania gmin - sprawdź połączenie"
@@ -114,15 +107,8 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
         selected_district_id = self.province_district_group.district_id
         selected_commune_id = self.commune_combobox.combobox.currentData()
         selected_school_type = self.school_type_combobox.combobox.currentText()
-        institution_type_ids = self.get_institution_type_ids(
-            selected_school_type
-        )
-        if not all([
-            selected_province_id,
-            selected_district_id,
-            selected_commune_id,
-            institution_type_ids
-        ]):
+        institution_type_ids = self.get_institution_type_ids(selected_school_type)
+        if not all([selected_province_id, selected_district_id, selected_commune_id, institution_type_ids]):
             return
 
         self.schools = rspo_client.list_institutions(

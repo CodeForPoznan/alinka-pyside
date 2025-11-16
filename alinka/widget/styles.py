@@ -306,4 +306,3 @@ def get_custom_overrides_stylesheet() -> str:
         margin-top: 10px;
     }}
     """
-

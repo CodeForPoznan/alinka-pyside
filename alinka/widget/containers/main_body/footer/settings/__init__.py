@@ -11,8 +11,7 @@ class SettingsFooterContainer(QFrame):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(16, 12, 16, 12)
         layout.setSpacing(12)
-        self.footer_support_center_data_container = \
-            SettingsSupportCenterDataContainer(self, True)
+        self.footer_support_center_data_container = SettingsSupportCenterDataContainer(self, True)
         layout.addWidget(self.footer_support_center_data_container)
 
     def show_footer_support_center_data_container(self):
