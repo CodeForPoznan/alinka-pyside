@@ -7,7 +7,6 @@ from alinka.widget.custom_tabbar import ValidationTabBar
 from .settings_tabs import (
     AppSettingsTabContainer,
     CreatorsTabContainer,
-    SchoolTabContainer,
     SupportCenterTabContainer,
 )
 
@@ -27,11 +26,9 @@ class SettingsContainer(ValidationMixin, QTabWidget):
         self._invalid_tabs = set()
         
         self.support_center_tab_container = SupportCenterTabContainer(self)
-        self.schools_tab_container = SchoolTabContainer(self)
         self.app_settings_tab_container = AppSettingsTabContainer(self)
         self.creators_tab_container = CreatorsTabContainer(self)
         self.addTab(self.support_center_tab_container, "Dane poradni")
-        self.addTab(self.schools_tab_container, "Szkoły")
         self.addTab(self.app_settings_tab_container, "Ustawienia aplikacji")
         self.addTab(self.creators_tab_container, "O aplikacji")
         self.currentChanged.connect(self.handle_footer_visibility)
@@ -61,12 +58,9 @@ class SettingsContainer(ValidationMixin, QTabWidget):
                 setting_footer_container.setVisible(True)  # Ensure visible
                 setting_footer_container.\
                     show_footer_support_center_data_container()
-            case 1:
-                setting_footer_container.setVisible(True)  # Ensure visible
-                setting_footer_container.show_footer_schools_container()
-            case 2:  # App settings tab - no footer needed
+            case 1:  # App settings tab - no footer needed
                 setting_footer_container.hide()
-            case 3:  # Creators tab - no footer needed
+            case 2:  # Creators tab - no footer needed
                 setting_footer_container.hide()
 
     def update_breadcrumb(self, index: int):

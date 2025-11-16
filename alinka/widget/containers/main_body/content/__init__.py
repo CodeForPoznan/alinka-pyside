@@ -56,9 +56,9 @@ class ContentContainer(ValidationMixin, QFrame):
             for index in range(self.settings_container.count()):
                 tab_widget = self.settings_container.widget(index)
                 tab_name = self.settings_container.tabText(index)
-                # Skip app settings tab (index 3) and creators tab (index 4)
+                # Skip app settings tab (index 1) and creators tab (index 2)
                 # as they don't need validation
-                if index in [3, 4]:
+                if index in [1, 2]:
                     continue
                 if hasattr(tab_widget, "is_valid") and not tab_widget.is_valid:
                     invalid_tab_names.append(tab_name)

@@ -187,4 +187,4 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
     def clear_validation_state(self):
         self.toggle_highlight(None)
-        self.application_container.clear_validation_state()
+        # Only clear own validation state, not parent

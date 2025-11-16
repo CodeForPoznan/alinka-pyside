@@ -133,10 +133,9 @@ class LabeledInputComponent(ValidationMixin, QFrame):
             return self.used_validator.default_error_message
 
     def clear_validation_state(self) -> None:
-        """Reset component and it's parent validation state"""
-        parent = self.parent()
-        if parent and hasattr(parent, 'clear_validation_state'):
-            parent.clear_validation_state()
+        """Reset component validation state"""
+        # Only clear field-level validation, not tab-level validation
+        # Tab-level validation should only be cleared when the tab actually becomes valid
         self.toggle_highlight(None)
 
 
@@ -263,10 +262,8 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.combobox.style().polish(self.combobox)
 
     def clear_validation_state(self) -> None:
-        """Reset component and it's parent validation state"""
-        parent = self.parent()
-        if parent and hasattr(parent, 'clear_validation_state'):
-            parent.clear_validation_state()
+        """Reset component validation state"""
+        # Only clear field-level validation, not tab-level validation
         self.toggle_highlight(None)
 
     @property
@@ -417,10 +414,8 @@ class LabeledDateComponent(ValidationMixin, QFrame):
             return f"Pole '{self.label}' jest wymagane."
 
     def clear_validation_state(self) -> None:
-        """Reset component and it's parent validation state"""
-        parent = self.parent()
-        if parent and hasattr(parent, 'clear_validation_state'):
-            parent.clear_validation_state()
+        """Reset component validation state"""
+        # Only clear field-level validation, not tab-level validation
         self.toggle_highlight(None)
 
 

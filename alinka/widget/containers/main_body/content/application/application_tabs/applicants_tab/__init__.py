@@ -31,14 +31,18 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
         layout.addWidget(add_remove_applicant_btn)
 
         self.containers = [self.applicant_1_data_group, self.applicant_2_data_group]
+        self._applicant_2_active = False
 
     def toggle_applicant_2_group(self):
-        if self.applicant_2_data_group.isVisible():
+        if self._applicant_2_active:
             self.applicant_2_data_group.clear()
-            self.applicant_2_data_group.address_checkbox.checkbox.setChecked(False)
+            checkbox = self.applicant_2_data_group.address_checkbox.checkbox
+            checkbox.setChecked(False)
             self.applicant_2_data_group.setVisible(False)
+            self._applicant_2_active = False
         else:
             self.applicant_2_data_group.setVisible(True)
+            self._applicant_2_active = True
 
     @property
     def applicants(self) -> list[PersonalData]:
@@ -54,7 +58,7 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
 
     @property
     def is_second_applicant_active(self) -> bool:
-        return self.applicant_2_data_group.is_visible
+        return self._applicant_2_active
 
     def clear(self) -> None:
         self.applicant_1_data_group.clear()
@@ -67,29 +71,52 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
 
         if len(applicants) == 1:
             self.applicant_1_data_group.populate_applicant_data(applicants[0])
-            self.applicant_1_data_group.address_checkbox.checkbox.setChecked(checkbox1)
+            checkbox = self.applicant_1_data_group.address_checkbox.checkbox
+            checkbox.setChecked(checkbox1)
             self.applicant_2_data_group.clear()
             self.applicant_2_data_group.setVisible(False)
+            self._applicant_2_active = False
         elif len(applicants) == 2:
             self.applicant_1_data_group.populate_applicant_data(applicants[0])
             self.applicant_2_data_group.populate_applicant_data(applicants[1])
-            self.applicant_1_data_group.address_checkbox.checkbox.setChecked(checkbox1)
-            self.applicant_2_data_group.address_checkbox.checkbox.setChecked(checkbox2)
+            checkbox1_widget = (
+                self.applicant_1_data_group.address_checkbox.checkbox
+            )
+            checkbox1_widget.setChecked(checkbox1)
+            checkbox2_widget = (
+                self.applicant_2_data_group.address_checkbox.checkbox
+            )
+            checkbox2_widget.setChecked(checkbox2)
             self.applicant_2_data_group.setVisible(True)
+            self._applicant_2_active = True
 
     @property
     def is_valid(self) -> bool:
-        return all(applicant.is_valid for applicant in self.containers if applicant.isVisible())
+        if self._applicant_2_active:
+            return (self.applicant_1_data_group.is_valid and
+                    self.applicant_2_data_group.is_valid)
+        return self.applicant_1_data_group.is_valid
 
     def error_messages(self) -> str | None:
-        for applicant in self.containers:
-            if applicant.isVisible() and not applicant.is_valid:
-                return applicant.error_message
+        if not self.applicant_1_data_group.is_valid:
+            return self.applicant_1_data_group.error_message
+        
+        if (self._applicant_2_active and
+                not self.applicant_2_data_group.is_valid):
+            return self.applicant_2_data_group.error_message
 
         return None
 
     def validate(self) -> bool:
-        return all([a.validate() for a in self.containers if a.isVisible()])
+        applicant_1_valid = self.applicant_1_data_group.validate()
+        
+        if self._applicant_2_active:
+            applicant_2_valid = self.applicant_2_data_group.validate()
+            return applicant_1_valid and applicant_2_valid
+        
+        return applicant_1_valid
 
     def clear_validation_state(self) -> None:
-        self.application_container.clear_validation_state()
+        self.applicant_1_data_group.clear_validation_state()
+        if self._applicant_2_active:
+            self.applicant_2_data_group.clear_validation_state()

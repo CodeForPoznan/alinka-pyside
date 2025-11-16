@@ -93,12 +93,8 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         previous_tab = self.widget(self.previous_tab_index)
         
         if not previous_tab.validate():
-            # Previous tab is invalid - add it to invalid set
             tab_name = self.tabText(self.previous_tab_index)
-            
-            # Add this tab to the invalid set
             self._invalid_tabs.add(self.previous_tab_index)
-            # Update the visual state
             self._update_invalid_tabs_display()
             
             show_validation_error(
@@ -107,17 +103,23 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
                 tab_names=[tab_name]
             )
         else:
-            # Previous tab is now valid - remove from invalid set
             self._invalid_tabs.discard(self.previous_tab_index)
-            # Update the visual state
             self._update_invalid_tabs_display()
             
-            # Clear validation message only if all tabs are now valid
             if not self._invalid_tabs:
                 header_container = (
                     self.content_container.main_body_container.header_container
                 )
                 header_container.clear_message()
+
+        current_tab = self.widget(new_index)
+        
+        if not current_tab.validate():
+            self._invalid_tabs.add(new_index)
+            self._update_invalid_tabs_display()
+        else:
+            self._invalid_tabs.discard(new_index)
+            self._update_invalid_tabs_display()
 
         self.previous_tab_index = new_index
 

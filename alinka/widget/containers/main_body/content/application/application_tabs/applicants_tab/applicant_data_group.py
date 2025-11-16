@@ -54,8 +54,26 @@ class ParentAddressFrame(ValidationMixin, QFrame):
         if not self.is_valid:
             for component in self.components:
                 if not component.text:
-                    return f"{component.label_text} jest wymagane"
+                    return f"{component.label} jest wymagane"
         return None
+
+    def validate(self) -> bool:
+        """Validate address components."""
+        for component in self.components:
+            component.validate()
+        
+        is_valid = self.is_valid
+        self.display_validation_result(is_valid)
+        return is_valid
+
+    def display_validation_result(self, validation_result: bool) -> None:
+        """Update visual validation state."""
+        pass
+
+    def clear_validation_state(self) -> None:
+        """Reset validation state for address components."""
+        for component in self.components:
+            component.clear_validation_state()
 
 
 class ApplicantDataGroup(ValidationMixin, QGroupBox):
@@ -65,8 +83,12 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
         layout.setAlignment(Qt.AlignTop)
         layout.setSpacing(8)
         layout.setContentsMargins(10, 10, 10, 10)
-        self.full_name = LabeledInputComponent("Imię i nazwisko", self, 200)
-        self.full_name_gen = LabeledInputComponent("Imię i nazwisko (dopełniacz)", self, 200)
+        self.full_name = LabeledInputComponent(
+            "Imię i nazwisko", self, 200, required=True
+        )
+        self.full_name_gen = LabeledInputComponent(
+            "Imię i nazwisko (dopełniacz)", self, 200, required=True
+        )
         layout.addWidget(self.full_name, 0, 0)
         layout.addWidget(self.full_name_gen, 0, 1)
 
@@ -113,15 +135,13 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
 
     @property
     def is_valid(self) -> bool:
-        """Check if the applicant data group is valid."""
-        if not self.isVisible():
-            return True
+        """Check if the applicant data group is valid.
         
-        # Check if required fields are filled
-        if not self.full_name.text or not self.full_name_gen.text:
+        Checks actual field values regardless of Qt visibility state.
+        """
+        if not self.full_name.is_valid or not self.full_name_gen.is_valid:
             return False
         
-        # If address checkbox is checked, validate address fields
         if self.address_checkbox.is_checked:
             address_components = [
                 self.address_frame.address,
@@ -137,10 +157,13 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
     def error_message(self) -> str | None:
         """Get error message if validation fails."""
         if not self.is_valid:
-            if not self.full_name.text:
-                return "Imię i nazwisko jest wymagane"
-            if not self.full_name_gen.text:
-                return "Imię i nazwisko (dopełniacz) jest wymagane"
+            # Check name fields first
+            if not self.full_name.is_valid:
+                return self.full_name.error_message
+            if not self.full_name_gen.is_valid:
+                return self.full_name_gen.error_message
+            
+            # Check address fields if checkbox is checked
             if self.address_checkbox.is_checked:
                 if not self.address_frame.address.text:
                     return "Adres jest wymagany"
@@ -151,3 +174,30 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
                 if not self.address_frame.post.text:
                     return "Poczta jest wymagana"
         return None
+
+    def validate(self) -> bool:
+        """Validate the applicant data group and update visual state."""
+        # Validate individual name components
+        self.full_name.validate()
+        self.full_name_gen.validate()
+        
+        # Validate address components if checkbox is checked
+        if self.address_checkbox.is_checked:
+            self.address_frame.validate()
+        
+        # Overall validation
+        is_valid = self.is_valid
+        self.display_validation_result(is_valid)
+        return is_valid
+
+    def display_validation_result(self, validation_result: bool) -> None:
+        """Update visual validation state of the group."""
+        # The group box styling will be handled by the parent ValidationMixin
+        pass
+
+    def clear_validation_state(self) -> None:
+        """Reset validation state for this component and its children."""
+        self.full_name.clear_validation_state()
+        self.full_name_gen.clear_validation_state()
+        if self.address_checkbox.is_checked:
+            self.address_frame.clear_validation_state()
