@@ -394,16 +394,9 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         self.province_combobox.combobox.setPlaceholderText("Wybierz z listy...")
         self.province_combobox.combobox.currentTextChanged.connect(self.on_province_changed)
 
-        try:
-            provinces = rspo_client.list_provinces()
-            for province in provinces:
-                self.province_combobox.addItem(province.name, province.id)
-        except Exception as e:
-            error_msg = "Błąd ładowania danych - sprawdź połączenie z internetem"
-            self.province_combobox.combobox.setPlaceholderText(error_msg)
-            self.province_combobox.combobox.setEditable(True)
-            self.province_combobox.combobox.setEnabled(True)
-            print(f"Error loading provinces: {e}")
+        provinces = rspo_client.list_provinces()
+        for province in provinces:
+            self.province_combobox.combobox.addItem(province.name, province.id)
 
         self.district_combobox = LabeledComboBoxComponent("Powiat", self, required=True)
         self.district_combobox.combobox.setPlaceholderText("Wybierz z listy...")
@@ -423,16 +416,9 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         self.district_combobox.clear()
         if not self.province_id:
             return
-        try:
-            districts = rspo_client.list_districts(province_id=self.province_id)
-            for district in districts:
-                self.district_combobox.addItem(district.name, district.id)
-        except Exception as e:
-            error_msg = "Błąd ładowania powiatów - sprawdź połączenie"
-            self.district_combobox.combobox.setPlaceholderText(error_msg)
-            self.district_combobox.combobox.setEditable(True)
-            self.district_combobox.combobox.setEnabled(True)
-            print(f"Error loading districts: {e}")
+        districts = rspo_client.list_districts(province_id=self.province_id)
+        for district in districts:
+            self.district_combobox.combobox.addItem(district.name, district.id)
 
     def on_province_changed(self):
         """
@@ -444,6 +430,5 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         self.populate_districts_combobox()
 
     def on_district_changed(self):
-        """In case of district change we should only trigger selection
-        changed signal"""
+        """In case of district change we should only trigger selection changed signal"""
         self.selection_changed.emit()
