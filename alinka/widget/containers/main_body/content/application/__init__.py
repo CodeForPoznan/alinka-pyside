@@ -30,7 +30,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
         # Track invalid tabs persistently
         self._invalid_tabs = set()
-        
+
         # Track which tabs have been visited/interacted with
         # Only validate tabs that have been visited to avoid errors on pristine tabs
         self._visited_tabs = set()
@@ -50,7 +50,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
         # Mark the first tab as visited since user starts there
         self._visited_tabs.add(0)
-        
+
         self.previous_tab_index = self.currentIndex()
         self.currentChanged.connect(self.validate_previous_tab)
         self.currentChanged.connect(self.update_breadcrumb)
@@ -96,13 +96,13 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
     def validate_previous_tab(self, new_index: int) -> None:
         """Validate the previous tab when switching tabs.
-        
+
         Only validates tabs that have been visited. This prevents showing
         validation errors on tabs the user hasn't interacted with yet.
         """
         # Mark the new tab as visited
         self._visited_tabs.add(new_index)
-        
+
         # Only validate the previous tab if it has been visited
         if self.previous_tab_index in self._visited_tabs:
             previous_tab = self.widget(self.previous_tab_index)
@@ -123,7 +123,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
         # Don't validate the new tab automatically - let the user fill it first
         # Validation will occur when they try to move to another tab or submit
-        
+
         self.previous_tab_index = new_index
 
     def _update_invalid_tabs_display(self) -> None:

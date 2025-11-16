@@ -37,34 +37,30 @@ class MeetingDatetimeFrame(ValidationMixin, QFrame):
         layout.setSpacing(8)
         layout.setAlignment(Qt.AlignTop)
 
-        self.meeting_date = LabeledDateComponent(
-            "Data zespołu", self, required=True
-        )
+        self.meeting_date = LabeledDateComponent("Data zespołu", self, required=True)
         self.meeting_date.date_input.setDate(QDate.currentDate())
-        self.meeting_time = LabeledInputComponent(
-            "Godzina zespołu", self, required=True
-        )
+        self.meeting_time = LabeledInputComponent("Godzina zespołu", self, required=True)
         self.meeting_time.line_edit.setPlaceholderText("np. 10:00")
 
         layout.addWidget(self.meeting_date, 1)
         layout.addWidget(self.meeting_time, 1)
-        
+
         self.components = [self.meeting_date, self.meeting_time]
-    
+
     @property
     def is_valid(self) -> bool:
         return all(c.is_valid for c in self.components)
-    
+
     @property
     def error_message(self) -> str | None:
         for c in self.components:
             if not c.is_valid:
                 return c.error_message
         return None
-    
+
     def validate(self) -> bool:
         return all([c.validate() for c in self.components])
-    
+
     def clear_validation_state(self) -> None:
         for c in self.components:
             c.clear_validation_state()
@@ -245,9 +241,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         meeting_member_group_layout.addWidget(self.listView, 0)
         meeting_member_group_layout.addWidget(self.handle_member_frame)
 
-        self.meeting_leader = LabeledComboBoxComponent(
-            "Przewodniczący zespołu", self, unselectable=True, required=True
-        )
+        self.meeting_leader = LabeledComboBoxComponent("Przewodniczący zespołu", self, unselectable=True, required=True)
 
         self.meeting_datetime_frame = MeetingDatetimeFrame(self)
         self.meeting_date = self.meeting_datetime_frame.meeting_date
@@ -262,10 +256,10 @@ class MeetingTabContainer(ValidationMixin, QWidget):
 
         # Populate after all widgets are initialized
         self.populate_meeting_members()
-        
+
         # Collect all components for validation
         self.components = [self.meeting_datetime_frame, self.meeting_leader]
-    
+
     @property
     def is_valid(self) -> bool:
         # Check if at least one team member is selected
@@ -273,7 +267,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             return False
         # Check all components (date, time, and meeting leader)
         return all(c.is_valid for c in self.components)
-    
+
     @property
     def error_message(self) -> str | None:
         if not self.selected_members_id:
@@ -282,12 +276,12 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             if not c.is_valid:
                 return c.error_message
         return None
-    
+
     def validate(self) -> bool:
         # Validate all components and check if members are selected
         has_members = len(self.selected_members_id) > 0
         components_valid = all([c.validate() for c in self.components])
-        
+
         # Highlight the list view if no members are selected
         if not has_members:
             self.listView.setProperty("validationState", "invalid")
@@ -295,9 +289,9 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             self.listView.setProperty("validationState", "valid")
         self.listView.style().unpolish(self.listView)
         self.listView.style().polish(self.listView)
-        
+
         return has_members and components_valid
-    
+
     def clear_validation_state(self) -> None:
         for c in self.components:
             c.clear_validation_state()
@@ -370,9 +364,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         # Update edit/remove button states
         selected_count = len(self.selected_members_id)
         self.handle_member_frame.edit_member_btn.setEnabled(selected_count == 1)
-        self.handle_member_frame.remove_member_btn.setEnabled(
-            selected_count == 1
-        )
+        self.handle_member_frame.remove_member_btn.setEnabled(selected_count == 1)
 
         # Update meeting leader dropdown
         self.meeting_leader.clear_options()
@@ -381,7 +373,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             if member.checkState() == Qt.CheckState.Unchecked:
                 continue
             self.meeting_leader.addItem(member.text(), member.data())
-        
+
         # Clear validation state when team member selection changes
         if hasattr(self, "listView"):
             self.listView.setProperty("validationState", "")
