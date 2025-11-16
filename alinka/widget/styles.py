@@ -244,7 +244,7 @@ def get_custom_overrides_stylesheet() -> str:
         color: {COLORS["text_primary"]} !important;
         background-color: {COLORS["background"]};
     }}
-   
+
     QComboBox QAbstractItemView::item:selected {{
         color: {COLORS["text_primary"]} !important;
         background-color: {COLORS["tab_hover"]} !important;
