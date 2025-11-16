@@ -226,7 +226,7 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
         return SchoolData(
             rspo_id=selected_school.rspo_id,
-            rspo_type=selected_school.rspo_type,
+            rspo_type=selected_school.rspo_type_id,
             parent_organisation_name=selected_school.parent_organisation_name,
             type=selected_school.type,
             name=selected_school.name,
