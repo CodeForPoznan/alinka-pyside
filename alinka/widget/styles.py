@@ -272,6 +272,7 @@ def get_custom_overrides_stylesheet() -> str:
     
     QCalendarWidget QAbstractItemView::item {{
         color: {COLORS["text_primary"]};
+        font-weight: normal;
     }}
     
     QCalendarWidget QAbstractItemView::item:hover {{
@@ -287,13 +288,13 @@ def get_custom_overrides_stylesheet() -> str:
     QCalendarWidget QAbstractItemView::item:selected:focus {{
         color: white !important;
         background-color: {COLORS["tab_selected_border"]} !important;
+        font-weight: bold;
     }}
     
     /* Calendar selected date - bold white text */
     QCalendarWidget QAbstractItemView:enabled {{
         selection-background-color: {COLORS["tab_selected_border"]};
         selection-color: white;
-        font-weight: bold;
     }}
     
     QCalendarWidget QMenu {{

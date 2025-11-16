@@ -112,7 +112,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
                 self._invalid_tabs.add(self.previous_tab_index)
                 self._update_invalid_tabs_display()
 
-                show_validation_error(self.window(), INVALID_FORM_MESSAGE, tab_names=[tab_name])
+                show_validation_error(self, INVALID_FORM_MESSAGE, tab_names=[tab_name])
             else:
                 self._invalid_tabs.discard(self.previous_tab_index)
                 self._update_invalid_tabs_display()
@@ -177,7 +177,7 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
             self.mark_invalid_tabs(invalid_indices)
 
-            show_validation_error(self.window(), self.error_message, tab_names=invalid_tabs)
+            show_validation_error(self, self.error_message, tab_names=invalid_tabs)
             return False
         else:
             self.clear_invalid_tabs()

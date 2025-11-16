@@ -62,7 +62,8 @@ class SidebarMenuContainer(QFrame):
             scaled_pixmap = logo_pixmap.scaled(120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             logo_label.setPixmap(scaled_pixmap)
             logo_label.setAlignment(Qt.AlignCenter)
-            layout.addWidget(logo_label, 0, Qt.AlignHCenter)
+            logo_label.setFixedWidth(200)
+            layout.addWidget(logo_label, 0, Qt.AlignCenter)
 
     def show_browser(self):
         self.search_child_btn.setChecked(True)
@@ -98,8 +99,9 @@ class SidebarMenu(QFrame):
         self.central_widget = parent
         self.setFrameShape(QFrame.StyledPanel)
         self.setObjectName("SidebarMenu")
-        self.setFixedWidth(200)
+        self.setFixedWidth(220)
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
         self.sidebar_menu_container = SidebarMenuContainer(self)
         layout.addWidget(self.sidebar_menu_container)

@@ -30,4 +30,4 @@ class SettingsSupportCenterDataContainer(QFrame):
         support_center_data = SupportCenterDbSchema(**self.support_center_data.model_dump())
         upsert_support_center(support_center_data.model_dump())
         self.setting_footer_container.footer_container.main_body_container.content_container.validate_basic_settings()
-        show_success(self.window(), "Dane poradni zostały zapisane")
+        show_success(self, "Dane poradni zostały zapisane")

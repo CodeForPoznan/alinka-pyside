@@ -21,7 +21,7 @@ class ParentAddressFrame(ValidationMixin, QFrame):
         layout.addWidget(self.address, 0, 0)
         layout.addWidget(self.town, 0, 1)
 
-        self.postal_code = LabeledInputComponent("Kod pocztowy", self)
+        self.postal_code = LabeledInputComponent("Kod pocztowy", self, required=True)
         self.post = LabeledInputComponent("Poczta", self, required=True)
         layout.addWidget(self.postal_code, 1, 0)
         layout.addWidget(self.post, 1, 1)

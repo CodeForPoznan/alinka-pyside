@@ -54,11 +54,11 @@ class ApplicationFooterContainer(QFrame):
     def validate_document_data(self) -> None:
         if not self.content_container.validate_basic_settings():
             error_message = self.content_container.settings_container.error_message
-            show_validation_error(self.window(), error_message)
+            show_validation_error(self, error_message)
             return
         if not self.content_container.validate_application():
             error_message = self.content_container.application_container.error_message
-            show_validation_error(self.window(), error_message)
+            show_validation_error(self, error_message)
             return
 
     def print_documents(self) -> None:
@@ -75,7 +75,7 @@ class ApplicationFooterContainer(QFrame):
             return
 
         generate_and_save_decision(form_data=self.document_data, generate=True, destination_path=destination_path)
-        show_success(self.window(), "Dokumenty zostały wygenerowane pomyślnie")
+        show_success(self, "Dokumenty zostały wygenerowane pomyślnie")
         self.redirect_to_browser()
 
     def cancel_application(self) -> None:

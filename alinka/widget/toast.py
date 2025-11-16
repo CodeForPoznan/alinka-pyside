@@ -11,24 +11,38 @@ def show_toast(
     Show a toast notification.
 
     Args:
-        parent: Parent widget (usually the main window)
+        parent: Parent widget (should be the central widget or a child of it)
         message: Message text to display
         toast_type: Type of toast - "success", "error", "info", "warning"
         duration: Duration in milliseconds (default: 4000ms)
         title: Optional title for the toast (default: None)
     """
-    # Get the main window to ensure proper parenting
-    main_window = parent.window() if parent else None
-    if not main_window:
+    # Find the central widget to ensure toasts appear within the app
+    # content area
+    toast_parent = parent
+    if parent:
+        # Try to find CentralWidget in the widget hierarchy
+        current = parent
+        while current:
+            if current.__class__.__name__ == "CentralWidget":
+                toast_parent = current
+                break
+            current = current.parent() if hasattr(current, "parent") else None
+
+        # If CentralWidget not found, use the parent as-is
+        if not toast_parent or toast_parent == parent:
+            toast_parent = parent
+
+    if not toast_parent:
         # Fallback: try to get from QApplication
         app = QApplication.instance()
         if app:
-            main_window = app.activeWindow()
+            toast_parent = app.activeWindow()
 
-    if not main_window:
+    if not toast_parent:
         return None
 
-    toast = Toast(main_window)
+    toast = Toast(toast_parent)
     toast.setAlwaysOnMainScreen(False)
     toast.setDuration(duration)
 
@@ -36,12 +50,23 @@ def show_toast(
     toast.setPosition(ToastPosition.TOP_RIGHT)
 
     toast.setMinimumWidth(400)
+    toast.setMaximumWidth(600)
 
     # Apply minimal stylesheet - let pyqt-toast handle most styling
     toast.setStyleSheet(
         """
         QLabel {
             color: white;
+        }
+        QLabel#text {
+            qproperty-wordWrap: true;
+        }
+        QLabel#title {
+            font-weight: bold;
+        }
+        QLabel#icon {
+            qproperty-alignment: AlignVCenter;
+            margin-right: 8px;
         }
         QPushButton {
             color: white;
@@ -57,9 +82,12 @@ def show_toast(
     """
     )
 
-    # Set title if provided
+    # Set title only if provided
     if title:
         toast.setTitle(title)
+    else:
+        # Hide title if not provided
+        toast.setShowDuration(False)
 
     # Set message
     toast.setText(message)
