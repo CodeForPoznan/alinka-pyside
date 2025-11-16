@@ -170,7 +170,6 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
             show_validation_error(self.window(), self.error_message, tab_names=invalid_tabs)
             return False
         else:
-            # SUCCESS - clear any remaining invalid markers
             self.clear_invalid_tabs()
             return True
 

@@ -1,4 +1,5 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import QLocale, Qt, Signal
+from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -7,6 +8,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QTableView,
     QVBoxLayout,
     QWidget,
 )
@@ -76,13 +78,12 @@ class LabeledInputComponent(ValidationMixin, QFrame):
         self.is_required = required
         super().__init__(parent)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)  # Bold margins for better spacing
-        layout.setSpacing(8)  # More spacing between label and input
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
         label = QLabel(text=text, parent=self)
-        # Make label bolder and darker
         label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.line_edit = QLineEdit(self)
-        self.line_edit.setMinimumHeight(36)  # Taller input fields
+        self.line_edit.setMinimumHeight(36)
         if min_length:
             self.line_edit.setMinimumWidth(min_length)
 
@@ -111,7 +112,6 @@ class LabeledInputComponent(ValidationMixin, QFrame):
         self.line_edit.style().polish(self.line_edit)
 
     def toggle_highlight(self, color: str | None) -> None:
-        # Legacy method for backward compatibility
         if color:
             self.line_edit.setProperty("validationState", "valid" if "green" in color.lower() else "invalid")
         else:
@@ -158,11 +158,10 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.is_unselectable = unselectable
         super().__init__(parent)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)  # Bold margins to match input
-        layout.setSpacing(8)  # More spacing between label and combobox
-        layout.setAlignment(Qt.AlignTop)  # Align to top to reduce empty space
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
+        layout.setAlignment(Qt.AlignTop)
         label = QLabel(text=text, parent=self)
-        # Make label bolder and darker
         label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.combobox = NoScrollComboBox(self)
         self.combobox.setMinimumHeight(28)  # Reduced height
@@ -253,7 +252,6 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.combobox.style().polish(self.combobox)
 
     def toggle_highlight(self, color: str | None) -> None:
-        # Legacy method for backward compatibility
         if color:
             self.combobox.setProperty("validationState", "valid" if "green" in color.lower() else "invalid")
         else:
@@ -283,13 +281,11 @@ class LabeledCheckboxComponent(ValidationMixin, QFrame):
     def __init__(self, text, parent, label_position: str = "above"):
         super().__init__(parent)
         label = QLabel(text=text, parent=self)
-        # Make label bolder and darker
         label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.checkbox = QCheckBox(self)
 
         layout_class = QVBoxLayout if label_position == "above" else QHBoxLayout
         layout = layout_class(self)
-        # Match margins and spacing with LabeledInputComponent for alignment
         layout.setContentsMargins(12, 12, 12, 12)
         layout.setSpacing(8)
         layout.addWidget(label)
@@ -312,10 +308,9 @@ class LabeledDateComponent(ValidationMixin, QFrame):
         self.required = required
         self.label = text
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 12, 12, 12)  # Match LabeledInputComponent margins
-        layout.setSpacing(8)  # Match LabeledInputComponent spacing
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
         label = QLabel(text=text, parent=self)
-        # Make label bolder and darker to match LabeledInputComponent
         label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.date_input = QDateEdit(self)
         self.date_input.setMinimumHeight(36)
@@ -326,8 +321,6 @@ class LabeledDateComponent(ValidationMixin, QFrame):
         self.date_input.installEventFilter(self)
 
         # Set Polish locale for calendar
-        from PySide6.QtCore import QLocale
-
         polish_locale = QLocale(QLocale.Polish, QLocale.Poland)
         self.date_input.setLocale(polish_locale)
 
@@ -360,14 +353,8 @@ class LabeledDateComponent(ValidationMixin, QFrame):
         """
         )
 
-        # Find the table view in the calendar and style it directly
-        from PySide6.QtWidgets import QTableView
-
         table_view = calendar.findChild(QTableView)
         if table_view:
-            # Use QPalette for more reliable color setting
-            from PySide6.QtGui import QColor, QPalette
-
             palette = table_view.palette()
             palette.setColor(QPalette.Highlight, QColor("#14b8a6"))
             palette.setColor(QPalette.HighlightedText, QColor("white"))
@@ -399,7 +386,6 @@ class LabeledDateComponent(ValidationMixin, QFrame):
         self.date_input.style().polish(self.date_input)
 
     def toggle_highlight(self, color: str | None) -> None:
-        # Legacy method for backward compatibility
         if color:
             self.date_input.setProperty("validationState", "valid" if "green" in color.lower() else "invalid")
         else:

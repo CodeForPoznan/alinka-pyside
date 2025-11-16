@@ -67,7 +67,6 @@ def get_validation_stylesheet() -> str:
 def get_custom_overrides_stylesheet() -> str:
     """
     Returns custom stylesheet overrides for qt-material themes.
-    These styles ensure consistent branding and accessibility.
     """
     return f"""
     /* Global minimum font size */

@@ -35,14 +35,13 @@ class MeetingDatetimeFrame(ValidationMixin, QFrame):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
-        layout.setAlignment(Qt.AlignTop)  # Align all widgets to top
+        layout.setAlignment(Qt.AlignTop)
 
         self.meeting_date = LabeledDateComponent("Data zespołu", self)
         self.meeting_date.date_input.setDate(QDate.currentDate())
         self.meeting_time = LabeledInputComponent("Godzina zespołu", self, required=True)
-        self.meeting_time.line_edit.setPlaceholderText("np. 10:00")  # Add placeholder text
+        self.meeting_time.line_edit.setPlaceholderText("np. 10:00")
 
-        # Add with stretch factor to maintain consistent sizing
         layout.addWidget(self.meeting_date, 1)
         layout.addWidget(self.meeting_time, 1)
 
@@ -138,7 +137,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         super().__init__(parent)
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
-        layout.setSpacing(8)  # Reduced spacing for more compact layout
+        layout.setSpacing(8)
 
         # Track team member IDs to detect changes
         self._last_team_members_ids = set()
@@ -155,8 +154,10 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         self.listView.setModel(self.model)
         self.listView.setAlternatingRowColors(True)
 
-        # Disable editing but allow checkbox interaction
+        # Disable row selection - only allow checkbox interaction
+        self.listView.setSelectionMode(QListView.NoSelection)
         self.listView.setEditTriggers(QListView.NoEditTriggers)
+        self.listView.setFocusPolicy(Qt.NoFocus)
 
         # Make checkboxes more visible and user-friendly with borders
         self.listView.setSpacing(2)
@@ -184,10 +185,6 @@ class MeetingTabContainer(ValidationMixin, QWidget):
             }
             QListView::item:hover {
                 background-color: #f3f4f6;
-            }
-            QListView::item:selected {
-                background-color: #e5e7eb;
-                color: black;
             }
             QListView::indicator {
                 width: 22px;

@@ -64,6 +64,5 @@ class ChildDataTabContainer(ValidationMixin, QWidget):
         return all([c.validate() for c in self.containers])
 
     def clear_validation_state(self) -> None:
-        # Clear validation for child components only
         for container in self.containers:
             container.clear_validation_state()

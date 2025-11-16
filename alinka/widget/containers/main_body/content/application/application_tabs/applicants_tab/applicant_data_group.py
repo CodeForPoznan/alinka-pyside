@@ -173,23 +173,14 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
 
     def validate(self) -> bool:
         """Validate the applicant data group and update visual state."""
-        # Validate individual name components
         self.full_name.validate()
         self.full_name_gen.validate()
 
-        # Validate address components if checkbox is checked
         if self.address_checkbox.is_checked:
             self.address_frame.validate()
 
-        # Overall validation
         is_valid = self.is_valid
-        self.display_validation_result(is_valid)
         return is_valid
-
-    def display_validation_result(self, validation_result: bool) -> None:
-        """Update visual validation state of the group."""
-        # The group box styling will be handled by the parent ValidationMixin
-        pass
 
     def clear_validation_state(self) -> None:
         """Reset validation state for this component and its children."""
