@@ -18,6 +18,8 @@ pydantic-settings = "^2.5.2"
 alembic = "^1.13.2"
 requests = "^2.32.3"
 platformdirs = "^4.3.6"
+pyqt-toast-notification = "^1.0.0"
+qt-material = "^2.14"
 
 [tool.poetry.group.dev]
 optional = true

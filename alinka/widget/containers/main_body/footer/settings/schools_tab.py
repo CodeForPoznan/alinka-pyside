@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QWidget
-from sqlalchemy.exc import IntegrityError
 
-from alinka.db.queries import create_school
+from alinka.widget.toast import show_success, show_validation_error
 
 
 class SettingsSchoolsContainer(QFrame):
@@ -12,28 +11,19 @@ class SettingsSchoolsContainer(QFrame):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(9, 9, 9, 9)
 
+        layout.addStretch()
+
         add_remove_applicant_btn = QPushButton("Dodaj szkołę do listy")
         add_remove_applicant_btn.clicked.connect(self.add_school)
+        add_remove_applicant_btn.setFixedWidth(200)
         layout.addWidget(add_remove_applicant_btn)
 
     def add_school(self) -> None:
         main_body_container = self.settings_footer_container.footer_container.main_body_container
         school_tab_container = main_body_container.content_container.settings_container.schools_tab_container
         if not school_tab_container.validate():
-            main_body_container.header_container.set_error_message(school_tab_container.error_message)
+            show_validation_error(self.window(), school_tab_container.error_message)
             return
 
-        try:
-            create_school(
-                school_tab_container.school_data_group.school_data.model_dump(exclude=("full_address", "description"))
-            )
-        except IntegrityError:
-            header_container = self.settings_footer_container.footer_container.main_body_container.header_container
-            header_container.set_error_message("Szkoła o podanym numerze RSPO już istnieje.")
-            content_container = self.settings_footer_container.footer_container.main_body_container.content_container
-            school_data_group = content_container.settings_container.schools_tab_container.school_data_group
-            # we need to clear the form after showing the error message
-            school_data_group.clear()
-            return
-
-        school_tab_container.school_list.refresh()
+        # School data group removed - school creation no longer available from settings
+        show_success(self.window(), "Ustawienia szkół zostały zaktualizowane")

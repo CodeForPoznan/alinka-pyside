@@ -10,7 +10,8 @@ class FooterContainer(QFrame):
         super().__init__(parent)
         self.main_body_container = parent
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(9, 9, 9, 9)
+        layout.setContentsMargins(10, 8, 10, 8)
+        layout.setSpacing(10)
         self.application_footer_container = ApplicationFooterContainer(self, visible=False)
         layout.addWidget(self.application_footer_container)
 

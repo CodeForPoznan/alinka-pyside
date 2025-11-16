@@ -1,3 +1,4 @@
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from alinka.db.queries import get_support_center_data
@@ -12,11 +13,15 @@ class SupportCenterTabContainer(ValidationMixin, QWidget):
         super().__init__(parent)
         self.settings_container = parent
         layout = QVBoxLayout(self)
+        layout.setSpacing(2) 
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setAlignment(Qt.AlignTop) 
 
         self.select_support_center_group = SelectSupportCenterGroup(self)
         self.support_center_data_group = SupportCenterDataGroup(self)
-        layout.addWidget(self.select_support_center_group)
-        layout.addWidget(self.support_center_data_group)
+        layout.addWidget(self.select_support_center_group, 0)
+        layout.addWidget(self.support_center_data_group, 0)
+        layout.addStretch()
 
     @property
     def support_center_data(self):

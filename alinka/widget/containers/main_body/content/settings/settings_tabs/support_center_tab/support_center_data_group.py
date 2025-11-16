@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QGroupBox, QWidget
+from PySide6.QtWidgets import QGridLayout, QGroupBox, QSizePolicy, QWidget
 
 from alinka.db.queries import get_support_center_data
 from alinka.schemas.document_schema import SupportCenterData
@@ -13,8 +13,12 @@ class SupportCenterDataGroup(ValidationMixin, QGroupBox):
 
     def __init__(self, parent: QWidget):
         super().__init__(title="Dane poradni", parent=parent)
+        # Set size policy to minimize vertical space
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         layout = QGridLayout(self)
         layout.setAlignment(Qt.AlignTop)
+        layout.setSpacing(4)  # Minimal spacing
+        layout.setContentsMargins(10, 10, 10, 10)  # Compact margins
 
         self.name_nominative = LabeledInputComponent("Nazwa poradnii (mianownik)", self, min_length=100)
         layout.addWidget(self.name_nominative, 0, 0, 1, 2)

@@ -9,10 +9,14 @@ class BrowserFooterContainer(QFrame):
         super().__init__(parent)
         self.footer_container = parent
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(9, 9, 9, 9)
+        layout.setContentsMargins(16, 12, 16, 12)
+        layout.setSpacing(12)
+        layout.addStretch()
+
         self.create_new_btn = QPushButton("Utwórz nowy", self)
         self.create_new_btn.clicked.connect(self.create_new_decision)
         self.create_new_btn.setEnabled(False)
+        self.create_new_btn.setFixedWidth(200)
         layout.addWidget(self.create_new_btn)
 
         self.setVisible(visible)

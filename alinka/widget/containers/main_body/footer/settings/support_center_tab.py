@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton, QWidget
 
 from alinka.db.queries import upsert_support_center
 from alinka.schemas import SupportCenterData, SupportCenterDbSchema
+from alinka.widget.toast import show_success
 
 
 class SettingsSupportCenterDataContainer(QFrame):
@@ -11,8 +12,13 @@ class SettingsSupportCenterDataContainer(QFrame):
         self.setVisible(visible)
         layout = QHBoxLayout(self)
         layout.setContentsMargins(9, 9, 9, 9)
+        
+        # Add stretch to push button to the right
+        layout.addStretch()
+        
         self.save_btn = QPushButton("Zapisz dane poradni", self)
         self.save_btn.clicked.connect(self.save_support_center_data)
+        self.save_btn.setFixedWidth(200)
         layout.addWidget(self.save_btn)
 
     @property
@@ -24,3 +30,4 @@ class SettingsSupportCenterDataContainer(QFrame):
         support_center_data = SupportCenterDbSchema(**self.support_center_data.model_dump())
         upsert_support_center(support_center_data.model_dump())
         self.setting_footer_container.footer_container.main_body_container.content_container.validate_basic_settings()
+        show_success(self.window(), "Dane poradni zostały zapisane")

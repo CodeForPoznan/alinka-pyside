@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt, Signal
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QGroupBox,
@@ -10,23 +10,37 @@ from PySide6.QtWidgets import (
 )
 
 from alinka.db.models import TeamMember
-from alinka.db.queries import delete_team_member, get_team_members, upsert_team_members
+from alinka.db.queries import (
+    delete_team_member,
+    get_team_members,
+    insert_team_member,
+    update_team_member,
+)
 from alinka.schemas import TeamMemberDbCreateSchema, TeamMemberDbSchema
 from alinka.widget.components import ValidationMixin
 
 
 class TeamMemberTableModel(QAbstractTableModel):
+    memberAdded = Signal()  # Signal emitted when a new member is successfully added
+    memberChanged = Signal()  # Signal emitted when team members list changes
+    
     def __init__(self):
         self.insert_row = None
         self.columns = TeamMember.__table__.columns.keys()
         self.header_labels = ["id", "Imię i nazwisko", "Specjalizacja"]
+        self._cached_team_members = []
+        self._refresh_data()
         super().__init__()
+
+    def _refresh_data(self):
+        """Refresh the cached team members data from database."""
+        self._cached_team_members = get_team_members()
 
     def columnCount(self, parent: QModelIndex = QModelIndex()) -> int:
         return len(self.columns)
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
-        return len(get_team_members()) + (1 if self.unsaved_insert_row() else 0)
+        return len(self._cached_team_members) + (1 if self.unsaved_insert_row() else 0)
 
     def flags(self, index: QModelIndex) -> Qt.ItemFlags:
         """Set flags for each cell."""
@@ -53,7 +67,7 @@ class TeamMemberTableModel(QAbstractTableModel):
             column_key = self.columns[index.column()]
             if self.unsaved_insert_row() and self.is_last_row(index):
                 return self.insert_row.get(column_key, "")
-            return get_team_members()[index.row()].model_dump()[column_key]
+            return self._cached_team_members[index.row()].model_dump()[column_key]
         return None
 
     def setData(self, index: QModelIndex, value: object, role: int = Qt.EditRole) -> bool:
@@ -72,10 +86,14 @@ class TeamMemberTableModel(QAbstractTableModel):
                 except ValidationError:
                     pass
                 else:
-                    upsert_team_members([tm])
+                    insert_team_member(tm)
                     self.insert_row = None
+                    self._refresh_data()  # Refresh cached data
 
                     self.layoutChanged.emit()
+                    # Emit signal for successful member addition
+                    self.memberAdded.emit()
+                    self.memberChanged.emit()  # Emit change signal
                     return True
             return False
 
@@ -85,9 +103,11 @@ class TeamMemberTableModel(QAbstractTableModel):
             tm = TeamMemberDbSchema.model_validate(tm_dict)
         except ValidationError:
             return False
-        upsert_team_members([tm])
+        update_team_member(tm)
+        self._refresh_data()  # Refresh cached data
 
         self.dataChanged.emit(index, index)
+        self.memberChanged.emit()  # Emit change signal
         return True
 
     def removeRow(self, row: int) -> bool:
@@ -96,8 +116,10 @@ class TeamMemberTableModel(QAbstractTableModel):
         else:
             db_id = self.data(self.createIndex(row, 0))
             delete_team_member(db_id)
+            self._refresh_data()  # Refresh cached data
 
         self.layoutChanged.emit()
+        self.memberChanged.emit()  # Emit change signal
         return True
 
     def insertRow(self, row: int) -> bool:
@@ -120,26 +142,56 @@ class TeamMemberTableGroup(ValidationMixin, QGroupBox):
         self.team_member_tab_container = parent
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(8)
 
         self.table_model = TeamMemberTableModel()
 
         self.table = QTableView()
         self.table.clicked.connect(self.row_selected_event)
         self.table.setModel(self.table_model)
-        self.table.resizeColumnsToContents()
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.table.hideColumn(0)
+        self.table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.table.hideColumn(0)  # Hide ID column
+        
+        # Enable alternating row colors and grid lines for better visibility
+        self.table.setAlternatingRowColors(True)
+        self.table.setShowGrid(True)
+        
+        # Make borders visible with stylesheet (single border, not double)
+        self.table.setStyleSheet("""
+            QTableView {
+                border: 1px solid #94a3b8;  /* Single border */
+                gridline-color: #cbd5e1;  /* Lighter gridlines */
+            }
+            QTableView::item {
+                padding: 8px;
+            }
+            QHeaderView::section {
+                background-color: #f1f5f9;
+                color: #000000;  /* Black text for headers */
+                border: 1px solid #94a3b8;  /* Single border */
+                border-top: none;  /* Remove top border to avoid double */
+                border-left: none;  /* Remove left border to avoid double */
+                padding: 10px;
+                font-weight: bold;
+                font-size: 13px;
+            }
+        """)
+        
+        # Set row height for better readability but don't limit table height
+        self.table.verticalHeader().setDefaultSectionSize(40)  # Taller rows for better readability
+        # Set reasonable minimum height
+        self.table.setMinimumHeight(200)
 
         header = self.table.horizontalHeader()
-        header.setSectionResizeMode(1, QHeaderView.Stretch)
-        header.setSectionResizeMode(2, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Stretch)  # Name - stretch to fill
+        header.setSectionResizeMode(2, QHeaderView.Stretch)  # Specialization - stretch to fill
+        header.setMinimumSectionSize(150)  # Minimum column width
 
         layout.addWidget(self.table)
 
     def row_selected_event(self, item, **kwargs):
-        footer_container = (
-            self.team_member_tab_container.settings_container.content_container.main_body_container.footer_container
-        )
-        footer_container.settings_footer_container.footer_team_members_container.remove_selected_member_btn.setEnabled(
-            True
-        )
+        # Footer functionality removed since TeamMember tab is no longer
+        # in settings
+        pass

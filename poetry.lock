@@ -730,7 +730,7 @@ version = "25.0"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"},
     {file = "packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"},
@@ -1162,6 +1162,21 @@ packaging = ">=22.0"
 setuptools = ">=42.0.0"
 
 [[package]]
+name = "pyqt-toast-notification"
+version = "1.3.3"
+description = "A fully customizable toast notification library for PyQt and PySide"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "pyqt-toast-notification-1.3.3.tar.gz", hash = "sha256:595dbf4b9edee77329e2514255d9a9415ff5d70708c50790db0fee207d323a29"},
+    {file = "pyqt_toast_notification-1.3.3-py3-none-any.whl", hash = "sha256:65ba011f536aa728f0b3ad3a452ab2b578a17f6e0e3468d6f1dc97f5b1cd4d15"},
+]
+
+[package.dependencies]
+QtPy = ">=2.4.1"
+
+[[package]]
 name = "pyreadline3"
 version = "3.5.4"
 description = "A python implementation of GNU readline."
@@ -1295,6 +1310,39 @@ files = [
     {file = "pywin32-ctypes-0.2.3.tar.gz", hash = "sha256:d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755"},
     {file = "pywin32_ctypes-0.2.3-py3-none-any.whl", hash = "sha256:8a1513379d709975552d202d942d9837758905c8d01eb82b8bcc30918929e7b8"},
 ]
+
+[[package]]
+name = "qt-material"
+version = "2.17"
+description = "Material inspired stylesheet for PySide6 and PyQt6."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "qt_material-2.17-py3-none-any.whl", hash = "sha256:660523341ae45b79d222bf15e202ec76ba3bf5e7e82170b66759738d7bb4873d"},
+    {file = "qt_material-2.17.tar.gz", hash = "sha256:b500a0c1f5ef8f46a8cf037d1aa5bdf9ea4eb618180b6332539dfbdd0647ad0d"},
+]
+
+[package.dependencies]
+Jinja2 = "*"
+
+[[package]]
+name = "qtpy"
+version = "2.4.3"
+description = "Provides an abstraction layer on top of the various Qt bindings (PyQt5/6 and PySide2/6)."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "QtPy-2.4.3-py3-none-any.whl", hash = "sha256:72095afe13673e017946cc258b8d5da43314197b741ed2890e563cf384b51aa1"},
+    {file = "qtpy-2.4.3.tar.gz", hash = "sha256:db744f7832e6d3da90568ba6ccbca3ee2b3b4a890c3d6fbbc63142f6e4cdf5bb"},
+]
+
+[package.dependencies]
+packaging = "*"
+
+[package.extras]
+test = ["pytest (>=6,!=7.0.0,!=7.0.1)", "pytest-cov (>=3.0.0)", "pytest-qt"]
 
 [[package]]
 name = "requests"
@@ -1562,4 +1610,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.12"
-content-hash = "2ee0ad0e24a6cb69d994eae670274a3b66e7c2a49fd916cf6f6dd445c078cf0d"
+content-hash = "617784dcef30e0235c9505eec6eed1be39db14f0fa6c3cf170ddcaa546a9c007"

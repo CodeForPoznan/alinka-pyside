@@ -223,7 +223,6 @@ class DocumentData(BaseModel):
             else:
                 parents_description = f"{parents_names}, {self.child.full_address}"
 
-        print(parents_description)
         return parents_description
 
     @computed_field

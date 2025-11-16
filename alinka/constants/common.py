@@ -2,6 +2,7 @@ from enum import Enum, StrEnum
 
 RPSO_SUPPORT_CENTER_TYPE_ID = 48
 INVALID_FORM_MESSAGE = "Popraw błędy w formularzu."
+INVALID_TAB_TOOLTIP_MESSAGE = "Ten formularz zawiera błędy walidacji"
 CHOOSE_FROM_LIST_MESSAGE = "Wybierz z listy..."
 
 

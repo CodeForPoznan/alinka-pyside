@@ -19,7 +19,7 @@ from alinka.constants.common import RPSO_SUPPORT_CENTER_TYPE_ID
 from alinka.db.models import Decision, School, SupportCenter, TeamMember
 from alinka.db.queries import db_session
 from alinka.schemas.rspo_schema import InstitutionRequestBody
-from alinka.widget.containers.main_body.content.settings.settings_tabs.schools_tab.select_school_group import (
+from alinka.widget.containers.main_body.content.application.application_tabs.school_tab.school_dialog.select_school_group import (  # noqa E501
     SelectSchoolGroup,
 )
 from tests.factories.atrributes import (

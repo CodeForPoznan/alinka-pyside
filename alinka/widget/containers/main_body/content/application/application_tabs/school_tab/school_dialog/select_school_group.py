@@ -1,8 +1,9 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QGroupBox, QVBoxLayout, QWidget
 
 from alinka import rspo_client
 from alinka.constants.common import RSPOSchoolTypes, SchoolTypes
+from alinka.schemas import SchoolDbCreateSchema
 from alinka.schemas.rspo_schema import BaseEntity, InstitutionRequestBody
 from alinka.widget.components import (
     LabeledComboBoxComponent,
@@ -12,6 +13,9 @@ from alinka.widget.components import (
 
 
 class SelectSchoolGroup(ValidationMixin, QGroupBox):
+    # when user selects a school, this signal is emitted
+    school_selected = Signal()
+
     def __init__(self, parent: QWidget):
         super().__init__(title="Wybierz szkołę", parent=parent)
         layout = QVBoxLayout(self)
@@ -24,21 +28,19 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
 
         self.commune_combobox = LabeledComboBoxComponent("Gmina", self, required=True)
         self.commune_combobox.combobox.setPlaceholderText("Wybierz z listy...")
-        self.commune_combobox.combobox.currentTextChanged.connect(
-            self.clear_schools
-        )
+        self.commune_combobox.combobox.currentTextChanged.connect(self.clear_school_types)
         layout.addWidget(self.province_district_group)
         layout.addWidget(self.commune_combobox)
 
         self.school_type_combobox = LabeledComboBoxComponent("Rodzaj szkoły", self, required=True, static=True)
         self.school_type_combobox.combobox.setPlaceholderText("Wybierz rodzaj szkoły...")
-        self.school_type_combobox.combobox.addItems(SchoolTypes.values())
+        self.school_type_combobox.addItems(SchoolTypes.values())
         self.school_type_combobox.combobox.currentTextChanged.connect(self.populate_schools_combobox)
         layout.addWidget(self.school_type_combobox)
 
         self.schools_combobox = LabeledComboBoxComponent("Szkoła", self, required=True)
         self.schools_combobox.combobox.setPlaceholderText("Wybierz szkołę...")
-        self.schools_combobox.combobox.currentTextChanged.connect(self.populate_school_data)
+        self.schools_combobox.combobox.currentTextChanged.connect(self.user_selected_school)
         layout.addWidget(self.schools_combobox)
 
         self.components = [
@@ -50,7 +52,7 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
 
     def province_district_changed(self):
         self.populate_commune_combobox()
-        self.school_type_combobox.remove_selection()
+        self.school_type_combobox.clear()
         self.schools_combobox.clear()
         self.clear_school_data()
 
@@ -83,6 +85,9 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
         else:
             return None
 
+    def user_selected_school(self):
+        self.school_selected.emit()
+
     def populate_commune_combobox(self) -> None:
         self.commune_combobox.clear()
         selected_province_id = self.province_district_group.province_id
@@ -90,22 +95,9 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
         if not (selected_province_id and selected_district_id):
             return
 
-        try:
-            communes = rspo_client.list_communes(
-                province_id=selected_province_id,
-                district_id=selected_district_id
-            )
-            for commune in communes:
-                self.commune_combobox.combobox.addItem(
-                    commune.name, commune.id
-                )
-        except Exception as e:
-            # If we can't load communes, show error and enable manual entry
-            error_msg = "Błąd ładowania gmin - sprawdź połączenie"
-            self.commune_combobox.combobox.setPlaceholderText(error_msg)
-            self.commune_combobox.combobox.setEditable(True)
-            self.commune_combobox.combobox.setEnabled(True)
-            print(f"Error loading communes: {e}")
+        communes = rspo_client.list_communes(province_id=selected_province_id, district_id=selected_district_id)
+        for commune in communes:
+            self.commune_combobox.addItem(commune.name, commune.id)
 
     def populate_schools_combobox(self):
         self.schools_combobox.clear()
@@ -114,15 +106,8 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
         selected_district_id = self.province_district_group.district_id
         selected_commune_id = self.commune_combobox.combobox.currentData()
         selected_school_type = self.school_type_combobox.combobox.currentText()
-        institution_type_ids = self.get_institution_type_ids(
-            selected_school_type
-        )
-        if not all([
-            selected_province_id,
-            selected_district_id,
-            selected_commune_id,
-            institution_type_ids
-        ]):
+        institution_type_ids = self.get_institution_type_ids(selected_school_type)
+        if not all([selected_province_id, selected_district_id, selected_commune_id, institution_type_ids]):
             return
 
         self.schools = rspo_client.list_institutions(
@@ -134,23 +119,33 @@ class SelectSchoolGroup(ValidationMixin, QGroupBox):
             )
         )
         for school in self.schools.items:
-            self.schools_combobox.combobox.addItem(school.name, school.id)
+            self.schools_combobox.addItem(school.name, school.id)
 
-    def populate_school_data(self):
-        # School data group removed - no longer needed for settings
-        pass
+    @property
+    def selected_school(self) -> SchoolDbCreateSchema | None:
+        selected_school_rspo = self.schools_combobox.combobox.currentData()
+        if not selected_school_rspo:
+            return None
+
+        school = rspo_client.get_institution(rspo_id=selected_school_rspo)
+        return SchoolDbCreateSchema(
+            rspo_id=school.rspo_id,
+            rspo_type_id=school.type.id,
+            address=school.address,
+            town=school.town,
+            postal_code=school.postal_code,
+            post=school.post,
+            type=self.get_school_type_from_school_data(school.type),
+            name=school.name,
+            parent_organisation_name=school.parent_organisation_name,
+        )
 
     def clear_school_types(self) -> None:
-        self.school_type_combobox.remove_selection()
+        self.school_type_combobox.clear()
         self.clear_school_data()
 
     def clear_school_data(self):
-        # School data group removed - no longer needed for settings
-        pass
-
-    def clear_schools(self):
-        self.schools_combobox.clear()
-        self.clear_school_data()
+        self.parent().school_data_group.clear()
 
     @property
     def is_valid(self) -> bool:

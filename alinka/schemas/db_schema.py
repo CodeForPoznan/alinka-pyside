@@ -70,10 +70,9 @@ class DecisionDbSchema(BaseDbSchema):
     file_no: str | None = None
 
 
-class SchoolDbSchema(BaseDbSchema):
-    id: int
+class SchoolDbCreateSchema(BaseDbSchema):
     rspo_id: int | None = None
-    rspo_type: int | None = None
+    rspo_type_id: int | None = None
     parent_organisation_name: str | None = None
     type: str
     name: str
@@ -81,6 +80,10 @@ class SchoolDbSchema(BaseDbSchema):
     town: str
     postal_code: str
     post: str
+
+
+class SchoolDbSchema(SchoolDbCreateSchema):
+    id: int
 
 
 class SupportCenterDbSchema(BaseDbSchema):

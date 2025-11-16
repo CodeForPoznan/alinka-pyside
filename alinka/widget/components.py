@@ -1,4 +1,4 @@
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -13,6 +13,14 @@ from PySide6.QtWidgets import (
 
 from alinka import rspo_client
 from alinka.constants.common import CHOOSE_FROM_LIST_MESSAGE
+
+
+class NoScrollComboBox(QComboBox):
+    """QComboBox that ignores mouse wheel events to prevent accidental changes."""
+    
+    def wheelEvent(self, event):
+        """Ignore wheel events to prevent scrolling through options."""
+        event.ignore()
 
 
 class ValidationMixin:
@@ -68,10 +76,13 @@ class LabeledInputComponent(ValidationMixin, QFrame):
         self.is_required = required
         super().__init__(parent)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(2)
+        layout.setContentsMargins(12, 12, 12, 12)  # Bold margins for better spacing
+        layout.setSpacing(8)  # More spacing between label and input
         label = QLabel(text=text, parent=self)
+        # Make label bolder and darker
+        label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.line_edit = QLineEdit(self)
+        self.line_edit.setMinimumHeight(36)  # Taller input fields
         if min_length:
             self.line_edit.setMinimumWidth(min_length)
 
@@ -93,15 +104,20 @@ class LabeledInputComponent(ValidationMixin, QFrame):
 
     def display_validation_result(self, validation_result: bool) -> None:
         if validation_result:
-            self.toggle_highlight("lightgreen")
+            self.line_edit.setProperty("validationState", "valid")
         else:
-            self.toggle_highlight("mistyrose")
+            self.line_edit.setProperty("validationState", "invalid")
+        self.line_edit.style().unpolish(self.line_edit)
+        self.line_edit.style().polish(self.line_edit)
 
     def toggle_highlight(self, color: str | None) -> None:
+        # Legacy method for backward compatibility
         if color:
-            self.line_edit.setStyleSheet(f"background-color: {color};")
+            self.line_edit.setProperty("validationState", "valid" if "green" in color.lower() else "invalid")
         else:
-            self.line_edit.setStyleSheet("")
+            self.line_edit.setProperty("validationState", "")
+        self.line_edit.style().unpolish(self.line_edit)
+        self.line_edit.style().polish(self.line_edit)
 
     @property
     def is_valid(self) -> bool:
@@ -118,7 +134,9 @@ class LabeledInputComponent(ValidationMixin, QFrame):
 
     def clear_validation_state(self) -> None:
         """Reset component and it's parent validation state"""
-        self.parent().clear_validation_state()
+        parent = self.parent()
+        if parent and hasattr(parent, 'clear_validation_state'):
+            parent.clear_validation_state()
         self.toggle_highlight(None)
 
 
@@ -141,10 +159,14 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.is_unselectable = unselectable
         super().__init__(parent)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(2)
+        layout.setContentsMargins(12, 12, 12, 12)  # Bold margins to match input
+        layout.setSpacing(8)  # More spacing between label and combobox
+        layout.setAlignment(Qt.AlignTop)  # Align to top to reduce empty space
         label = QLabel(text=text, parent=self)
-        self.combobox = QComboBox(self)
+        # Make label bolder and darker
+        label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
+        self.combobox = NoScrollComboBox(self)
+        self.combobox.setMinimumHeight(28)  # Reduced height
         if min_length:
             self.combobox.setMinimumWidth(min_length)
         if self.is_unselectable:
@@ -154,6 +176,9 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.combobox.currentTextChanged.connect(self.clear_validation_state)
         layout.addWidget(label)
         layout.addWidget(self.combobox)
+        
+        # Initialize combobox state
+        self._update_combobox_state()
 
     @property
     def text(self) -> str:
@@ -171,6 +196,7 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
 
     def remove_selection(self) -> None:
         self.combobox.setCurrentIndex(-1)
+        self._update_combobox_state()
 
     def _insert_invitation_item(self) -> None:
         self.combobox.insertItem(0, CHOOSE_FROM_LIST_MESSAGE)
@@ -179,6 +205,7 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
         self.combobox.clear()
         if self.is_unselectable:
             self._insert_invitation_item()
+        self.combobox.setEnabled(True)
 
     def clear(self) -> None:
         self.remove_selection()
@@ -187,22 +214,59 @@ class LabeledComboBoxComponent(ValidationMixin, QFrame):
 
     def addItems(self, items: list[str]) -> None:
         self.combobox.addItems(items)
+        self._update_combobox_state()
+    
+    def addItem(self, text: str, userData=None) -> None:
+        """Wrapper for combobox.addItem that also updates state."""
+        self.combobox.addItem(text, userData)
+        self._update_combobox_state()
+    
+    def _update_combobox_state(self) -> None:
+        """Enable/disable combobox based on whether it has selectable items."""
+        # If combobox is editable, always keep it enabled (user can type)
+        if self.combobox.isEditable():
+            self.combobox.setEnabled(True)
+            return
+        
+        # Count items excluding the invitation item if present
+        item_count = self.combobox.count()
+        if self.is_unselectable and item_count > 0:
+            # Has at least the invitation item, check if there are more
+            has_selectable_items = item_count > 1
+        else:
+            has_selectable_items = item_count > 0
+        
+        # Disable if no selectable items, enable otherwise
+        self.combobox.setEnabled(has_selectable_items)
+        
+        # If disabled and empty, set placeholder-like text
+        if not has_selectable_items and not self.is_unselectable:
+            # This will be handled by the stylesheet or we could add a
+            # placeholder
+            pass
 
     def display_validation_result(self, validation_result: bool) -> None:
         if validation_result:
-            self.toggle_highlight("lightgreen")
+            self.combobox.setProperty("validationState", "valid")
         else:
-            self.toggle_highlight("mistyrose")
+            self.combobox.setProperty("validationState", "invalid")
+        self.combobox.style().unpolish(self.combobox)
+        self.combobox.style().polish(self.combobox)
 
     def toggle_highlight(self, color: str | None) -> None:
+        # Legacy method for backward compatibility
         if color:
-            self.combobox.setStyleSheet(f"background-color: {color};")
+            self.combobox.setProperty("validationState", "valid" if "green" in color.lower() else "invalid")
         else:
-            self.combobox.setStyleSheet(None)
+            self.combobox.setProperty("validationState", "")
+        self.combobox.style().unpolish(self.combobox)
+        self.combobox.style().polish(self.combobox)
 
     def clear_validation_state(self) -> None:
         """Reset component and it's parent validation state"""
-        self.parent().clear_validation_state()
+        parent = self.parent()
+        if parent and hasattr(parent, 'clear_validation_state'):
+            parent.clear_validation_state()
         self.toggle_highlight(None)
 
     @property
@@ -222,10 +286,15 @@ class LabeledCheckboxComponent(ValidationMixin, QFrame):
     def __init__(self, text, parent, label_position: str = "above"):
         super().__init__(parent)
         label = QLabel(text=text, parent=self)
+        # Make label bolder and darker
+        label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.checkbox = QCheckBox(self)
 
         layout_class = QVBoxLayout if label_position == "above" else QHBoxLayout
         layout = layout_class(self)
+        # Match margins and spacing with LabeledInputComponent for alignment
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(8)
         layout.addWidget(label)
         if label_position == "above":
             layout.insertWidget(1, self.checkbox)
@@ -235,33 +304,106 @@ class LabeledCheckboxComponent(ValidationMixin, QFrame):
     def clear(self) -> None:
         self.checkbox.setChecked(False)
 
+    @property
+    def is_checked(self) -> bool:
+        return self.checkbox.isChecked()
+
 
 class LabeledDateComponent(ValidationMixin, QFrame):
     def __init__(self, text, parent, required: bool = False):
         super().__init__(parent)
         self.required = required
+        self.label = text
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(12, 12, 12, 12)  # Match LabeledInputComponent margins
+        layout.setSpacing(8)  # Match LabeledInputComponent spacing
         label = QLabel(text=text, parent=self)
+        # Make label bolder and darker to match LabeledInputComponent
+        label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
         self.date_input = QDateEdit(self)
+        self.date_input.setMinimumHeight(36)
         self.date_input.setCalendarPopup(True)
+        
+        # Disable mouse wheel scrolling
+        self.date_input.setFocusPolicy(Qt.StrongFocus)
+        self.date_input.installEventFilter(self)
+        
+        # Set Polish locale for calendar
+        from PySide6.QtCore import QLocale
+        polish_locale = QLocale(QLocale.Polish, QLocale.Poland)
+        self.date_input.setLocale(polish_locale)
+        
+        # Style the calendar widget immediately after creation
+        calendar = self.date_input.calendarWidget()
+        if calendar:
+            self._style_calendar(calendar)
+        
         layout.addWidget(label)
         layout.addWidget(self.date_input)
+    
+    def _style_calendar(self, calendar):
+        """Apply aggressive styling to calendar widget."""
+        # Set stylesheet on the calendar widget
+        calendar.setStyleSheet("""
+            QCalendarWidget QTableView {
+                selection-background-color: #14b8a6 !important;
+                selection-color: white !important;
+            }
+            QCalendarWidget QAbstractItemView:enabled {
+                selection-background-color: #14b8a6 !important;
+                selection-color: white !important;
+                color: #000000;
+            }
+            QCalendarWidget QAbstractItemView::item:selected {
+                background-color: #14b8a6 !important;
+                color: white !important;
+            }
+        """)
+        
+        # Find the table view in the calendar and style it directly
+        from PySide6.QtWidgets import QTableView
+        table_view = calendar.findChild(QTableView)
+        if table_view:
+            # Use QPalette for more reliable color setting
+            from PySide6.QtGui import QPalette, QColor
+            palette = table_view.palette()
+            palette.setColor(QPalette.Highlight, QColor("#14b8a6"))
+            palette.setColor(QPalette.HighlightedText, QColor("white"))
+            table_view.setPalette(palette)
+    
+    def showEvent(self, event):
+        """Apply calendar styling when widget is shown."""
+        super().showEvent(event)
+        calendar = self.date_input.calendarWidget()
+        if calendar:
+            self._style_calendar(calendar)
+    
+    def eventFilter(self, obj, event):
+        """Filter wheel events to prevent scrolling."""
+        if event.type() == event.Type.Wheel and obj == self.date_input:
+            event.ignore()
+            return True
+        return super().eventFilter(obj, event)
 
     def clear(self) -> None:
         self.date_input.clear()
 
     def display_validation_result(self, validation_result: bool) -> None:
         if validation_result:
-            self.toggle_highlight("lightgreen")
+            self.date_input.setProperty("validationState", "valid")
         else:
-            self.toggle_highlight("mistyrose")
+            self.date_input.setProperty("validationState", "invalid")
+        self.date_input.style().unpolish(self.date_input)
+        self.date_input.style().polish(self.date_input)
 
     def toggle_highlight(self, color: str | None) -> None:
+        # Legacy method for backward compatibility
         if color:
-            self.date_input.setStyleSheet(f"background-color: {color};")
+            self.date_input.setProperty("validationState", "valid" if "green" in color.lower() else "invalid")
         else:
-            self.date_input.setStyleSheet("")
+            self.date_input.setProperty("validationState", "")
+        self.date_input.style().unpolish(self.date_input)
+        self.date_input.style().polish(self.date_input)
 
     @property
     def is_valid(self) -> bool:
@@ -276,7 +418,9 @@ class LabeledDateComponent(ValidationMixin, QFrame):
 
     def clear_validation_state(self) -> None:
         """Reset component and it's parent validation state"""
-        self.parent().clear_validation_state()
+        parent = self.parent()
+        if parent and hasattr(parent, 'clear_validation_state'):
+            parent.clear_validation_state()
         self.toggle_highlight(None)
 
 
@@ -295,13 +439,26 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         self.province_combobox.combobox.setPlaceholderText("Wybierz z listy...")
         self.province_combobox.combobox.currentTextChanged.connect(self.on_province_changed)
 
-        provinces = rspo_client.list_provinces()
-        for province in provinces:
-            self.province_combobox.combobox.addItem(province.name, province.id)
+        try:
+            provinces = rspo_client.list_provinces()
+            for province in provinces:
+                self.province_combobox.addItem(province.name, province.id)
+        except Exception as e:
+            error_msg = "Błąd ładowania danych - sprawdź połączenie z internetem"
+            self.province_combobox.combobox.setPlaceholderText(error_msg)
+            self.province_combobox.combobox.setEditable(True)
+            self.province_combobox.combobox.setEnabled(True)
+            print(f"Error loading provinces: {e}")
 
-        self.district_combobox = LabeledComboBoxComponent("Powiat", self, required=True)
-        self.district_combobox.combobox.setPlaceholderText("Wybierz z listy...")
-        self.district_combobox.combobox.currentTextChanged.connect(self.on_district_changed)
+        self.district_combobox = LabeledComboBoxComponent(
+            "Powiat", self, required=True
+        )
+        self.district_combobox.combobox.setPlaceholderText(
+            "Wybierz z listy..."
+        )
+        self.district_combobox.combobox.currentTextChanged.connect(
+            self.on_district_changed
+        )
         location_frame_layout.addWidget(self.province_combobox)
         location_frame_layout.addWidget(self.district_combobox)
 
@@ -314,12 +471,21 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         return self.district_combobox.combobox.currentData()
 
     def populate_districts_combobox(self) -> None:
-        self.district_combobox.combobox.clear()
+        self.district_combobox.clear()
         if not self.province_id:
             return
-        districts = rspo_client.list_districts(province_id=self.province_id)
-        for district in districts:
-            self.district_combobox.combobox.addItem(district.name, district.id)
+        try:
+            districts = rspo_client.list_districts(
+                province_id=self.province_id
+            )
+            for district in districts:
+                self.district_combobox.addItem(district.name, district.id)
+        except Exception as e:
+            error_msg = "Błąd ładowania powiatów - sprawdź połączenie"
+            self.district_combobox.combobox.setPlaceholderText(error_msg)
+            self.district_combobox.combobox.setEditable(True)
+            self.district_combobox.combobox.setEnabled(True)
+            print(f"Error loading districts: {e}")
 
     def on_province_changed(self):
         """
@@ -327,9 +493,10 @@ class SelectProvinceDistrictGroup(ValidationMixin, QFrame):
         repopulate districts combobox
         """
         self.selection_changed.emit()
-        self.district_combobox.combobox.clear()
+        self.district_combobox.clear()
         self.populate_districts_combobox()
 
     def on_district_changed(self):
-        """In case of district change we should only trigger selection changed signal"""
+        """In case of district change we should only trigger selection
+        changed signal"""
         self.selection_changed.emit()
