@@ -324,34 +324,10 @@ class LabeledDateComponent(ValidationMixin, QFrame):
         polish_locale = QLocale(QLocale.Polish, QLocale.Poland)
         self.date_input.setLocale(polish_locale)
 
-        # Style the calendar widget immediately after creation
         calendar = self.date_input.calendarWidget()
-        if calendar:
-            self._style_calendar(calendar)
 
         layout.addWidget(label)
         layout.addWidget(self.date_input)
-
-    def _style_calendar(self, calendar):
-        """Apply aggressive styling to calendar widget."""
-        # Set stylesheet on the calendar widget
-        calendar.setStyleSheet(
-            """
-            QCalendarWidget QTableView {
-                selection-background-color: #14b8a6 !important;
-                selection-color: white !important;
-            }
-            QCalendarWidget QAbstractItemView:enabled {
-                selection-background-color: #14b8a6 !important;
-                selection-color: white !important;
-                color: #000000;
-            }
-            QCalendarWidget QAbstractItemView::item:selected {
-                background-color: #14b8a6 !important;
-                color: white !important;
-            }
-        """
-        )
 
         table_view = calendar.findChild(QTableView)
         if table_view:
@@ -359,13 +335,6 @@ class LabeledDateComponent(ValidationMixin, QFrame):
             palette.setColor(QPalette.Highlight, QColor("#14b8a6"))
             palette.setColor(QPalette.HighlightedText, QColor("white"))
             table_view.setPalette(palette)
-
-    def showEvent(self, event):
-        """Apply calendar styling when widget is shown."""
-        super().showEvent(event)
-        calendar = self.date_input.calendarWidget()
-        if calendar:
-            self._style_calendar(calendar)
 
     def eventFilter(self, obj, event):
         """Filter wheel events to prevent scrolling."""

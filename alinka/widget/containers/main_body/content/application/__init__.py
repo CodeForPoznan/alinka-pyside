@@ -30,6 +30,10 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
         # Track invalid tabs persistently
         self._invalid_tabs = set()
+        
+        # Track which tabs have been visited/interacted with
+        # Only validate tabs that have been visited to avoid errors on pristine tabs
+        self._visited_tabs = set()
 
         self.child_tab_container = ChildDataTabContainer(self)
         self.school_tab_container = SchoolTabContainer(self)
@@ -44,6 +48,9 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         self.addTab(self.meeting_tab_container, "Zespół")
         self.setCurrentIndex(0)
 
+        # Mark the first tab as visited since user starts there
+        self._visited_tabs.add(0)
+        
         self.previous_tab_index = self.currentIndex()
         self.currentChanged.connect(self.validate_previous_tab)
         self.currentChanged.connect(self.update_breadcrumb)
@@ -88,32 +95,35 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         header_container.set_breadcrumb(f"Utwórz dokument > {tab_name}")
 
     def validate_previous_tab(self, new_index: int) -> None:
-        """Validate the previous tab when switching tabs"""
-        previous_tab = self.widget(self.previous_tab_index)
+        """Validate the previous tab when switching tabs.
+        
+        Only validates tabs that have been visited. This prevents showing
+        validation errors on tabs the user hasn't interacted with yet.
+        """
+        # Mark the new tab as visited
+        self._visited_tabs.add(new_index)
+        
+        # Only validate the previous tab if it has been visited
+        if self.previous_tab_index in self._visited_tabs:
+            previous_tab = self.widget(self.previous_tab_index)
 
-        if not previous_tab.validate():
-            tab_name = self.tabText(self.previous_tab_index)
-            self._invalid_tabs.add(self.previous_tab_index)
-            self._update_invalid_tabs_display()
+            if not previous_tab.validate():
+                tab_name = self.tabText(self.previous_tab_index)
+                self._invalid_tabs.add(self.previous_tab_index)
+                self._update_invalid_tabs_display()
 
-            show_validation_error(self.window(), INVALID_FORM_MESSAGE, tab_names=[tab_name])
-        else:
-            self._invalid_tabs.discard(self.previous_tab_index)
-            self._update_invalid_tabs_display()
+                show_validation_error(self.window(), INVALID_FORM_MESSAGE, tab_names=[tab_name])
+            else:
+                self._invalid_tabs.discard(self.previous_tab_index)
+                self._update_invalid_tabs_display()
 
-            if not self._invalid_tabs:
-                header_container = self.content_container.main_body_container.header_container
-                header_container.clear_message()
+                if not self._invalid_tabs:
+                    header_container = self.content_container.main_body_container.header_container
+                    header_container.clear_message()
 
-        current_tab = self.widget(new_index)
-
-        if not current_tab.validate():
-            self._invalid_tabs.add(new_index)
-            self._update_invalid_tabs_display()
-        else:
-            self._invalid_tabs.discard(new_index)
-            self._update_invalid_tabs_display()
-
+        # Don't validate the new tab automatically - let the user fill it first
+        # Validation will occur when they try to move to another tab or submit
+        
         self.previous_tab_index = new_index
 
     def _update_invalid_tabs_display(self) -> None:
@@ -208,3 +218,5 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         self.meeting_tab_container.clear()
         self.id = None
         self.clear_invalid_tabs()
+        # Reset visited tabs - only first tab (index 0) is visited initially
+        self._visited_tabs = {0}

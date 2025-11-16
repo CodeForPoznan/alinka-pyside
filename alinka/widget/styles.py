@@ -61,6 +61,14 @@ def get_validation_stylesheet() -> str:
         background-color: {COLORS["validation_error"]};
         border: 1px solid {COLORS["error"]};
     }}
+
+    QListView[validationState="valid"] {{
+        border: 2px solid {COLORS["success"]};
+    }}
+
+    QListView[validationState="invalid"] {{
+        border: 2px solid {COLORS["error"]};
+    }}
     """
 
 
