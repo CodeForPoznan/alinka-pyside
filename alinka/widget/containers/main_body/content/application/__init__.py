@@ -163,14 +163,32 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         self._update_invalid_tabs_display()
 
     def validate(self) -> bool:
-        # First validate all tabs
-        validation_results = [tab.validate() for tab in self.containers]
+        # Backwards-compatible validate method.
+        # By default this behaves as before and will show field-level
+        # validation results. If called with show_errors=False it will
+        # only check `is_valid` flags (no display/highlighting) which is
+        # useful when toggling visibility of the application form so we
+        # don't highlight pristine fields immediately.
+        return self._validate(show_errors=True)
+
+    def _validate(self, show_errors: bool = True) -> bool:
+        """Internal validation helper.
+
+        show_errors=True -> call each tab.validate() (updates visual state)
+        show_errors=False -> only check tab.is_valid (no visual updates)
+        """
+        if show_errors:
+            # First validate all tabs (this will display field-level results)
+            validation_results = [tab.validate() for tab in self.containers]
+        else:
+            # Only read validity without triggering visual updates
+            validation_results = [tab.is_valid for tab in self.containers]
 
         if not all(validation_results):
             # Collect all invalid tab names and indices
             invalid_tabs = []
             invalid_indices = []
-            for index, (_, is_valid) in enumerate(zip(self.containers, validation_results)):
+            for index, is_valid in enumerate(validation_results):
                 if not is_valid:
                     tab_name = self.tabText(index)
                     invalid_tabs.append(tab_name)
@@ -178,7 +196,8 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
 
             self.mark_invalid_tabs(invalid_indices)
 
-            show_validation_error(self, self.error_message, tab_names=invalid_tabs)
+            if show_errors:
+                show_validation_error(self, self.error_message, tab_names=invalid_tabs)
             return False
         else:
             self.clear_invalid_tabs()

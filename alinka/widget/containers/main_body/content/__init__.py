@@ -85,7 +85,14 @@ class ContentContainer(ValidationMixin, QFrame):
 
     def validate_application(self):
         if self.application_container.isVisible():
-            # This will trigger validation and red tab highlighting if invalid
+            # When showing the application container as part of UI flow we
+            # don't want to immediately highlight pristine fields. Use the
+            # internal _validate with show_errors=False to just check validity
+            # without triggering visual validation. Full validation (with
+            # highlights) will be triggered when user submits or switches tabs.
+            if hasattr(self.application_container, "_validate"):
+                return self.application_container._validate(show_errors=False)
+            # fallback
             return self.application_container.validate()
         return True
 
@@ -122,4 +129,23 @@ class ContentContainer(ValidationMixin, QFrame):
         self.settings_container.setVisible(False)
         self.application_container.setVisible(False)
         self.browser_container.setVisible(True)
+
+        # Set the correct backlighting of buttons in the sidebar
+        self.sidebar_menu_container.search_child_btn.setChecked(True)
+        self.sidebar_menu_container.create_documents_btn.setChecked(False)
+        self.sidebar_menu_container.settings_btn.setChecked(False)
+
+        # Set focus on 'Search' button, remove from 'Create document'
+        self.sidebar_menu_container.search_child_btn.setFocus()
+        self.sidebar_menu_container.create_documents_btn.clearFocus()
+
         header_container.set_breadcrumb("Wyszukaj dokument")
+
+        # Reset validation and form state so fields don't get highlighted on re-entry
+        self.application_container.finish_application_flow()
+
+        # Force validation clearing on all subcontainers
+        if hasattr(self.application_container, "containers"):
+            for tab in self.application_container.containers:
+                if hasattr(tab, "clear_validation_state"):
+                    tab.clear_validation_state()
