@@ -12,7 +12,7 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
         super().__init__(parent)
         self.application_container = parent
         layout = QVBoxLayout(self)
-        layout.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(10)
         self.applicant_1_data_group = ApplicantDataGroup(
@@ -36,13 +36,17 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
     def toggle_applicant_2_group(self):
         if self._applicant_2_active:
             self.applicant_2_data_group.clear()
-            checkbox = self.applicant_2_data_group.address_checkbox.checkbox
-            checkbox.setChecked(False)
+            self.applicant_2_data_group.address_checkbox.checkbox.setChecked(False)
             self.applicant_2_data_group.setVisible(False)
             self._applicant_2_active = False
         else:
             self.applicant_2_data_group.setVisible(True)
             self._applicant_2_active = True
+
+        # wymuszenie odświeżenia layoutu
+        self.layout().update()
+        self.layout().activate()
+        self.adjustSize()
 
     @property
     def applicants(self) -> list[PersonalData]:

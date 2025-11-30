@@ -80,9 +80,9 @@ class ApplicantDataGroup(ValidationMixin, QGroupBox):
     def __init__(self, title: str, parent: QWidget, checkbox_description: str, initial_visible: bool = True):
         super().__init__(title=title, parent=parent)
         layout = QGridLayout(self)
-        layout.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.setSpacing(8)
-        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setContentsMargins(10, 24, 10, 10)
         self.full_name = LabeledInputComponent("Imię i nazwisko", self, 200, required=True)
         self.full_name_gen = LabeledInputComponent("Imię i nazwisko (dopełniacz)", self, 200, required=True)
         layout.addWidget(self.full_name, 0, 0)
