@@ -1,6 +1,6 @@
 """Custom QTabBar that supports validation highlighting."""
 
-from PySide6.QtCore import QPoint, QRect, Qt, QSize
+from PySide6.QtCore import QPoint, QRect, QSize, Qt
 from PySide6.QtGui import QBrush, QColor, QFont, QPainter
 from PySide6.QtWidgets import QTabBar
 
@@ -13,7 +13,6 @@ class ValidationTabBar(QTabBar):
         self._invalid_tabs = []
         self.icon_margin = 10  # margines od prawej krawędzi tab'a
         self.warning_icon = "⚠"
-
 
     def set_invalid_tabs(self, invalid_indices: list[int]) -> None:
         """Set which tab indices should be painted as invalid."""
