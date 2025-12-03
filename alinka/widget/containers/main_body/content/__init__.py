@@ -129,23 +129,4 @@ class ContentContainer(ValidationMixin, QFrame):
         self.settings_container.setVisible(False)
         self.application_container.setVisible(False)
         self.browser_container.setVisible(True)
-
-        # Set the correct backlighting of buttons in the sidebar
-        self.sidebar_menu_container.search_child_btn.setChecked(True)
-        self.sidebar_menu_container.create_documents_btn.setChecked(False)
-        self.sidebar_menu_container.settings_btn.setChecked(False)
-
-        # Set focus on 'Search' button, remove from 'Create document'
-        self.sidebar_menu_container.search_child_btn.setFocus()
-        self.sidebar_menu_container.create_documents_btn.clearFocus()
-
         header_container.set_breadcrumb("Wyszukaj dokument")
-
-        # Reset validation and form state so fields don't get highlighted on re-entry
-        self.application_container.finish_application_flow()
-
-        # Force validation clearing on all subcontainers
-        if hasattr(self.application_container, "containers"):
-            for tab in self.application_container.containers:
-                if hasattr(tab, "clear_validation_state"):
-                    tab.clear_validation_state()
