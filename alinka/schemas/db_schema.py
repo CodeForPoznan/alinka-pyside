@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class BaseDbSchema(BaseModel):
@@ -31,8 +31,10 @@ class DecisionDbSchema(BaseDbSchema):
     school_postal_code: str
     school_post: str | None = None
 
-    address_child_checkbox: bool = False
-    address_first_parent_checkbox: bool = False
+    # if True then first parent address is different than child's
+    is_first_parent_address_different: bool = False
+    # if True then second parent address is different than first parent's
+    is_second_parent_address_different: bool = False
     first_parent_full_name: str
     first_parent_full_name_gen: str
     first_parent_address: str
@@ -68,10 +70,9 @@ class DecisionDbSchema(BaseDbSchema):
     file_no: str | None = None
 
 
-class SchoolDbSchema(BaseDbSchema):
-    id: int
+class SchoolDbCreateSchema(BaseDbSchema):
     rspo_id: int | None = None
-    rspo_type: int | None = None
+    rspo_type_id: int | None = None
     parent_organisation_name: str | None = None
     type: str
     name: str
@@ -79,6 +80,10 @@ class SchoolDbSchema(BaseDbSchema):
     town: str
     postal_code: str
     post: str
+
+
+class SchoolDbSchema(SchoolDbCreateSchema):
+    id: int
 
 
 class SupportCenterDbSchema(BaseDbSchema):
@@ -96,8 +101,8 @@ class SupportCenterDbSchema(BaseDbSchema):
 
 
 class TeamMemberDbCreateSchema(BaseDbSchema):
-    name: str
-    function: str
+    name: str = Field(..., min_length=1)
+    function: str = Field(..., min_length=1)
 
 
 class TeamMemberDbSchema(TeamMemberDbCreateSchema):

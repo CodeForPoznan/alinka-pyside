@@ -1,8 +1,8 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QGridLayout, QGroupBox, QWidget
+from PySide6.QtWidgets import QGridLayout, QGroupBox, QSizePolicy, QWidget
 
 from alinka.db.queries import get_support_center_data
-from alinka.schemas.document_schema import SupportCenterData
+from alinka.schemas.db_schema import SupportCenterDbSchema
 from alinka.widget.components import LabeledInputComponent, ValidationMixin
 
 
@@ -13,8 +13,12 @@ class SupportCenterDataGroup(ValidationMixin, QGroupBox):
 
     def __init__(self, parent: QWidget):
         super().__init__(title="Dane poradni", parent=parent)
+        # Set size policy to minimize vertical space
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         layout = QGridLayout(self)
         layout.setAlignment(Qt.AlignTop)
+        layout.setSpacing(4)  # Minimal spacing
+        layout.setContentsMargins(10, 10, 10, 10)  # Compact margins
 
         self.name_nominative = LabeledInputComponent("Nazwa poradnii (mianownik)", self, min_length=100)
         layout.addWidget(self.name_nominative, 0, 0, 1, 2)
@@ -50,24 +54,24 @@ class SupportCenterDataGroup(ValidationMixin, QGroupBox):
         ]
         self.populate_fields_on_init()
 
-    def populate_fields(self, **kwargs):
+    def populate_fields(self, support_center_data: dict[str, str]):
         self.clear()
-        self.province_id = kwargs.get("province_id")
-        self.district_id = kwargs.get("district_id")
-        self.rspo = kwargs.get("rspo")
-        self.name_nominative.text = kwargs.get("name_nominative")
-        self.name_genitive.text = kwargs.get("name_genitive")
-        self.institute_name.text = kwargs.get("institute_name")
-        self.kurator.text = kwargs.get("kurator")
-        self.address.text = kwargs.get("address")
-        self.town.text = kwargs.get("town")
-        self.postal_code.text = kwargs.get("postal_code")
-        self.post.text = kwargs.get("post")
+        self.province_id = support_center_data.get("province_id")
+        self.district_id = support_center_data.get("district_id")
+        self.name_nominative.text = support_center_data.get("name_nominative", "")
+        self.name_genitive.text = support_center_data.get("name_genitive", "")
+        self.address.text = support_center_data.get("address", "")
+        self.town.text = support_center_data.get("town", "")
+        self.postal_code.text = support_center_data.get("postal_code", "")
+        self.post.text = support_center_data.get("post", "")
+        self.rspo = support_center_data.get("rspo", "") or support_center_data.get("rspo_id", "")
+        self.institute_name.text = support_center_data.get("institute_name", "")
+        self.kurator.text = support_center_data.get("kurator", "")
 
     def populate_fields_on_init(self):
         support_center_data = get_support_center_data()
         if support_center_data:
-            self.populate_fields(**support_center_data.model_dump())
+            self.populate_fields(support_center_data.model_dump())
 
     def clear(self):
         for c in self.components:
@@ -78,7 +82,7 @@ class SupportCenterDataGroup(ValidationMixin, QGroupBox):
 
     @property
     def support_center_data(self):
-        return SupportCenterData(
+        return SupportCenterDbSchema(
             province_id=self.province_id,
             district_id=self.district_id,
             rspo=self.rspo,
@@ -108,4 +112,5 @@ class SupportCenterDataGroup(ValidationMixin, QGroupBox):
         return all([c.validate() for c in self.components])
 
     def clear_validation_state(self) -> None:
-        self.parent().clear_validation_state()
+        for c in self.components:
+            c.clear_validation_state()

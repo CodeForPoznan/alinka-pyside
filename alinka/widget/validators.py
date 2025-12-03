@@ -1,5 +1,7 @@
 from PySide6.QtGui import QValidator
 
+from alinka.utils import is_valid_pesel
+
 
 class RequiredValidator(QValidator):
     default_error_message = "To pole jest wymagane"
@@ -20,15 +22,9 @@ class PeselValidator(QValidator):
             return QValidator.Invalid, input_str, pos
         if len(input_str) > 12:
             return QValidator.Invalid, input_str, pos
-
         if len(input_str) < 11:
             return QValidator.Intermediate, input_str, pos
-
-        weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3]
-        digits = [int(ch) for ch in input_str]
-        checksum = (10 - sum(w * d for w, d in zip(weights, digits)) % 10) % 10
-
-        if checksum == digits[-1]:
+        if is_valid_pesel(input_str):
             return QValidator.Acceptable, input_str, pos
         else:
             return QValidator.Intermediate, input_str, pos

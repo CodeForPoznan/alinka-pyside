@@ -88,8 +88,8 @@ def convert_raw_documents_data(raw_documents_data: DecisionDbSchema) -> Document
     )
     return DocumentData(
         child=child_data,
-        address_child_checkbox=raw_documents_data.address_child_checkbox,
-        address_first_parent_checkbox=raw_documents_data.address_first_parent_checkbox,
+        is_first_parent_address_different=raw_documents_data.is_first_parent_address_different,
+        is_second_parent_address_different=raw_documents_data.is_second_parent_address_different,
         issue=raw_documents_data.issue,
         reasons=raw_documents_data.reasons,
         activity_form=raw_documents_data.activity_form,

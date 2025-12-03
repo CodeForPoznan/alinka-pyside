@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
 
 from alinka.db.queries import filter_decisions_by_pesel_child_name
 from alinka.schemas.db_schema import DecisionDbSchema
-from alinka.widget.components import LabeledInputComponent
+from alinka.widget.components import LabeledInputComponent, ValidationMixin
 
 
 class DecisionsTableModel(QAbstractTableModel):
@@ -43,6 +43,8 @@ class DecisionsTableModel(QAbstractTableModel):
     def data(self, index: QModelIndex, role: int = Qt.DisplayRole):
         if role == Qt.DisplayRole:
             return self._data[index.row()][index.column()]
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignLeft | Qt.AlignVCenter
 
     @property
     def header_names(self):
@@ -56,7 +58,7 @@ class DecisionsTableModel(QAbstractTableModel):
                 return section + 1
 
 
-class BrowseDecisionContainer(QWidget):
+class BrowseDecisionContainer(ValidationMixin, QWidget):
     selected_decision_id: int | None
 
     def __init__(self, parent: QWidget):
@@ -64,7 +66,8 @@ class BrowseDecisionContainer(QWidget):
         super().__init__(parent)
         self.selected_decision_id = None
         layout = QVBoxLayout(self)
-        browse_input = LabeledInputComponent("Szukaj", self)
+        browse_input = LabeledInputComponent("Wyszukaj ucznia", self)
+        browse_input.line_edit.setPlaceholderText("Wprowadź PESEL lub imię i nazwisko ucznia")
         browse_input.line_edit.textChanged.connect(self.entered_filter_by)
 
         self.table_model = DecisionsTableModel()
@@ -79,10 +82,16 @@ class BrowseDecisionContainer(QWidget):
         self.decision_table.setSelectionBehavior(QAbstractItemView.SelectRows)
 
         header = self.decision_table.horizontalHeader()
+
         header.setSectionResizeMode(0, QHeaderView.Fixed)
-        header.setSectionResizeMode(1, QHeaderView.Fixed)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.Interactive)
+        header.setSectionResizeMode(2, QHeaderView.Interactive)
+        header.setSectionResizeMode(3, QHeaderView.Interactive)
+
+        header.setMinimumSectionSize(150)
+        header.resizeSection(1, 150)
+        header.resizeSection(2, 250)
+        header.resizeSection(3, 300)
 
         layout.addWidget(browse_input)
         layout.addWidget(self.decision_table)
@@ -133,9 +142,9 @@ class BrowseDecisionContainer(QWidget):
 
 
 class BrowserContainer(QTabWidget):
-    def __init__(self, parent: QWidget, visible: bool = False):
+    def __init__(self, parent: QWidget, content_container, visible: bool = False):
         super().__init__(parent)
-        self.content_container = parent
+        self.content_container = content_container
         self.browse_decision_container = BrowseDecisionContainer(self)
         self.addTab(self.browse_decision_container, "Wyszukaj dokument")
 

@@ -1,13 +1,11 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from alinka.db.queries import get_school_by_name
-from alinka.schemas import ChildData, DocumentData, SchoolData, SchoolDbSchema
+from alinka.schemas import ChildData, DocumentData
 from alinka.widget.components import ValidationMixin
 
 from .child_data_group import ChildDataGroupContainer
 from .general_data_group import GeneralDataGroupContainer
-from .school_data_group import SchoolDataGroupContainer
 
 
 class ChildDataTabContainer(ValidationMixin, QWidget):
@@ -16,15 +14,15 @@ class ChildDataTabContainer(ValidationMixin, QWidget):
         super().__init__(parent)
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)
         self.general_data_group = GeneralDataGroupContainer(self)
         self.child_data_group = ChildDataGroupContainer(self)
-        self.school_data_group = SchoolDataGroupContainer(self)
 
         layout.addWidget(self.general_data_group)
         layout.addWidget(self.child_data_group)
-        layout.addWidget(self.school_data_group)
 
-        self.containers = [self.general_data_group, self.child_data_group, self.school_data_group]
+        self.containers = [self.general_data_group, self.child_data_group]
 
     @property
     def child_data(self) -> ChildData:
@@ -37,27 +35,9 @@ class ChildDataTabContainer(ValidationMixin, QWidget):
             full_name=self.child_data_group.child_name_nom.text,
             full_name_gen=self.child_data_group.child_name_gen.text,
             birth_place=self.child_data_group.birth_place.text,
-            klass=self.school_data_group.school_klass.text,
-            profession=self.school_data_group.school_profession.text,
-            student=self.school_data_group.student_checkbox.checkbox.isChecked(),
-        )
-
-    @property
-    def school_data(self) -> SchoolData:
-        selected_school_name = self.school_data_group.school.combobox.currentText()
-        school: SchoolDbSchema = get_school_by_name(selected_school_name)
-
-        if not school:
-            raise ValueError(f"School '{selected_school_name}' not found in database.")
-
-        return SchoolData(
-            address=school.address,
-            town=school.town,
-            postal_code=school.postal_code,
-            post=school.post,
-            name=school.name,
-            type=school.type,
-            parent_organisation=school.parent_organisation_name,
+            klass=self.child_data_group.school_klass.text,
+            profession=self.child_data_group.school_profession.text,
+            student=self.child_data_group.student_checkbox.checkbox.isChecked(),
         )
 
     def clear(self) -> None:
@@ -80,10 +60,9 @@ class ChildDataTabContainer(ValidationMixin, QWidget):
 
         return None
 
-    def validate(self) -> None:
+    def validate(self) -> bool:
         return all([c.validate() for c in self.containers])
 
     def clear_validation_state(self) -> None:
-        main_body_container = self.application_container.content_container.main_body_container
-        header_container = main_body_container.header_container
-        header_container.clear_message()
+        for container in self.containers:
+            container.clear_validation_state()

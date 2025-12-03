@@ -44,8 +44,8 @@ class Decision(Base):
     school_postal_code = Column(String(12), nullable=False)
     school_post = Column(String(128), nullable=False)
 
-    address_child_checkbox = Column(Boolean, nullable=False, default=False)
-    address_first_parent_checkbox = Column(Boolean, nullable=False, default=False)
+    is_first_parent_address_different = Column(Boolean, nullable=False, default=False)
+    is_second_parent_address_different = Column(Boolean, nullable=False, default=False)
     first_parent_full_name = Column(String(100), nullable=False)
     first_parent_full_name_gen = Column(String(100), nullable=False)
     first_parent_address = Column(String(1024), nullable=False)

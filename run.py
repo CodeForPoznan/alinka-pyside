@@ -21,10 +21,14 @@ if getattr(sys, "frozen", False):
 # We're pushing these import below, just to redirect
 # stdout and stderr as soon as possible
 from PySide6.QtWidgets import QApplication
+from qt_material import apply_stylesheet
 
 from alinka.widget.main_window import MainWindow
 
 app = QApplication(sys.argv)
+
+# Apply qt-material light teal theme as default
+apply_stylesheet(app, theme="light_teal_500.xml", invert_secondary=True)
 
 window = MainWindow()
 window.showMaximized()

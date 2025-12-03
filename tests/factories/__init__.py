@@ -19,7 +19,7 @@ from alinka.constants.common import RPSO_SUPPORT_CENTER_TYPE_ID
 from alinka.db.models import Decision, School, SupportCenter, TeamMember
 from alinka.db.queries import db_session
 from alinka.schemas.rspo_schema import InstitutionRequestBody
-from alinka.widget.containers.main_body.content.settings.settings_tabs.schools_tab.select_school_group import (
+from alinka.widget.containers.main_body.content.application.application_tabs.school_tab.school_dialog.select_school_group import (  # noqa E501
     SelectSchoolGroup,
 )
 from tests.factories.atrributes import (
@@ -81,8 +81,8 @@ class DecisionFactory(SQLAlchemyModelFactory):
     school_post = SelfAttribute("_school.post")
 
     _second_parent_exists = fuzzy.FuzzyChoice(choices=[True, False])
-    address_child_checkbox = fuzzy.FuzzyChoice(choices=[True, False])
-    address_first_parent_checkbox = Maybe(
+    is_first_parent_address_different = fuzzy.FuzzyChoice(choices=[True, False])
+    is_second_parent_address_different = Maybe(
         "_second_parent_exists",
         yes_declaration=fuzzy.FuzzyChoice(choices=[True, False]),
         no_declaration=False,
@@ -94,7 +94,7 @@ class DecisionFactory(SQLAlchemyModelFactory):
     first_parent_address = factory_faker("street_address")
     first_parent_town = factory_faker("city")
     first_parent_postal_code = Maybe(
-        "address_child_checkbox",
+        "is_first_parent_address_different",
         yes_declaration=None,
         no_declaration=factory_faker("postcode"),
     )
@@ -110,17 +110,17 @@ class DecisionFactory(SQLAlchemyModelFactory):
         no_declaration=None,
     )
     second_parent_address = Maybe(
-        "address_first_parent_checkbox",
+        "is_second_parent_address_different",
         yes_declaration=None,
         no_declaration=factory_faker("street_address"),
     )
     second_parent_town = Maybe(
-        "address_first_parent_checkbox",
+        "is_second_parent_address_different",
         yes_declaration=None,
         no_declaration=factory_faker("city"),
     )
     second_parent_postal_code = Maybe(
-        "address_first_parent_checkbox",
+        "is_second_parent_address_different",
         yes_declaration=None,
         no_declaration=factory_faker("postcode"),
     )

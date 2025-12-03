@@ -57,7 +57,7 @@ class TestQuery:
             post="Kłecko",
         )
 
-        support_center = upsert_support_center(support_center_data.model_dump())
+        support_center = upsert_support_center(support_center_data)
         assert support_center.name_nominative == support_center_data.name_nominative
 
     def test_upsert_support_center__existing(self):
@@ -77,7 +77,7 @@ class TestQuery:
             post="Kłecko",
         )
 
-        support_center = upsert_support_center(support_center_data.model_dump())
+        support_center = upsert_support_center(support_center_data)
         assert support_center.name_nominative == support_center_data.name_nominative
 
     def test_get_support_center__exists(self):

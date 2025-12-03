@@ -1,10 +1,10 @@
 from sqlalchemy import delete, or_
-from sqlalchemy.dialects.sqlite import insert
 
 from alinka.db.connection import db_session
 from alinka.db.models import Decision, School, SupportCenter, TeamMember
 from alinka.schemas import (
     DecisionDbSchema,
+    SchoolDbCreateSchema,
     SchoolDbSchema,
     SupportCenterDbSchema,
     TeamMemberDbCreateSchema,
@@ -62,9 +62,19 @@ def filter_schools_by_type(school_type: str | None = None) -> list[SchoolDbSchem
         return [SchoolDbSchema.model_validate(school) for school in query]
 
 
-def get_school_by_name(school_name: str) -> SchoolDbSchema:
+def get_school_by_name(school_name: str) -> SchoolDbSchema | None:
     with db_session() as db:
         school = db.query(School).filter(School.name == school_name).one_or_none()
+        if not school:
+            return None
+        return SchoolDbSchema.model_validate(school)
+
+
+def get_school_by_id(school_id: int) -> SchoolDbSchema | None:
+    with db_session() as db:
+        school = db.query(School).filter(School.id == school_id).one_or_none()
+        if not school:
+            return None
         return SchoolDbSchema.model_validate(school)
 
 
@@ -80,14 +90,23 @@ def check_if_any_school_exists() -> bool:
         return bool(any_school)
 
 
-def upsert_support_center(support_center_data: dict) -> SupportCenterDbSchema:
+def delete_school(school_id: int) -> None:
+    with db_session() as db:
+        stmt = delete(School).where(School.id == school_id)
+        db.execute(stmt)
+        db.commit()
+
+
+def upsert_support_center(support_center_data: SupportCenterDbSchema) -> SupportCenterDbSchema:
     with db_session() as db:
         if db.query(SupportCenter).where(SupportCenter.id == 1).one_or_none():
-            db.query(SupportCenter).where(SupportCenter.id == 1).update(support_center_data, synchronize_session="auto")
+            db.query(SupportCenter).where(SupportCenter.id == 1).update(
+                support_center_data.model_dump(), synchronize_session="auto"
+            )
             db.commit()
             support_center = db.query(SupportCenter).where(SupportCenter.id == 1).one()
         else:
-            support_center = SupportCenter(**support_center_data)
+            support_center = SupportCenter(**support_center_data.model_dump())
             db.add(support_center)
             db.commit()
 
@@ -101,12 +120,21 @@ def get_support_center_data() -> SupportCenterDbSchema | None:
             return SupportCenterDbSchema.model_validate(support_center)
 
 
-def create_school(school_data: dict) -> SchoolDbSchema:
+def create_school(school_data: SchoolDbCreateSchema) -> SchoolDbSchema:
     with db_session() as db:
-        school = School(**school_data)
+        school = School(**school_data.model_dump())
         db.add(school)
         db.commit()
         return SchoolDbSchema.model_validate(school)
+
+
+def update_school(school_data: SchoolDbSchema) -> SchoolDbSchema:
+    with db_session() as db:
+        db.query(School).filter(School.id == school_data.id).update(
+            school_data.model_dump(), synchronize_session="auto"
+        )
+        db.commit()
+        return school_data
 
 
 def get_team_members() -> list[TeamMemberDbSchema]:
@@ -115,16 +143,28 @@ def get_team_members() -> list[TeamMemberDbSchema]:
         return [TeamMemberDbSchema.model_validate(tm) for tm in team_members]
 
 
-def upsert_team_members(team_members_data: list[TeamMemberDbCreateSchema]) -> None:
+def get_meeting_member_by_id(member_id: int) -> TeamMemberDbSchema:
     with db_session() as db:
-        for tm in team_members_data:
-            upsert_stmt = (
-                insert(TeamMember)
-                .values(tm.model_dump())
-                .on_conflict_do_update(index_elements=["id"], set_={"name": tm.name, "function": tm.function})
-            )
-            db.execute(upsert_stmt)
+        team_member = db.query(TeamMember).filter(TeamMember.id == member_id).one()
+        return TeamMemberDbSchema.model_validate(team_member)
+
+
+def insert_team_member(team_member_data: TeamMemberDbCreateSchema) -> TeamMemberDbSchema:
+    with db_session() as db:
+        team_member = TeamMember(**team_member_data.model_dump())
+        db.add(team_member)
         db.commit()
+        return TeamMemberDbSchema.model_validate(team_member)
+
+
+def update_team_member(team_member_data: TeamMemberDbSchema) -> TeamMemberDbSchema:
+    with db_session() as db:
+        db.query(TeamMember).filter(TeamMember.id == team_member_data.id).update(
+            team_member_data.model_dump(exclude={"id"}), synchronize_session="auto"
+        )
+        db.commit()
+        team_member = db.query(TeamMember).filter(TeamMember.id == team_member_data.id).one()
+        return TeamMemberDbSchema.model_validate(team_member)
 
 
 def delete_team_member(team_member_id: int) -> None:
@@ -133,4 +173,4 @@ def delete_team_member(team_member_id: int) -> None:
         db.execute(stmt)
         db.commit()
 
-    return get_team_members()
+    return None

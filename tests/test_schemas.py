@@ -53,40 +53,35 @@ class TestChildDateOfBirth:
 
 
 class TestParentDescription:
-    @pytest.mark.parametrize("address_first_parent_checkbox", [True])
-    def test_parent_description_one_parent_different_flats(self, address_first_parent_checkbox, common_data_fixture):
+    def test_parent_description_one_parent_different_flats(self, common_data_fixture):
         del common_data_fixture["applicants"][-1]
         applicants = common_data_fixture["applicants"]
         expected_description = (
             f"{applicants[0]['full_name']},"
             f" {applicants[0]['address']}, {applicants[0]['postal_code']} {applicants[0]['town']}"
         )
-        common_data_fixture["address_child_checkbox"] = False
-        common_data_fixture["address_first_parent_checkbox"] = address_first_parent_checkbox
+        common_data_fixture["is_first_parent_address_different"] = True
+        common_data_fixture["is_second_parent_address_different"] = False
 
         document_data = DocumentData(**common_data_fixture)
 
         assert document_data.parent_descriptions == expected_description
 
-    @pytest.mark.parametrize("address_first_parent_checkbox", [True, False])
-    def test_parent_description_one_parent_same_flat(self, address_first_parent_checkbox, common_data_fixture):
+    def test_parent_description_one_parent_same_flat(self, common_data_fixture):
         del common_data_fixture["applicants"][-1]
         applicants = common_data_fixture["applicants"]
         child = common_data_fixture["child"]
         expected_description = (
             f"{applicants[0]['full_name']}," f" {child['address']}, {child['postal_code']} {child['town']}"
         )
-        common_data_fixture["address_child_checkbox"] = True
-        common_data_fixture["address_first_parent_checkbox"] = address_first_parent_checkbox
+        common_data_fixture["is_first_parent_address_different"] = False
+        common_data_fixture["is_second_parent_address_different"] = False
 
         document_data = DocumentData(**common_data_fixture)
 
         assert document_data.parent_descriptions == expected_description
 
-    @pytest.mark.parametrize("address_first_parent_checkbox", [True, False])
-    def test_parent_description_two_parents_same_flat_as_child(
-        self, address_first_parent_checkbox, common_data_fixture
-    ):
+    def test_parent_description_two_parents_same_flat_as_child(self, common_data_fixture):
         applicants = common_data_fixture["applicants"]
         child = common_data_fixture["child"]
         expected_description = (
@@ -94,8 +89,8 @@ class TestParentDescription:
             f" {applicants[1]['full_name']},"
             f" {child['address']}, {child['postal_code']} {child['town']}"
         )
-        common_data_fixture["address_child_checkbox"] = True
-        common_data_fixture["address_first_parent_checkbox"] = address_first_parent_checkbox
+        common_data_fixture["is_first_parent_address_different"] = False
+        common_data_fixture["is_second_parent_address_different"] = False
 
         document_data = DocumentData(**common_data_fixture)
 
@@ -108,8 +103,8 @@ class TestParentDescription:
             f" {applicants[1]['full_name']},"
             f" {applicants[0]['address']}, {applicants[0]['postal_code']} {applicants[0]['town']}"
         )
-        common_data_fixture["address_child_checkbox"] = False
-        common_data_fixture["address_first_parent_checkbox"] = True
+        common_data_fixture["is_first_parent_address_different"] = True
+        common_data_fixture["is_second_parent_address_different"] = False
 
         document_data = DocumentData(**common_data_fixture)
 
@@ -123,8 +118,8 @@ class TestParentDescription:
             f" {applicants[1]['full_name']},"
             f" {applicants[1]['address']}, {applicants[1]['postal_code']} {applicants[1]['town']}"
         )
-        common_data_fixture["address_child_checkbox"] = False
-        common_data_fixture["address_first_parent_checkbox"] = False
+        common_data_fixture["is_first_parent_address_different"] = True
+        common_data_fixture["is_second_parent_address_different"] = True
 
         document_data = DocumentData(**common_data_fixture)
 

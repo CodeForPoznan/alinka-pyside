@@ -2,6 +2,7 @@ from PySide6.QtCore import QDate, Qt
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 from alinka.constants.common import (
+    INVALID_FORM_MESSAGE,
     ISSUE_DESCRIPTION_NOMINATIVE_MAPPER,
     REASON_DESCRIPTION_ACCUSATIVE_LONG_MAPPER,
     ActivityForm,
@@ -17,30 +18,47 @@ from alinka.widget.components import (
 
 class ApplicationTabContainer(ValidationMixin, QWidget):
     def __init__(self, parent: QWidget):
+        self.application_container = parent
         super().__init__(parent)
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
-        self.application_date = LabeledDateComponent("Data wniosku", self)
+        layout.setSpacing(8)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.application_date = LabeledDateComponent("Data wniosku", self, required=True)
         self.application_date.date_input.setDate(QDate.currentDate())
-        self.application_subject = LabeledComboBoxComponent("Wniosek o", self)
+        self.application_subject = LabeledComboBoxComponent("Wniosek o", self, required=True)
         self.application_subject.combobox.setPlaceholderText("Wybierz z listy...")
         self.populate_application_subject()
         self.application_subject.combobox.currentTextChanged.connect(self.change_application_subject)
 
-        self.application_reason = LabeledComboBoxComponent("Z uwagi na", self)
+        self.application_reason = LabeledComboBoxComponent("Z uwagi na", self, required=True)
         self.application_reason.combobox.setPlaceholderText("Wybierz z listy...")
         self.application_reason.combobox.currentTextChanged.connect(self.change_application_reason)
-        self.application_reason_2 = LabeledComboBoxComponent("Z uwagi na", self)
+        self.application_reason_2 = LabeledComboBoxComponent("Z uwagi na", self, unselectable=True)
         self.application_reason_2.combobox.setPlaceholderText("Wybierz z listy...")
-        self.application_reason_2.setFixedHeight(0)
+        self.application_reason_2.setVisible(False)
 
         self._activity_form = LabeledComboBoxComponent("Forma zajęć", self)
-        self._activity_form.setFixedHeight(0)
+        self._activity_form.setVisible(False)
         self._activity_form.combobox.setEnabled(False)
         self._activity_form.combobox.setPlaceholderText("Wybierz z listy...")
 
-        self.application_period = LabeledComboBoxComponent("Na okres", self)
+        # TODO: not sure if this should be ComboBox or Input
+        self.application_period = LabeledComboBoxComponent("Na okres", self, required=True)
         self.application_period.combobox.setEditable(True)
+        self.application_period.combobox.setPlaceholderText("np. 24 miesiące")
+        # TODO: probably can be removed after changing type
+        line_edit = self.application_period.combobox.lineEdit()
+        if line_edit:
+            line_edit.setPlaceholderText("np. 24 miesiące")
+            line_edit.setStyleSheet("QLineEdit { color: #64748b; }")
+        # Hide the dropdown arrow to make it look like a text input
+        self.application_period.combobox.setStyleSheet(
+            """
+            QComboBox::drop-down { width: 0px; border: none; }
+            QComboBox::down-arrow { image: none; border: none; }
+        """
+        )
         layout.addWidget(self.application_date)
         layout.addWidget(self.application_subject)
         layout.addWidget(self.application_reason)
@@ -53,12 +71,12 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
         self.application_reason.combobox.clear()
 
         self._activity_form.combobox.clear()
-        self._activity_form.setFixedHeight(0)
+        self._activity_form.setVisible(False)
         self._activity_form.combobox.setEnabled(False)
 
         self.application_reason_2.combobox.clear()
         self.application_reason_2.combobox.setEnabled(False)
-        self.application_reason_2.setFixedHeight(0)
+        self.application_reason_2.setVisible(False)
 
         self.application_period.combobox.clear()
         self.populate_application_reason(application_subject)
@@ -72,17 +90,17 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
             application_subject = self.application_subject.combobox.currentData()
 
         for reason, reason_description in self.get_list_of_primary_reasons(application_subject).items():
-            self.application_reason.combobox.addItem(reason_description, reason)
+            self.application_reason.addItem(reason_description, reason)
 
     def change_application_reason(self):
-        self.application_reason_2.combobox.clear()
-        self.application_period.combobox.clear()
+        self.application_reason_2.clear()
+        self.application_period.clear()
         primary_reason = self.application_reason.combobox.currentData()
         if primary_reason == Reason.GLEBOKIE:
-            self._activity_form.setFixedHeight(45)
+            self._activity_form.setVisible(True)
             self._activity_form.combobox.setEnabled(True)
-            self._activity_form.combobox.addItem(ActivityForm.INDYWIDUALNE.value, ActivityForm.INDYWIDUALNE)
-            self._activity_form.combobox.addItem(ActivityForm.ZESPOLOWE.value, ActivityForm.ZESPOLOWE)
+            self._activity_form.addItem(ActivityForm.INDYWIDUALNE.value, ActivityForm.INDYWIDUALNE)
+            self._activity_form.addItem(ActivityForm.ZESPOLOWE.value, ActivityForm.ZESPOLOWE)
             return
         if primary_reason not in Reason.multiple_disabilities_reasons():
             # we want to show another reason select box is first is suitable
@@ -110,8 +128,8 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
             if reason not in reason_to_exclude
         }
         for reason, reason_description in secondary_reasons.items():
-            self.application_reason_2.combobox.addItem(reason_description, reason)
-        self.application_reason_2.setFixedHeight(45)
+            self.application_reason_2.addItem(reason_description, reason)
+        self.application_reason_2.setVisible(True)
         self.application_reason_2.combobox.setEnabled(True)
 
     def get_list_of_primary_reasons(self, issue: Issue) -> dict[Reason, str]:
@@ -162,11 +180,60 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
 
     def clear(self):
         self.application_date.date_input.setDate(QDate.currentDate())
-        self.application_subject.combobox.setCurrentIndex(-1)
-        self.application_reason.combobox.setCurrentIndex(-1)
-        self.application_reason_2.combobox.setCurrentIndex(-1)
-        self.application_reason_2.setFixedHeight(0)
-        self._activity_form.combobox.setCurrentIndex(-1)
-        self._activity_form.setFixedHeight(0)
+        self.application_subject.remove_selection()
+        self.application_reason.remove_selection()
+        self.application_reason_2.remove_selection()
+        self.application_reason_2.setVisible(False)
+        self._activity_form.remove_selection()
+        self._activity_form.setVisible(False)
         self._activity_form.combobox.setEnabled(False)
-        self.application_period.combobox.setCurrentIndex(-1)
+        self.application_period.clear()
+
+    @property
+    def is_valid(self) -> bool:
+        return all(
+            [
+                self.application_date.is_valid,
+                self.application_subject.is_valid,
+                self.application_reason.is_valid,
+                self.is_activity_form_valid,
+                self.application_period.is_valid,
+            ]
+        )
+
+    @property
+    def error_message(self) -> str | None:
+        if not self.is_valid:
+            return INVALID_FORM_MESSAGE
+
+    @property
+    def is_activity_form_valid(self) -> bool:
+        if (
+            self.application_subject.combobox.currentData() == Issue.REWALIDACYJNE
+            and self._activity_form.combobox.currentIndex() == -1
+        ):
+            return False
+        return True
+
+    def validate_activity_form(self) -> bool:
+        self._activity_form.display_validation_result(self.is_activity_form_valid)
+        return self.is_activity_form_valid
+
+    def validate(self) -> bool:
+        return all(
+            [
+                self.application_date.validate(),
+                self.application_subject.validate(),
+                self.application_reason.validate(),
+                self.validate_activity_form(),
+                self.application_period.validate(),
+            ]
+        )
+
+    def clear_validation_state(self):
+        self.application_date.clear_validation_state()
+        self.application_subject.clear_validation_state()
+        self.application_reason.clear_validation_state()
+        self.application_reason_2.clear_validation_state()
+        self._activity_form.clear_validation_state()
+        self.application_period.clear_validation_state()

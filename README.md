@@ -1,11 +1,5 @@
 # Alinka PySide
 
-## Development
-
-If you're using Docker Compose (or Linux in general) for development, be aware
-that Waylaynd as Windows System is causing issues and it would be wise
-to switch X11 (see procedure in https://apploye.com/help/switch-from-wayland-to-xorg-ubuntu/).
-
 ## Release 
 To make a release please follow instruction
 1. Go to "Actions" tab and run "Crate release" workflow (additional instructions [here](https://docs.github.com/en/actions/how-tos/managing-workflow-runs-and-deployments/managing-workflow-runs/manually-running-a-workflow#running-a-workflow)).
@@ -16,5 +10,5 @@ To make a release please follow instruction
 6. Fill in the form with "Microsoft Defender Smartscreeen" option and "Code for Poznań" as a company name.
 7. While, waiting for Microsoft check go to pre-release again and start editing.
 8. In the content describe all the changes made based on github repo history of merged code. 
-9. Once you get the confirmation from Microsoft you can uncheck pre-release tag and unkorque the champagne!
+9. Once you get the confirmation from Microsoft you can uncheck pre-release tag and uncork the champagne!
 10. But first paste the latest release onto facebook group: https://www.facebook.com/groups/496335526898202

@@ -65,8 +65,8 @@ support_center_data = {
 }
 
 common_data = {
-    "address_child_checkbox": False,
-    "addres_first_parent_checkbox": False,
+    "is_first_parent_address_different": False,
+    "is_second_parent_address_different": False,
     "issue": "specjalne",
     "period": "nauki w klasach I - III",
     "reasons": ["umiarkowane"],
@@ -105,8 +105,8 @@ decision_data = {
     "school_town": "Grudziądz",
     "school_postal_code": "40-999",
     "school_post": "Grudziądz",
-    "address_child_checkbox": False,
-    "address_first_parent_checkbox": True,
+    "is_first_parent_address_different": False,
+    "is_second_parent_address_different": True,
     "first_parent_full_name": "Emilia Uroda",
     "first_parent_full_name_gen": "Emilii Urody",
     "first_parent_address": "plac Floriana 83/87",
