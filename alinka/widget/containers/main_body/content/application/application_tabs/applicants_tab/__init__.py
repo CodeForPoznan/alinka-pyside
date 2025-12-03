@@ -43,7 +43,6 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
             self.applicant_2_data_group.setVisible(True)
             self._applicant_2_active = True
 
-        # wymuszenie odświeżenia layoutu
         self.layout().update()
         self.layout().activate()
         self.adjustSize()

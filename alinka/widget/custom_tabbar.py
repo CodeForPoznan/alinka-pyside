@@ -11,7 +11,7 @@ class ValidationTabBar(QTabBar):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._invalid_tabs = []
-        self.icon_margin = 10  # margines od prawej krawędzi tab'a
+        self.icon_margin = 10
         self.warning_icon = "⚠"
 
     def set_invalid_tabs(self, invalid_indices: list[int]) -> None:
