@@ -80,21 +80,7 @@ class ContentContainer(ValidationMixin, QFrame):
 
     def showEvent(self, event):
         self.validate_basic_settings()
-        self.validate_application()
         return super().showEvent(event)
-
-    def validate_application(self):
-        if self.application_container.isVisible():
-            # When showing the application container as part of UI flow we
-            # don't want to immediately highlight pristine fields. Use the
-            # internal _validate with show_errors=False to just check validity
-            # without triggering visual validation. Full validation (with
-            # highlights) will be triggered when user submits or switches tabs.
-            if hasattr(self.application_container, "_validate"):
-                return self.application_container._validate(show_errors=False)
-            # fallback
-            return self.application_container.validate()
-        return True
 
     def show_settings_container(self):
         header_container = self.main_body_container.header_container

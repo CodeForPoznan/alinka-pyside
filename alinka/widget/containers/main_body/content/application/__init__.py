@@ -89,6 +89,21 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         for c in self.containers:
             c.clear_validation_state()
 
+    def check_validity(self, show_errors: bool = False) -> bool:
+        """Public helper to check validity.
+
+        - show_errors=False (default): only reads `is_valid` flags and returns
+          the combined result without producing any visual side-effects.
+        - show_errors=True: performs full validation and highlights errors
+          (same behaviour as :meth:`validate`).
+
+        This keeps a clear contract: `validate` highlights errors, while
+        `check_validity(False)` only tests the state.
+        """
+        if show_errors:
+            return self.validate()
+        return self.is_valid
+
     def update_breadcrumb(self, index: int):
         """Update breadcrumb when tab changes"""
         header_container = self.content_container.main_body_container.header_container
@@ -108,7 +123,16 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         if self.previous_tab_index in self._visited_tabs:
             previous_tab = self.widget(self.previous_tab_index)
 
-            if not previous_tab.validate():
+            # Only call validate if the widget implements it. Some child
+            # widgets may be plain QWidgets (type checker warns), so guard
+            # the call to avoid unresolved attribute references and runtime
+            # AttributeError in unusual cases.
+            if hasattr(previous_tab, "validate"):
+                is_prev_valid = previous_tab.validate()
+            else:
+                is_prev_valid = True
+
+            if not is_prev_valid:
                 tab_name = self.tabText(self.previous_tab_index)
                 self._invalid_tabs.add(self.previous_tab_index)
                 self._update_invalid_tabs_display()
@@ -148,9 +172,24 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         When application flow is finished (either by generating documents or cancelling)
         we should prepare the form for a new application.
         """
+        # Reset form state and visual markers
         self.clear()
         self.setCurrentWidget(self.child_tab_container)
         self.clear_validation_state()
+
+        # Move focus away from any previously focused sidebar/button widget.
+        # This prevents leftover "focused" visuals on the sidebar buttons
+        # after cancelling the form. We try to focus the header; if that
+        # fails, fall back to clearing focus on the top-level window.
+        try:
+            header_container = self.content_container.main_body_container.header_container
+            header_container.setFocus()
+        except Exception:
+            try:
+                # best-effort fallback
+                self.window().clearFocus()
+            except Exception:
+                pass
 
     def mark_invalid_tabs(self, invalid_indices: list[int]) -> None:
         """Mark tabs as invalid using custom tab bar painting"""
@@ -163,12 +202,14 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         self._update_invalid_tabs_display()
 
     def validate(self) -> bool:
-        # Backwards-compatible validate method.
-        # By default this behaves as before and will show field-level
-        # validation results. If called with show_errors=False it will
-        # only check `is_valid` flags (no display/highlighting) which is
-        # useful when toggling visibility of the application form so we
-        # don't highlight pristine fields immediately.
+        """Validate the whole application and highlight any errors.
+
+        This method performs full validation (field-level checks and visual
+        highlighting) and returns True when the form is valid. If a caller
+        needs to check validity without side-effects, use
+        :meth:`check_validity(show_errors=False)` or the :attr:`is_valid`
+        property instead of this method.
+        """
         return self._validate(show_errors=True)
 
     def _validate(self, show_errors: bool = True) -> bool:
@@ -221,7 +262,6 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
             period=self.application_tab_container.period,
             reasons=self.application_tab_container.reasons,
             activity_form=self.application_tab_container.activity_form,
-            application_no=self.child_tab_container.general_data_group.decision_no.text,
             application_date=self.application_tab_container.application_date.date_input.date().toPython(),
             meeting_data=self.meeting_tab_container.meeting_data,
             support_center=support_center_data,
