@@ -1,5 +1,6 @@
-from PySide6.QtWidgets import QTabWidget, QWidget
 import logging
+
+from PySide6.QtWidgets import QTabWidget, QWidget
 
 from alinka.constants.common import INVALID_FORM_MESSAGE, INVALID_TAB_TOOLTIP_MESSAGE
 from alinka.db.queries import get_support_center_data
@@ -192,7 +193,9 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
             # If header container or its attributes are missing, fall back to clearing
             # focus on the top-level window. Log at DEBUG because this is usually
             # a benign UI state during teardown/reset.
-            logger.debug("Could not focus header container; falling back to window.clearFocus(): %s", err, exc_info=True)
+            logger.debug(
+                "Could not focus header container; falling back to window.clearFocus(): %s", err, exc_info=True
+            )
             try:
                 win = self.window()
                 if win is not None and hasattr(win, "clearFocus"):
