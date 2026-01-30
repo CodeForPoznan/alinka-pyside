@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QTabWidget, QWidget
+import logging
 
 from alinka.constants.common import INVALID_FORM_MESSAGE, INVALID_TAB_TOOLTIP_MESSAGE
 from alinka.db.queries import get_support_center_data
@@ -14,6 +15,9 @@ from .application_tabs import (
     MeetingTabContainer,
     SchoolTabContainer,
 )
+
+# Module logger
+logger = logging.getLogger(__name__)
 
 
 class ApplicationContainer(ValidationMixin, QTabWidget):
@@ -184,12 +188,20 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
         try:
             header_container = self.content_container.main_body_container.header_container
             header_container.setFocus()
-        except Exception:
+        except (AttributeError, RuntimeError, TypeError) as err:
+            # If header container or its attributes are missing, fall back to clearing
+            # focus on the top-level window. Log at DEBUG because this is usually
+            # a benign UI state during teardown/reset.
+            logger.debug("Could not focus header container; falling back to window.clearFocus(): %s", err, exc_info=True)
             try:
-                # best-effort fallback
-                self.window().clearFocus()
-            except Exception:
-                pass
+                win = self.window()
+                if win is not None and hasattr(win, "clearFocus"):
+                    win.clearFocus()
+                else:
+                    logger.debug("Window is None or has no clearFocus method; nothing to clear")
+            except (AttributeError, RuntimeError, TypeError) as err2:
+                # Unexpected failures while trying to clear focus; record stack trace
+                logger.exception("Failed to clear focus on window: %s", err2)
 
     def mark_invalid_tabs(self, invalid_indices: list[int]) -> None:
         """Mark tabs as invalid using custom tab bar painting"""
