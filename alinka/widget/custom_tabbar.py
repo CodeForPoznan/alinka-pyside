@@ -8,6 +8,8 @@ from PySide6.QtWidgets import QTabBar
 class ValidationTabBar(QTabBar):
     """Custom QTabBar with validation highlighting for invalid tabs."""
 
+    TAB_PADDING = 40
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self._invalid_tabs = []
@@ -25,7 +27,7 @@ class ValidationTabBar(QTabBar):
         font_metrics = self.fontMetrics()
         text_width = font_metrics.horizontalAdvance(self.tabText(index))
         icon_width = font_metrics.horizontalAdvance(self.warning_icon)
-        extra_width = icon_width + 40 + self.icon_margin
+        extra_width = icon_width + self.TAB_PADDING + self.icon_margin
         size.setWidth(max(size.width(), text_width + extra_width))
         return size
 
