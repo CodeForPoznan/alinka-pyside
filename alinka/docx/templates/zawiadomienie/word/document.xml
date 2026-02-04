@@ -15,7 +15,7 @@
         <w:pStyle w:val="City-and-date" />
       </w:pPr>
       <w:r>
-        <w:t>{{ support_center.town }}, {{ application_date }}</w:t>
+        <w:t>{{ support_center.city }}, {{ application_date }}</w:t>
       </w:r>
     </w:p>
     <w:p>
@@ -82,7 +82,7 @@
         <w:pStyle w:val="LegalBasis" />
       </w:pPr>
       <w:r>
-        <w:t>Podstawa prawna: §7 ust.4 oraz §4 ust.5 Rozporządzenia Ministra Edukacji Narodowej z dnia 7 września 2017 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. z 2023 r. poz. 2061)</w:t>
+        <w:t>Podstawa prawna: §7 ust.4 oraz §4 ust.5 Rozporządzenia Ministra Edukacji Narodowej z dnia 7 września 2017 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz.U. z 2017r. poz.1743)</w:t>
       </w:r>
     </w:p>
     <w:p>
@@ -150,7 +150,7 @@
         <w:t>,</w:t>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> zawiadamiam, że posiedzenie Zespołu Orzekającego, na którym będzie rozpatrywany złożony wniosek, odbędzie się w dniu</w:t>
+        <w:t xml:space="preserve"> zawiadamiam, że posiedzenie Zespołu Orzekającego, na którym będzie rozpatrywany złożony wniosek odbędzie się w dniu</w:t>
       </w:r>
       <w:r>
         <w:rPr>
@@ -176,7 +176,7 @@
         <w:rPr>
           <w:b />
         </w:rPr>
-        <w:t>{{ meeting_data.time }}</w:t>
+        <w:t>{{ meeting_data.hour }}</w:t>
       </w:r>
       <w:r>
         <w:t>.</w:t>
