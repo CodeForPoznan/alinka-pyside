@@ -1,4 +1,4 @@
-from PySide6.QtCore import QDate, Qt, Signal
+from PySide6.QtCore import QDate, Qt, Signal, QTime
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QDialog,
@@ -26,6 +26,7 @@ from alinka.widget.components import (
     LabeledInputComponent,
     ValidationMixin,
 )
+from alinka.widget.containers import LabeledTimeComponent
 
 from .member_dialog import MemberDialog
 
@@ -88,8 +89,9 @@ class MeetingDatetimeFrame(ValidationMixin, QFrame):
 
         self.meeting_date = LabeledDateComponent("Data zespołu", self, required=True)
         self.meeting_date.date_input.setDate(QDate.currentDate())
-        self.meeting_time = LabeledInputComponent("Godzina zespołu", self, required=True)
-        self.meeting_time.line_edit.setPlaceholderText("np. 10:00")
+
+        self.meeting_time = LabeledTimeComponent("Godzina zespołu", self, required=True)
+        self.meeting_time.time_input.setTime(QTime.currentTime())
 
         layout.addWidget(self.meeting_date, 1)
         layout.addWidget(self.meeting_time, 1)
