@@ -1,14 +1,13 @@
 import os
 from zipfile import ZipFile
 
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from alinka.constants import DocumentsTypes
 from alinka.schemas import DocumentData
 
-# Use PackageLoader so resources are resolved correctly from the installed package
-# (works with Windows installer and PyInstaller)
-loader = PackageLoader("alinka.docx", "templates")
+TEMPLATES_BASE_PATH = os.path.join(os.path.dirname(__file__), "templates")
+loader = FileSystemLoader(TEMPLATES_BASE_PATH)
 environment = Environment(loader=loader)
 
 
@@ -42,37 +41,22 @@ class DocumentGenerator:
         ]
 
     @property
-    def footnotes_file_path(self) -> str:
-        return "/".join([self.document_type, "word", "footnotes.xml"])
+    def footnotes_file_path(self):
+        return os.path.join(TEMPLATES_BASE_PATH, self.document_type, "word", "footnotes.xml")
 
     def get_rendered_document(self):
         data = self.document_data.model_dump()
         return self.template.render(data)
 
-    def _get_resource_bytes(self, template_name: str) -> bytes:
-        # Read template content via Jinja loader regardless of filesystem location
-        source, _, _ = environment.loader.get_source(environment, template_name)
-        return source.encode("utf-8")
-
     def generate(self):
         with ZipFile(self.destination_path, "w") as document:
-            # Write common static files from the packaged templates
             for path_parts in self.files_path_parts:
-                file_arch_path = "/".join(path_parts)  # Jinja loader expects forward slashes
-                common_template_name = "/".join(["commons", file_arch_path])
-                document.writestr(zinfo_or_arcname=file_arch_path, data=self._get_resource_bytes(common_template_name))
+                file_arch_path = os.path.join(*path_parts)
+                file_source_path = os.path.join(TEMPLATES_BASE_PATH, "commons", file_arch_path)
+                document.write(filename=file_source_path, arcname=file_arch_path)
 
-            # Write footnotes file for the specific document type
-            document.writestr(
-                data=self._get_resource_bytes(self.footnotes_file_path),
-                zinfo_or_arcname=os.path.join("word", "footnotes.xml"),
-            )
-
-            # Write rendered document.xml
-            document.writestr(
-                data=self.get_rendered_document(),
-                zinfo_or_arcname=os.path.join("word", "document.xml"),
-            )
+            document.write(filename=self.footnotes_file_path, arcname=os.path.join("word", "footnotes.xml"))
+            document.writestr(data=self.get_rendered_document(), zinfo_or_arcname=os.path.join("word", "document.xml"))
 
 
 class Documents:
