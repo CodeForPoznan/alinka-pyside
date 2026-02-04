@@ -1,12 +1,13 @@
 from datetime import time as dt_time
+
 from PySide6.QtCore import QTime
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QTextEdit, QTimeEdit, QVBoxLayout
+from PySide6.QtWidgets import QLabel, QTimeEdit, QVBoxLayout, QWidget
 
 from alinka.widget.components import ValidationMixin
 
 
 class LabeledTimeComponent(ValidationMixin, QWidget):
-    def __init__(self, label: str, parent: QWidget, required = False):
+    def __init__(self, label: str, parent: QWidget, required=False):
         super().__init__(parent)
         self.required = required
 
@@ -26,7 +27,7 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
         layout.addWidget(self.time_input)
 
     @property
-    def time(selfself) -> dt_time:
+    def time(self) -> dt_time:
         q = self.time_input.time()
         return dt_time(q.hour(), q.minute(), q.second())
 

@@ -1,4 +1,4 @@
-from PySide6.QtCore import QDate, Qt, Signal, QTime
+from PySide6.QtCore import QDate, Qt, QTime, Signal
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QDialog,
@@ -23,10 +23,9 @@ from alinka.widget.components import (
     ConfirmationModal,
     LabeledComboBoxComponent,
     LabeledDateComponent,
-    LabeledInputComponent,
     ValidationMixin,
 )
-from alinka.widget.containers import LabeledTimeComponent
+from alinka.widget.containers.labeled_time_component import LabeledTimeComponent
 
 from .member_dialog import MemberDialog
 
