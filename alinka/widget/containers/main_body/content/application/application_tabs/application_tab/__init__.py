@@ -28,8 +28,7 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
         self.application_date.date_input.setDate(QDate.currentDate())
         self.application_subject = LabeledComboBoxComponent("Wniosek o", self, required=True)
         self.application_subject.combobox.setPlaceholderText("Wybierz z listy...")
-        for issue, description in ISSUE_DESCRIPTION_NOMINATIVE_MAPPER.items():
-            self.application_subject.addItem(description, issue)
+        self.populate_application_subject()
         self.application_subject.combobox.currentTextChanged.connect(self.change_application_subject)
 
         self.application_reason = LabeledComboBoxComponent("Z uwagi na", self, required=True)
@@ -80,6 +79,15 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
         self.application_reason_2.setVisible(False)
 
         self.application_period.combobox.clear()
+        self.populate_application_reason(application_subject)
+
+    def populate_application_subject(self) -> None:
+        for issue, description in ISSUE_DESCRIPTION_NOMINATIVE_MAPPER.items():
+            self.application_subject.combobox.addItem(description, issue)
+
+    def populate_application_reason(self, application_subject: LabeledComboBoxComponent | None = None) -> None:
+        if not application_subject:
+            application_subject = self.application_subject.combobox.currentData()
 
         for reason, reason_description in self.get_list_of_primary_reasons(application_subject).items():
             self.application_reason.addItem(reason_description, reason)
@@ -171,7 +179,7 @@ class ApplicationTabContainer(ValidationMixin, QWidget):
         return self._activity_form.combobox.currentData()
 
     def clear(self):
-        self.application_date.date_input.clear()
+        self.application_date.date_input.setDate(QDate.currentDate())
         self.application_subject.remove_selection()
         self.application_reason.remove_selection()
         self.application_reason_2.remove_selection()

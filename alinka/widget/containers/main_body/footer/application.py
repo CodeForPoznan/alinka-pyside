@@ -19,14 +19,16 @@ class ApplicationFooterContainer(QFrame):
 
         self.cancel_btn = QPushButton("Anuluj", self)
         self.cancel_btn.clicked.connect(self.cancel_application)
-        layout.addWidget(self.cancel_btn)
 
         layout.addStretch()
 
         self.print_btn = QPushButton("Drukuj dokumenty", self)
         self.print_btn.clicked.connect(self.print_documents)
-        self.print_btn.setFixedWidth(200)
-        layout.addWidget(self.print_btn)
+        self.clear_application_btn = QPushButton("Wyczyść formularz", self)
+        layout.addWidget(self.print_btn, stretch=3)
+        self.clear_application_btn.clicked.connect(self.clear_application)
+        layout.addWidget(self.clear_application_btn, stretch=1)
+        layout.addWidget(self.cancel_btn)
 
         self.setVisible(visible)
 
@@ -88,3 +90,12 @@ class ApplicationFooterContainer(QFrame):
 
         self.content_container.main_body_container.header_container.set_info_message("Tworzenie dokumentu anulowane")
         self.redirect_to_browser()
+
+    def clear_application(self):
+        if not ConfirmationModal(
+            self,
+            "Potwierdzenie usunięcia zmian",
+            "Czy na pewno chcesz usunąć wszystkie wprowadzone dane?",
+        ).confirm():
+            return
+        self.content_container.application_container.clear()

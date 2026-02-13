@@ -391,6 +391,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
 
     def clear(self):
         self.meeting_leader.remove_selection()
+        self.meeting_leader.combobox.clear()
         self.meeting_date.date_input.setDate(QDate.currentDate())
         self.meeting_time.clear()
         self.meeting_member_group.clear()
