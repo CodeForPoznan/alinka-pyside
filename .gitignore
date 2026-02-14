@@ -17,3 +17,5 @@ help.spec
 
 # db files
 *.db
+
+/.idea
