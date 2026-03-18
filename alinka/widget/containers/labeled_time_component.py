@@ -19,7 +19,7 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
         self._label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
 
         self.time_input = QTimeEdit(self)
-        self.time_input.setDisplayFormat("hh:mm:ss")
+        self.time_input.setDisplayFormat("hh:mm")
         self.time_input.setTime(QTime.currentTime())
         self.time_input.setKeyboardTracking(False)
 
@@ -37,9 +37,9 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
 
     @text.setter
     def text(self, value: str) -> None:
-        q = QTime.fromString(value, "HH:mm")
-        if q.isValid():
-            self.time_input.setTime(q)
+        time = QTime.fromString(value, "HH:mm")
+        if time.isValid():
+            self.time_input.setTime(time)
 
     @property
     def is_valid(self) -> bool:
@@ -49,13 +49,13 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
 
     @property
     def error_message(self) -> str | None:
-        if self.required and not self.time_input.time().isValid():
+        if not self.is_valid:
             return "Proszę wybrać prawidłową godzinę."
         return None
 
     def validate(self) -> bool:
         valid = self.is_valid
-        self.display_validation_result(not valid)
+        self.display_validation_result(valid)
         return valid
 
     def clear_validation_state(self) -> None:
@@ -63,8 +63,8 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
         self.time_input.style().unpolish(self.time_input)
         self.time_input.style().polish(self.time_input)
 
-    def display_validation_result(self, invalid: bool) -> None:
-        self.time_input.setProperty("validationState", "invalid" if invalid else "valid")
+    def display_validation_result(self, is_valid: bool) -> None:
+        self.time_input.setProperty("validationState", "valid" if is_valid else "invalid")
         self.time_input.style().unpolish(self.time_input)
         self.time_input.style().polish(self.time_input)
 

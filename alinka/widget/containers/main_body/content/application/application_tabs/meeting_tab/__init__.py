@@ -1,4 +1,4 @@
-from PySide6.QtCore import QDate, Qt, QTime, Signal
+from PySide6.QtCore import QDate, Qt, Signal
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QDialog,
@@ -90,7 +90,6 @@ class MeetingDatetimeFrame(ValidationMixin, QFrame):
         self.meeting_date.date_input.setDate(QDate.currentDate())
 
         self.meeting_time = LabeledTimeComponent("Godzina zespołu", self, required=True)
-        self.meeting_time.time_input.setTime(QTime.currentTime())
 
         layout.addWidget(self.meeting_date, 1)
         layout.addWidget(self.meeting_time, 1)
