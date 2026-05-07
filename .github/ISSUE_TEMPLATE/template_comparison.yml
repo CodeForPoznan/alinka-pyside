@@ -1,0 +1,55 @@
+name: Porównanie szablonu dokumentu
+description: Aktualizacja szablonu DOCX do nowego wzorca MEN — użyj gdy wychodzi nowe rozporządzenie
+title: "Porównanie istniejącej template \"[NAZWA]\" do nowego wzorca"
+labels: ["discovery", "templates"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Użyj tego szablonu gdy Ministerstwo Edukacji wydało nowe rozporządzenie i trzeba zaktualizować istniejący szablon DOCX generowany przez Alinkę.
+
+  - type: textarea
+    id: legal_context
+    attributes:
+      label: Kontekst prawny
+      description: Rozporządzenie, numer Dz.U., załącznik którego dotyczy zadanie.
+      placeholder: |
+        Rozporządzenie MEN z dnia [DATA] (Dz. U. z [ROK] r. poz. [NR])
+        Załącznik nr [X] — [NAZWA DOKUMENTU]
+    validations:
+      required: true
+
+  - type: input
+    id: wzorzec_url
+    attributes:
+      label: Link do nowego wzorca
+      description: Bezpośredni link do PDF lub strony z rozporządzeniem.
+      placeholder: "https://..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: changes
+    attributes:
+      label: Zakres zmian względem poprzedniego wzorca
+      description: Co się zmieniło? Pogrupuj na zmiany tekstowe i strukturalne.
+      placeholder: |
+        Zmiany tekstowe (zaktualizowane podstawy prawne, brzmienie pól, itp.):
+        - ...
+
+        Zmiany strukturalne (nowe sekcje, zmieniony układ, usunięte pola, itp.):
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done
+      description: Kiedy zadanie można uznać za skończone?
+      placeholder: |
+        - [ ] Szablon Jinja2 zaktualizowany zgodnie z nowym wzorcem
+        - [ ] Wygenerowany dokument porównany ręcznie z wzorcem MEN (wizualnie i treściowo)
+        - [ ] Testy generowania dokumentu przechodzą
+    validations:
+      required: true

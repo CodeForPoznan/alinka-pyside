@@ -1,0 +1,51 @@
+name: Bug report
+description: Coś nie działa jak powinno — regresja lub błędne zachowanie
+title: ""
+labels: ["bug"]
+body:
+  - type: textarea
+    id: repro
+    attributes:
+      label: Kroki reprodukcji
+      description: Jak możemy odtworzyć ten błąd krok po kroku?
+      placeholder: |
+        1. Otwórz aplikację
+        2. Przejdź do...
+        3. Kliknij...
+        4. Widzisz błąd
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Oczekiwane zachowanie
+      description: Co powinno się stać?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Aktualne zachowanie
+      description: Co się faktycznie dzieje? Jeśli jest komunikat błędu — wklej go tutaj.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Środowisko
+      placeholder: |
+        - OS: Windows 11 / Ubuntu 22.04 / macOS 14
+        - Wersja Alinki: x.x.x
+    validations:
+      required: true
+
+  - type: textarea
+    id: extras
+    attributes:
+      label: Zrzuty ekranu / logi
+      description: Opcjonalnie — screenshot, nagranie lub fragment logu z konsoli.
+    validations:
+      required: false

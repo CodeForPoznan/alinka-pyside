@@ -1,0 +1,47 @@
+name: Chore
+description: Praca techniczna bez wartości dla użytkownika — porządki, refactor, upgrade zależności
+title: ""
+labels: ["chore"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Co trzeba zrobić?
+      description: Konkretny opis pracy do wykonania.
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Dlaczego teraz?
+      description: Co motywuje to zadanie? Co się psuje lub pogarsza jeśli tego nie zrobimy?
+      placeholder: |
+        Np. "Dependabot zgłasza lukę w X", "refactor potrzebny zanim dodamy Y",
+        "dług techniczny który spowalnia każdą zmianę w module Z"
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Zakres
+      description: Co jest w scope, a co nie — żeby zadanie nie rosło w trakcie.
+      placeholder: |
+        W scope:
+        - ...
+
+        Poza scope:
+        - ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: dod
+    attributes:
+      label: Kryteria ukończenia
+      description: Skąd wiemy że sprzątanie jest zrobione?
+      placeholder: |
+        - [ ] ...
+    validations:
+      required: true
