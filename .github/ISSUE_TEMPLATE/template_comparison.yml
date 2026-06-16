@@ -1,6 +1,6 @@
 name: Porównanie szablonu dokumentu
 description: Aktualizacja szablonu DOCX do nowego wzorca MEN — użyj gdy wychodzi nowe rozporządzenie
-title: "Porównanie istniejącej template \"[NAZWA]\" do nowego wzorca"
+title: "Porównanie istniejącego szablonu \"[NAZWA]\" do nowego wzorca"
 labels: ["discovery", "templates"]
 body:
   - type: markdown
