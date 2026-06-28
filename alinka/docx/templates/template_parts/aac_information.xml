@@ -6,27 +6,61 @@
     <w:t>Dodatkowe informacje</w:t>
   </w:r>
 </w:p>
+
 <w:p>
   <w:pPr>
-    <w:pStyle w:val="Additional-info-desc"/>
+    <w:pStyle w:val="Recommend"/>
   </w:pPr>
   <w:r>
-    <w:t>({{ issue.aac_information_description }})</w:t>
+    <w:t>1. Dziecko posługuje się wspomagającą lub alternatywną metodą komunikacji (AAC)\n   lub językiem migowym: {{ 'TAK' if aac_uses else 'NIE' }}</w:t>
+  </w:r>
+  <w:r>
+    <w:rPr>
+      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+    </w:rPr>
+    <w:footnoteReference w:id="6"/>
+  </w:r>
+</w:p>
+
+<w:p>
+  <w:pPr>
+    <w:jc w:val="both"/>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ aac_description }}</w:t>
+  </w:r>
+</w:p>
+
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+  </w:pPr>
+  <w:r>
+    <w:t>2. Informacje o sprzęcie specjalistycznym i środkach dydaktycznych,\n   z których korzysta dziecko:</w:t>
   </w:r>
 </w:p>
 <w:p>
   <w:pPr>
     <w:jc w:val="both"/>
-    <w:rPr>
-      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-      <w:lang w:val="pl-PL"/>
-    </w:rPr>
   </w:pPr>
   <w:r>
-    <w:rPr>
-      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-      <w:lang w:val="pl-PL"/>
-    </w:rPr>
-    <w:t>Opis</w:t>
+    <w:t>{{ equipment_info }}</w:t>
+  </w:r>
+</w:p>
+
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+  </w:pPr>
+  <w:r>
+    <w:t>3. Inne:</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:jc w:val="both"/>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ additional_info }}</w:t>
   </w:r>
 </w:p>

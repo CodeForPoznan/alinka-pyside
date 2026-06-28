@@ -22,7 +22,7 @@
         <w:pStyle w:val="LegalBasis"/>
       </w:pPr>
       <w:r>
-        <w:t>Działając na podstawie art. 127 ust. 10 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe (Dz. U. z 2023 r. poz. 900, 1672 i 1718)</w:t>
+        <w:t>Działając na podstawie art. 127 ust. 10 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe (Dz. U. z 2025 r. poz. 1043, z późn. zm.)</w:t>
       </w:r>
     </w:p>
     {% include "template_parts/on_request.xml" %}
@@ -75,7 +75,6 @@
       </w:r>
     </w:p>
     {% include "template_parts/child_name.xml" %}
-    {% include "template_parts/child_birth.xml" %}
     {% include "template_parts/pesel.xml" %}
     {% include "template_parts/child_address.xml" %}
     <w:p>
@@ -125,7 +124,7 @@
         <w:footnoteReference w:id="3"/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> oraz adres ich zamieszkania)</w:t>
+        <w:t xml:space="preserve"> oraz adres albo adresy ich zamieszkania)</w:t>
       </w:r>
     </w:p>
     <w:p>
@@ -176,20 +175,31 @@
         <w:t>ze względu na niepełnosprawność intelektualną w stopniu głębokim.</w:t>
       </w:r>
     </w:p>
-    {% with diagnosis_header="Zespół Orzekający przedstawia diagnozę funkcjonowania dziecka, z uwzględnieniem potencjału rozwojowego, mocnych stron dziecka oraz występujących w środowisku nauczania i wychowania barier i ograniczeń utrudniających jego funkcjonowanie:" %}"
+    {% with diagnosis_header="Zespół orzekający określa diagnozę funkcjonowania dziecka, zawierającą opis:" %}
       {% include "template_parts/diagnosis.xml" %}
     {% endwith %}
     {% include "template_parts/recommendations_header.xml" %}
-    {% with recommendation="(należy określić zalecane warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych dziecka, w tym warunki rozwijania jego potencjalnych możliwości i mocnych stron oraz wzmacniania aktywności i uczestnictwa dziecka w życiu przedszkola, innej formy wychowania przedszkolnego, szkoły lub ośrodka, o którym mowa w art. 2 pkt 7 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe, wraz z uzasadnieniem)" %}
+    {% with recommendation="zalecane warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych dziecka w ramach:" %}
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić zalecane cele rozwojowe i terapeutyczne do realizacji podczas zajęć rewalidacyjno-wychowawczych oraz, w zależności od potrzeb, w ramach pomocy psychologiczno-pedagogicznej udzielanej dziecku i jego rodzicom, przez przedszkole, inną formę wychowania przedszkolnego, szkołę lub ośrodek, o którym mowa w art. 2 pkt 7 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe, oraz poradnię, wraz ze wskazaniem zalecanych form pomocy psychologiczno-pedagogicznej, wraz z uzasadnieniem)" %}
+
+    {% with recommendation="  bieżącej pracy z dzieckiem, w tym organizowanej we współpracy z rodzicami:" %}
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić, w zależności od potrzeb dziecka, niezbędny w ramach realizacji zajęć rewalidacyjno-wychowawczych sprzęt specjalistyczny i środki dydaktyczne, w tym z wykorzystaniem technologii informacyjno-komunikacyjnych, wraz z uzasadnieniem)" %}
+
+    {% with recommendation="  zintegrowanych działań nauczycieli i specjalistów:" %}
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić zalecane sposoby oceny efektów działań podjętych przez przedszkole, inną formę wychowania przedszkolnego, szkołę lub ośrodek, o którym mowa w art. 2 pkt 7 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe, w celu realizacji zaleceń, o których mowa w pkt 1–3)" %}
+
+    {% with recommendation="  pomocy psychologiczno-pedagogicznej, ze wskazaniem zalecanych form tej pomocy udzielanej dziecku oraz, w zależności od potrzeb, jego rodzicom, przez przedszkole, szkołę, ośrodek lub poradnię:" %}
+      {% include "template_parts/recommendation.xml" %}
+    {% endwith %}
+
+    {% with recommendation="formę zajęć rewalidacyjno-wychowawczych: indywidualną/zespołową" %}
+      {% include "template_parts/recommendation.xml" %}
+    {% endwith %}
+
+    {% with recommendation="konieczność zapewnienia sprzętu specjalistycznego i środków dydaktycznych, niezbędnych\n w realizacji zajęć rewalidacyjno-wychowawczych:" %}
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
     {% include "template_parts/aac_information.xml" %}
@@ -204,7 +214,7 @@
         <w:rPr>
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
-        <w:footnoteReference w:id="5"/>
+        <w:footnoteReference w:id="7"/>
       </w:r>
       <w:r>
         <w:t>:</w:t>
@@ -218,13 +228,6 @@
           <w:lang w:val="pl-PL"/>
         </w:rPr>
       </w:pPr>
-      <w:r>
-        <w:rPr>
-          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-          <w:lang w:val="pl-PL"/>
-        </w:rPr>
-        <w:t>Opis</w:t>
-      </w:r>
     </w:p>
     <w:p>
       <w:pPr>
@@ -237,7 +240,7 @@
         <w:rPr>
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
-        <w:footnoteReference w:id="6"/>
+        <w:footnoteReference w:id="8"/>
       </w:r>
       <w:r>
         <w:t>:</w:t>

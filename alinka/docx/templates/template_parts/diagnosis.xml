@@ -14,18 +14,57 @@
     <w:t>{{ diagnosis_header }}</w:t>
   </w:r>
 </w:p>
+
+<!-- 1) potencjału rozwojowego -->
 <w:p>
   <w:pPr>
-    <w:rPr>
-      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-      <w:lang w:val="pl-PL"/>
-    </w:rPr>
+    <w:pStyle w:val="Recommend"/>
   </w:pPr>
   <w:r>
-    <w:rPr>
-      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-      <w:lang w:val="pl-PL"/>
-    </w:rPr>
-    <w:t>Tekst diagnozy.</w:t>
+    <w:t>1) potencjału rozwojowego, w tym możliwości funkcjonowania psychospołecznego dziecka,\n   z uwzględnieniem wpływu występujących w środowisku nauczania i wychowania barier\n   utrudniających jego funkcjonowanie:</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:jc w:val="both"/>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ diagnosis_potential }}</w:t>
+  </w:r>
+</w:p>
+
+<!-- 2) mocne strony -->
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+  </w:pPr>
+  <w:r>
+    <w:t>2) mocnych stron i uzdolnień dziecka wynikających z jego indywidualnych możliwości:</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:jc w:val="both"/>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ diagnosis_strengths }}</w:t>
+  </w:r>
+</w:p>
+
+<!-- 3) potrzeby -->
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+  </w:pPr>
+  <w:r>
+    <w:t>3) indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych dziecka\n   wynikających z jego trudności, mocnych stron i uzdolnień:</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:jc w:val="both"/>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ diagnosis_needs }}</w:t>
   </w:r>
 </w:p>

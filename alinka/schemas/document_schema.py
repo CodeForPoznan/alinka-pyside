@@ -101,6 +101,16 @@ class DocumentData(BaseModel):
     meeting_data: MeetingData
     support_center: SupportCenterData
     file_no: str | None = None
+    # new diagnosis fields for rewalidacyjne template
+    diagnosis_potential: str | None = None
+    diagnosis_strengths: str | None = None
+    diagnosis_needs: str | None = None
+
+    # AAC and additional info (rewalidacyjne)
+    aac_uses: bool | None = None
+    aac_description: str | None = None
+    equipment_info: str | None = None
+    additional_info: str | None = None
 
     @computed_field
     def on_request(self) -> str:
