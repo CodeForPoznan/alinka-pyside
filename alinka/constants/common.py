@@ -53,7 +53,6 @@ class Issue(Enum):
         return RECIPIENT_DESCRIPTION_GENITIVE_MAPPER[self]
 
 
-
 ISSUE_DESCRIPTION_NOMINATIVE_MAPPER = {
     Issue.SPECJALNE: "kształcenie specjalne",
     Issue.INDYWIDUALNE: "indywidualne nauczanie",
