@@ -1,4 +1,4 @@
-from PySide6.QtCore import QLocale, Qt, Signal, QTime
+from PySide6.QtCore import QLocale, Qt, QTime, Signal
 from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -10,13 +10,13 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QTableView,
+    QTimeEdit,
     QVBoxLayout,
-    QWidget, QTimeEdit,
+    QWidget,
 )
 
 from alinka import rspo_client
 from alinka.constants.common import CHOOSE_FROM_LIST_MESSAGE
-from datetime import time as dt_time
 
 
 class NoScrollComboBox(QComboBox):
@@ -453,8 +453,9 @@ class ConfirmationModal(QMessageBox):
         self.exec()
         return self.clickedButton() == self.yes_button
 
+
 class LabeledTimeComponent(ValidationMixin, QWidget):
-    def __init__(self, label: str, parent: QWidget, required = False):
+    def __init__(self, label: str, parent: QWidget, required=False):
         super().__init__(parent)
         self.required = required
         self._user_interacted = False
