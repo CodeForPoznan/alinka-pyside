@@ -23,9 +23,9 @@ from alinka.widget.components import (
     ConfirmationModal,
     LabeledComboBoxComponent,
     LabeledDateComponent,
+    LabeledTimeComponent,
     ValidationMixin,
 )
-from alinka.widget.containers.labeled_time_component import LabeledTimeComponent
 
 from .member_dialog import MemberDialog
 
