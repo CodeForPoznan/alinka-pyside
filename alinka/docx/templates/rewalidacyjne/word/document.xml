@@ -175,6 +175,7 @@
         <w:t>ze względu na niepełnosprawność intelektualną w stopniu głębokim.</w:t>
       </w:r>
     </w:p>
+
     {% with diagnosis_header="Zespół orzekający określa diagnozę funkcjonowania dziecka, zawierającą opis:" %}
       {% include "template_parts/diagnosis.xml" %}
     {% endwith %}
@@ -203,6 +204,168 @@
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
     {% include "template_parts/aac_information.xml" %}
+
+<!--    {% include "template_parts/recommendations_header.xml" %}-->
+
+<!--    &lt;!&ndash; GŁÓWNY PUNKT 1) &ndash;&gt;-->
+<!--    <w:p>-->
+<!--      <w:pPr>-->
+<!--        <w:pStyle w:val="Recommend"/>-->
+<!--        <w:numPr>-->
+<!--          <w:numId w:val="0"/>-->
+<!--        </w:numPr>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--      </w:pPr>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>1)  zalecane warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych dziecka w ramach:</w:t>-->
+<!--      </w:r>-->
+<!--    </w:p>-->
+
+<!--    &lt;!&ndash; Podpunkt a) &ndash;&gt;-->
+<!--    <w:p>-->
+<!--      <w:pPr>-->
+<!--        <w:pStyle w:val="Recommend"/>-->
+<!--        <w:numPr>-->
+<!--          <w:numId w:val="0"/>-->
+<!--        </w:numPr>-->
+<!--        &lt;!&ndash; Dodatkowe wcięcie dla podpunktu, aby wyglądał jak na zrzucie &ndash;&gt;-->
+<!--        <w:ind w:left="720" w:hanging="360"/>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--      </w:pPr>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>a)  bieżącej pracy z dzieckiem, w tym organizowanej we współpracy z rodzicami:</w:t>-->
+<!--      </w:r>-->
+<!--    </w:p>-->
+<!--    &lt;!&ndash; Miejsce na kropki / tekst pod podpunktem a &ndash;&gt;-->
+<!--    <w:p><w:pPr><w:jc w:val="both"/><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr><w:t>........................................................................................................................</w:t></w:r></w:p>-->
+
+<!--    &lt;!&ndash; Podpunkt b) &ndash;&gt;-->
+<!--    <w:p>-->
+<!--      <w:pPr>-->
+<!--        <w:pStyle w:val="Recommend"/>-->
+<!--        <w:numPr>-->
+<!--          <w:numId w:val="0"/>-->
+<!--        </w:numPr>-->
+<!--        <w:ind w:left="720" w:hanging="360"/>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--      </w:pPr>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>b)  zintegrowanych działań nauczycieli i specjalistów:</w:t>-->
+<!--      </w:r>-->
+<!--    </w:p>-->
+<!--    &lt;!&ndash; Miejsce na kropki / tekst pod podpunktem b &ndash;&gt;-->
+<!--    <w:p><w:pPr><w:jc w:val="both"/><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr><w:t>........................................................................................................................</w:t></w:r></w:p>-->
+
+<!--    &lt;!&ndash; Podpunkt c) &ndash;&gt;-->
+<!--    <w:p>-->
+<!--      <w:pPr>-->
+<!--        <w:pStyle w:val="Recommend"/>-->
+<!--        <w:numPr>-->
+<!--          <w:numId w:val="0"/>-->
+<!--        </w:numPr>-->
+<!--        <w:ind w:left="720" w:hanging="360"/>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--      </w:pPr>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>c)  pomocy psychologiczno-pedagogicznej, ze wskazaniem zalecanych form tej pomocy udzielanej dziecku oraz, w zależności od potrzeb, jego rodzicom, przez przedszkole, szkołę, ośrodek lub poradnię:</w:t>-->
+<!--      </w:r>-->
+<!--    </w:p>-->
+<!--    &lt;!&ndash; Miejsce na kropki / tekst pod podpunktem c &ndash;&gt;-->
+<!--    <w:p><w:pPr><w:jc w:val="both"/><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr><w:t>........................................................................................................................</w:t></w:r></w:p>-->
+
+
+<!--    &lt;!&ndash; GŁÓWNY PUNKT 2) &ndash;&gt;-->
+<!--    <w:p>-->
+<!--      <w:pPr>-->
+<!--        <w:pStyle w:val="Recommend"/>-->
+<!--        <w:numPr>-->
+<!--          <w:numId w:val="0"/>-->
+<!--        </w:numPr>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--      </w:pPr>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>2)  formę zajęć rewalidacyjno-wychowawczych: indywidualną/zespołową</w:t>-->
+<!--      </w:r>-->
+<!--      &lt;!&ndash; Przypis górny nr 5 widoczny na obrazku &ndash;&gt;-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:rStyle w:val="Odwoanieprzypisudolnego"/>-->
+<!--        </w:rPr>-->
+<!--        <w:footnoteReference w:id="5"/>-->
+<!--      </w:r>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>:</w:t>-->
+<!--      </w:r>-->
+<!--    </w:p>-->
+<!--    &lt;!&ndash; Miejsce na kropki / tekst pod punktem 2 &ndash;&gt;-->
+<!--    <w:p><w:pPr><w:jc w:val="both"/><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr><w:t>........................................................................................................................</w:t></w:r></w:p>-->
+
+
+<!--    &lt;!&ndash; GŁÓWNY PUNKT 3) &ndash;&gt;-->
+<!--    <w:p>-->
+<!--      <w:pPr>-->
+<!--        <w:pStyle w:val="Recommend"/>-->
+<!--        <w:numPr>-->
+<!--          <w:numId w:val="0"/>-->
+<!--        </w:numPr>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--      </w:pPr>-->
+<!--      <w:r>-->
+<!--        <w:rPr>-->
+<!--          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>-->
+<!--          <w:lang w:val="pl-PL"/>-->
+<!--        </w:rPr>-->
+<!--        <w:t>3)  konieczność zapewnienia sprzętu specjalistycznego i środków dydaktycznych, niezbędnych w realizacji zajęć rewalidacyjno-wychowawczych:</w:t>-->
+<!--      </w:r>-->
+<!--    </w:p>-->
+<!--    &lt;!&ndash; Miejsce na kropki / tekst pod punktem 3 &ndash;&gt;-->
+<!--    <w:p><w:pPr><w:jc w:val="both"/><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:lang w:val="pl-PL"/></w:rPr><w:t>........................................................................................................................</w:t></w:r></w:p>-->
+
+<!--    {% include "template_parts/aac_information.xml" %}-->
+
     <w:p>
       <w:pPr>
         <w:pStyle w:val="newdocumentreason"/>

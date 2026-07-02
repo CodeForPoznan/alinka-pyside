@@ -1,21 +1,49 @@
 <w:p>
   <w:pPr>
     <w:pStyle w:val="Section"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
     <w:t>Dodatkowe informacje</w:t>
   </w:r>
 </w:p>
 
 <w:p>
   <w:pPr>
-    <w:pStyle w:val="Recommend"/>
+    <w:numPr>
+      <w:numId w:val="0"/>
+    </w:numPr>
+    <w:ind w:left="720"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
-    <w:t>1. Dziecko posługuje się wspomagającą lub alternatywną metodą komunikacji (AAC)\n   lub językiem migowym: {{ 'TAK' if aac_uses else 'NIE' }}</w:t>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+    <w:t>1. Dziecko posługuje się wspomagającą lub alternatywną metodą komunikacji (AAC) lub językiem migowym: {{ 'TAK' if aac_uses else 'NIE' }}</w:t>
   </w:r>
   <w:r>
     <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
       <w:rStyle w:val="Odwoanieprzypisudolnego"/>
     </w:rPr>
     <w:footnoteReference w:id="6"/>
@@ -25,42 +53,103 @@
 <w:p>
   <w:pPr>
     <w:jc w:val="both"/>
+    <w:ind w:left="720"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
     <w:t>{{ aac_description }}</w:t>
   </w:r>
 </w:p>
 
 <w:p>
   <w:pPr>
-    <w:pStyle w:val="Recommend"/>
+    <w:numPr>
+      <w:numId w:val="0"/>
+    </w:numPr>
+    <w:ind w:left="720"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
-    <w:t>2. Informacje o sprzęcie specjalistycznym i środkach dydaktycznych,\n   z których korzysta dziecko:</w:t>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+    <w:t>2. Informacje o sprzęcie specjalistycznym i środkach dydaktycznych, z których korzysta dziecko:</w:t>
   </w:r>
 </w:p>
+
 <w:p>
   <w:pPr>
     <w:jc w:val="both"/>
+    <w:ind w:left="720"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
     <w:t>{{ equipment_info }}</w:t>
   </w:r>
 </w:p>
 
 <w:p>
   <w:pPr>
-    <w:pStyle w:val="Recommend"/>
+    <w:numPr>
+      <w:numId w:val="0"/>
+    </w:numPr>
+    <w:ind w:left="720"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
     <w:t>3. Inne:</w:t>
   </w:r>
 </w:p>
+
 <w:p>
   <w:pPr>
     <w:jc w:val="both"/>
+    <w:ind w:left="720"/>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
   </w:pPr>
   <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
     <w:t>{{ additional_info }}</w:t>
   </w:r>
 </w:p>

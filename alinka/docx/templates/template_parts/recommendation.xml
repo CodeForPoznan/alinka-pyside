@@ -1,24 +1,82 @@
 <w:p>
-    <w:pPr>
-    <w:pStyle w:val="Recommend"/>
-    </w:pPr>
+  <w:pPr>
+    <w:numPr>
+      <w:numId w:val="0"/>
+    </w:numPr>
+    {% if "bieżącej pracy" in recommendation or "zintegrowanych działań" in recommendation or "pomocy psychologiczno" in recommendation %}
+      <w:ind w:left="1080" w:hanging="360"/>
+    {% else %}
+      <w:ind w:left="720" w:hanging="360"/>
+    {% endif %}
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+  </w:pPr>
+  <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+    <w:t>
+      {%- if "zalecane warunki" in recommendation -%}1)  zalecane warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych dziecka w ramach:
+      {%- elif "bieżącej pracy" in recommendation -%}a)  bieżącej pracy z dzieckiem, w tym organizowanej we współpracy z rodzicami:
+      {%- elif "zintegrowanych działań" in recommendation -%}b)  zintegrowanych działań nauczycieli i specjalistów:
+      {%- elif "pomocy psychologiczno" in recommendation -%}c)  pomocy psychologiczno-pedagogicznej, ze wskazaniem zalecanych form tej pomocy udzielanej dziecku oraz, w zależności od potrzeb, jego rodzicom, przez przedszkole, szkołę, ośrodek lub poradnię:
+      {%- elif "formę zajęć" in recommendation -%}2)  formę zajęć rewalidacyjno-wychowawczych: indywidualną/zespołową
+      {%- elif "konieczność zapewnienia" in recommendation -%}3)  konieczność zapewnienia sprzętu specjalistycznego i środków dydaktycznych, niezbędnych w realizacji zajęć rewalidacyjno-wychowawczych:
+      {%- else -%}{{ recommendation }}
+      {%- endif -%}
+    </w:t>
+  </w:r>
+  {% if "formę zajęć" in recommendation %}
     <w:r>
-    <w:t>{{ recommendation }}</w:t>
+      <w:rPr>
+        <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+        <w:sz w:val="22"/>
+        <w:szCs w:val="22"/>
+        <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+      </w:rPr>
+      <w:footnoteReference w:id="5"/>
     </w:r>
+    <w:r>
+      <w:rPr>
+        <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+        <w:sz w:val="22"/>
+        <w:szCs w:val="22"/>
+        <w:lang w:val="pl-PL"/>
+      </w:rPr>
+      <w:t>:</w:t>
+    </w:r>
+  {% endif %}
 </w:p>
+
 <w:p>
-    <w:pPr>
+  <w:pPr>
     <w:jc w:val="both"/>
+    {% if "bieżącej pracy" in recommendation or "zintegrowanych działań" in recommendation or "pomocy psychologiczno" in recommendation %}
+      <w:ind w:left="1080"/>
+    {% else %}
+      <w:ind w:left="720"/>
+    {% endif %}
     <w:rPr>
-        <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-        <w:lang w:val="pl-PL"/>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
     </w:rPr>
-    </w:pPr>
-    <w:r>
+  </w:pPr>
+  <w:r>
     <w:rPr>
-        <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
-        <w:lang w:val="pl-PL"/>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:sz w:val="22"/>
+      <w:szCs w:val="22"/>
+      <w:lang w:val="pl-PL"/>
     </w:rPr>
-    <w:t>Tekst zaleceń</w:t>
-    </w:r>
+    <w:t>{{ recommendation_text if recommendation_text else '' }}</w:t>
+  </w:r>
 </w:p>
