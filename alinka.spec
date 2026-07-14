@@ -18,7 +18,7 @@ a = Analysis(
         ("alembic.ini", "."),
         ('migrations/env.py', 'migrations'),
         ('migrations/versions', 'migrations/versions'),
-        ('alinka/docx/templates', 'alinka/docx/templates')
+        ('alinka/docx/templates', 'docx/templates')
     ],
     hiddenimports=[
         # required by Alembic's env.py
