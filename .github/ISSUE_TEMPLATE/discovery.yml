@@ -1,0 +1,55 @@
+name: Discovery
+description: Nie wiemy jeszcze jak to zrobić — issue wymaga zbadania przed implementacją
+title: ""
+labels: ["discovery"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Discovery zamykamy gdy mamy odpowiedź na pytanie i gotowe issue/y z konkretnym zadaniem do implementacji.
+        Samo discovery **nie kończy się kodem** — kończy się decyzją i planem.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Pytanie do odpowiedzenia
+      description: Jedno konkretne pytanie, na które to discovery ma odpowiedzieć.
+      placeholder: "Jak powinniśmy obsłużyć X? / Czy Y jest możliwe w naszym stacku? / Którą z opcji A/B/C wybrać i dlaczego?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Kontekst
+      description: Dlaczego to pytanie jest ważne? Co blokuje lub motywuje to zadanie?
+    validations:
+      required: true
+
+  - type: textarea
+    id: options
+    attributes:
+      label: Znane opcje / podejścia
+      description: Co już wiemy? Jakie opcje wchodzą w grę?
+    validations:
+      required: false
+
+  - type: textarea
+    id: resources
+    attributes:
+      label: Zasoby / linki
+      description: Dokumentacja, podobne projekty, wcześniejsze dyskusje, PR-y.
+    validations:
+      required: false
+
+  - type: textarea
+    id: dod
+    attributes:
+      label: Definition of Done
+      description: Kiedy to discovery można zamknąć?
+      placeholder: |
+        - [ ] Wiemy którą opcję wybieramy i dlaczego
+        - [ ] Decyzja jest udokumentowana w komentarzu do tego issue
+        - [ ] Powstały issue/y z konkretnym zadaniem implementacyjnym (lub świadomie zdecydowaliśmy że nie implementujemy)
+    validations:
+      required: true
