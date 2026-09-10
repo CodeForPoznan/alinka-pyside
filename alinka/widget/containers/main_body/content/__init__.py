@@ -80,14 +80,7 @@ class ContentContainer(ValidationMixin, QFrame):
 
     def showEvent(self, event):
         self.validate_basic_settings()
-        self.validate_application()
         return super().showEvent(event)
-
-    def validate_application(self):
-        if self.application_container.isVisible():
-            # This will trigger validation and red tab highlighting if invalid
-            return self.application_container.validate()
-        return True
 
     def show_settings_container(self):
         header_container = self.main_body_container.header_container

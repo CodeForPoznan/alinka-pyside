@@ -10,9 +10,9 @@ class GeneralDataGroupContainer(ValidationMixin, QGroupBox):
         self.child_tab_container = parent
         super().__init__(title="Dane ogólne", parent=parent)
         layout = QHBoxLayout(self)
-        layout.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.setSpacing(10)
-        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setContentsMargins(10, 24, 10, 10)
         self.decision_no = LabeledInputComponent("Numer orzeczenia", self, required=True)
         self.file_no = LabeledInputComponent("Numer teczki", self, required=True)
         layout.addWidget(self.decision_no)

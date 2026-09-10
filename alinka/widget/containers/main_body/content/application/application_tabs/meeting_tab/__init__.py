@@ -84,7 +84,7 @@ class MeetingDatetimeFrame(ValidationMixin, QFrame):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(8)
-        layout.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         self.meeting_date = LabeledDateComponent("Data zespołu", self, required=True)
         self.meeting_date.date_input.setDate(QDate.currentDate())
@@ -335,7 +335,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         super().__init__(parent)
         self.application_container = parent
         layout = QVBoxLayout(self)
-        layout.setAlignment(Qt.AlignTop)
+        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.setSpacing(8)
 
         self.meeting_datetime_frame = MeetingDatetimeFrame(self)
