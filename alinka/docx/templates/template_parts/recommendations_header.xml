@@ -11,6 +11,6 @@
     <w:pStyle w:val="Section-desc"/>
   </w:pPr>
   <w:r>
-    <w:t>Zespół Orzekający zaleca:</w:t>
+    <w:t>{{ recommendations_header|default("Zespół orzekający zaleca:") }}</w:t>
   </w:r>
 </w:p>

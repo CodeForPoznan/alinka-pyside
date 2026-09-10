@@ -3,7 +3,7 @@
     <w:pStyle w:val="SubtitledRun"/>
   </w:pPr>
   <w:r>
-    <w:t>Zespół Orzekający przy {{ support_center.name_genitive }}, {{ support_center.full_address }}</w:t>
+    <w:t>zespół orzekający przy {{ support_center.name_genitive }}, {{ support_center.full_address }}</w:t>
   </w:r>
 </w:p>
 <w:p>

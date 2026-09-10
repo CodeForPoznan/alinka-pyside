@@ -3,6 +3,6 @@
     <w:pStyle w:val="Information"/>
   </w:pPr>
   <w:r>
-    <w:t>Od niniejszego orzeczenia przysługuje odwołanie do Kuratora Oświaty w {{ support_center.kurator }}, za pośrednictwem Zespołu Orzekającego, który wydał orzeczenie, w terminie 14 dni od dnia jego doręczenia.</w:t>
+    <w:t>Od niniejszego orzeczenia przysługuje odwołanie do kuratora oświaty w {{ support_center.kurator }}, za pośrednictwem zespołu orzekającego, który wydał orzeczenie, w terminie 14 dni od dnia jego doręczenia.</w:t>
   </w:r>
 </w:p>

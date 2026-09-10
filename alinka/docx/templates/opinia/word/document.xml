@@ -22,7 +22,7 @@
         <w:pStyle w:val="LegalBasis"/>
       </w:pPr>
       <w:r>
-        <w:t>Działając na podstawie art. 127 ust. 10 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe (Dz. U. z 2023 r. poz. 900, 1672 i 1718),</w:t>
+        <w:t>Działając na podstawie art. 127 ust. 10 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe (Dz. U. z 2025 r. poz. 1043, z późn. zm.),</w:t>
       </w:r>
     </w:p>
     {% include "template_parts/on_request.xml" %}
@@ -37,7 +37,6 @@
       </w:r>
     </w:p>
     {% include "template_parts/child_name.xml" %}
-    {% include "template_parts/child_birth.xml" %}
     {% include "template_parts/pesel.xml" %}
     {% include "template_parts/child_address.xml" %}
     <w:p>
@@ -62,7 +61,7 @@
         <w:footnoteReference w:id="1"/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> oraz adres ich zamieszkania)</w:t>
+        <w:t xml:space="preserve"> oraz adres albo adresy ich zamieszkania)</w:t>
       </w:r>
     </w:p>
     <w:p>
@@ -106,34 +105,104 @@
         <w:br w:type="page"/>
       </w:r>
     </w:p>
-    {% with diagnosis_header="Zespół Orzekający przedstawia diagnozę poziomu funkcjonowania dziecka, w tym informację o potencjale rozwojowym i mocnych stronach dziecka oraz występujących w środowisku barierach i ograniczeniach utrudniających jego funkcjonowanie:" %}"
-      {% include "template_parts/diagnosis.xml" %}
+
+<!-- Diagnosis -->
+
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Section"/>
+      </w:pPr>
+      <w:r>
+        <w:t>Diagnoza</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Section-desc"/>
+      </w:pPr>
+      <w:r>
+        <w:t>Zespół orzekający określa poziom funkcjonowania dziecka, w tym informację o:</w:t>
+      </w:r>
+    </w:p>
+    {% with diagnosis_item="możliwościach psychofizycznych i potencjale rozwojowym dziecka, w tym jego mocnych stronach i uzdolnieniach:", level=0, dotted_line=True %}
+      {% include "template_parts/diagnosis_opinia_list_item.xml" %}
     {% endwith %}
-    {% include "template_parts/recommendations_header.xml" %}
-    {% with recommendation="(należy określić zalecane warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych dziecka, z uwzględnieniem możliwości psychofizycznych oraz potencjału rozwojowego dziecka, w tym sprzyjające wzmacnianiu jego aktywności i uczestnictwa w życiu społecznym, wraz z uzasadnieniem)" %}
-      {% include "template_parts/recommendation.xml" %}
+    {% with diagnosis_item="występujących w środowisku opieki, wychowania i nauczania:", level=0, dotted_line=False %}
+      {% include "template_parts/diagnosis_opinia_list_item.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić zalecane cele rozwojowe i terapeutyczne do realizacji podczas zajęć w ramach wczesnego wspomagania rozwoju dziecka oraz w ramach pomocy i wsparcia udzielanych dziecku i rodzinie, w szczególności pomocy psychologiczno-pedagogicznej, wraz ze wskazaniem form tej pomocy, wraz z uzasadnieniem)" %}
-      {% include "template_parts/recommendation.xml" %}
+    {% with diagnosis_item="zasobach:", level=1, dotted_line=True %}
+      {% include "template_parts/diagnosis_opinia_list_item.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić zalecane sposoby oceny efektów działań podjętych w celu realizacji zaleceń, o których mowa w pkt 1 i 2)" %}
-      {% include "template_parts/recommendation.xml" %}
+    {% with diagnosis_item="barierach i ograniczeniach wpływających na jego funkcjonowanie:", level=1, dotted_line=True %}
+      {% include "template_parts/diagnosis_opinia_list_item.xml" %}
     {% endwith %}
-    {% include "template_parts/aac_information.xml" %}
+
+<!-- Recommendations -->
+
+    {% with recommendations_header="Zespół orzekający zaleca wynikające z diagnozy:" %}
+      {% include "template_parts/recommendations_header.xml" %}
+    {% endwith %}
+    {% with recommendation="warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb dziecka, w tym związanych z rozwijaniem jego indywidualnego potencjału, mocnych stron i uzdolnień, sprzyjające wzmacnianiu aktywności i uczestnictwa w życiu społecznym:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="w przypadku dziecka spełniającego obowiązkowe roczne przygotowanie przedszkolne – warunki i formy wsparcia dziecka w procesie przejścia do edukacji szkolnej, z uwzględnieniem roli rodziców, przedszkola i szkoły, jeżeli zachodzi potrzeba takiego wsparcia:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="sposoby wykorzystania i wzmacniania zasobów dziecka, w tym znajdujących się w jego środowisku opieki, wychowania i nauczania:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="sposoby usuwania barier i ograniczeń w funkcjonowaniu dziecka, w tym znajdujących się w jego środowisku opieki, wychowania i nauczania, w ramach:", level=0, dotted_line=False %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="wczesnego wspomagania rozwoju dziecka:", level=1, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="wychowania przedszkolnego:", level=1, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="innych form i rodzajów wsparcia udzielanych dziecku i rodzinie, w szczególności pomocy psychologiczno-pedagogicznej, w tym w ramach współpracy między podmiotami w środowisku lokalnym:", level=1, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+
+<!-- Additional informations -->
+
+    {% include "template_parts/additional_information_header.xml" %}
+    {% with additional_information_text="Dziecko posługuje się wspomagającą lub alternatywną metodą komunikacji (AAC) lub językiem migowym: TAK/NIE", additional_information_footnote_id=3 %}
+      {% include "template_parts/additional_information_first_item.xml" %}
+    {% endwith %}
+    {% with additional_information_text="Inne:" %}
+      {% include "template_parts/additional_information_item.xml" %}
+    {% endwith %}
+
+
+<!-- New decision -->
+
     <w:p>
       <w:pPr>
         <w:pStyle w:val="newdocumentreason"/>
       </w:pPr>
       <w:r>
-        <w:t>W przypadku wydania nowej opinii o potrzebie wczesnego wspomagania rozwoju dziecka należy wskazać okoliczności, które Zespół Orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowej opinii</w:t>
+        <w:t>W przypadku wydania nowej opinii o potrzebie wczesnego wspomagania rozwoju dziecka należy wskazać okoliczności, które zespół orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowej opinii</w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+        <w:footnoteReference w:id="4"/>
       </w:r>
       <w:r>
         <w:rPr>
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
-        <w:footnoteReference w:id="3"/>
+        <w:t>)</w:t>
       </w:r>
       <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
         <w:t>:</w:t>
       </w:r>
     </w:p>
@@ -149,23 +218,38 @@
           <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:t>Opis okoliczności</w:t>
+        <w:t>..........</w:t>
       </w:r>
     </w:p>
+
+<!-- Revocation -->
+
     <w:p>
       <w:pPr>
         <w:pStyle w:val="Revocation"/>
       </w:pPr>
       <w:r>
-        <w:t>Opinia uchyla opinię nr ......o potrzebie wczesnego wspomagania rozwoju dziecka z dnia ............ wydaną przez .............</w:t>
+        <w:t>Opinia uchyla</w:t>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+        <w:t>4</w:t>
       </w:r>
       <w:r>
         <w:rPr>
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
-        <w:footnoteReference w:id="4"/>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> opinię nr ...... o potrzebie wczesnego wspomagania rozwoju dziecka z dnia ............ wydaną przez ..............</w:t>
       </w:r>
     </w:p>
-  {% include "template_parts/director_signature.xml" %}
-  {% include "template_parts/recipients.xml" %}
+
+  {% include "template_parts/team_member_signature.xml" %}
+  {% include "template_parts/recipients_opinia.xml" %}
 {% endblock %}

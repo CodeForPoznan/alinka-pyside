@@ -173,7 +173,7 @@
         <w:pStyle w:val="teamTitle"/>
       </w:pPr>
       <w:r>
-        <w:t>Zespół Orzekający w składzie:</w:t>
+        <w:t>zespół orzekający w składzie:</w:t>
       </w:r>
     </w:p>
     {% for member in meeting_data.members %}
@@ -184,7 +184,7 @@
         </w:pPr>
         <w:r>
           {% if member == meeting_data.members[0] %}
-            <w:t>{{ member.name }} - Przewodniczący Zespołu Orzekającego</w:t>
+            <w:t>{{ member.name }} - przewodniczący zespołu orzekającego</w:t>
           {% else %}
             <w:t>{{ member.name }} - {{ member.function }}</w:t>
           {% endif %}
@@ -378,7 +378,7 @@
         <w:pStyle w:val="boldText"/>
       </w:pPr>
       <w:r>
-        <w:t>W związku z powyższym Zespół Orzekający orzeka o potrzebie:</w:t>
+        <w:t>W związku z powyższym zespół orzekający orzeka o potrzebie:</w:t>
       </w:r>
     </w:p>
     <w:p>
@@ -466,7 +466,7 @@
           <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:t>Przewodniczący zespołu orzekającego wyznaczył osobę która przygotuje orzeczenie/opinię: </w:t>
+        <w:t>przewodniczący zespołu orzekającego wyznaczył osobę która przygotuje orzeczenie/opinię: </w:t>
       </w:r>
     </w:p>
     <w:p>

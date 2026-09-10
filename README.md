@@ -12,3 +12,6 @@ To make a release please follow instruction
 8. In the content describe all the changes made based on github repo history of merged code. 
 9. Once you get the confirmation from Microsoft you can uncheck pre-release tag and uncork the champagne!
 10. But first paste the latest release onto facebook group: https://www.facebook.com/groups/496335526898202
+
+## User journey
+Working progress (artifacts) are stored here. 

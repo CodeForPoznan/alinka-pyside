@@ -1,0 +1,27 @@
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+    <w:numPr>
+      <w:ilvl w:val="{{ level }}"/>
+      <w:numId w:val="1"/>
+    </w:numPr>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ recommendation }}</w:t>
+  </w:r>
+</w:p>
+{% if dotted_line %}
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="RecommendText"/>
+  </w:pPr>
+  <w:r>
+    <w:t>………………………………………………………………………………………………</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="RecommendText"/>
+  </w:pPr>
+</w:p>
+{% endif %}

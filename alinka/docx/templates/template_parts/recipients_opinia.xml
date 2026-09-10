@@ -1,0 +1,127 @@
+<w:p>
+  <w:pPr>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:b/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+  </w:pPr>
+  <w:r>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:b/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+    <w:t>Otrzymuje:</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+  </w:pPr>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t>1) Przedszkole, inna forma wychowania przedszkolnego, szkoła, ośrodek lub poradnia, w których dziecko zostanie objęte wczesnym wspomaganiem rozwoju</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t xml:space="preserve">{{ school.name }}</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Subtitle-end"/>
+  </w:pPr>
+  <w:r>
+    <w:t>(nazwa przedszkola, innej formy wychowania przedszkolnego, szkoły, ośrodka lub poradni)</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t xml:space="preserve">{{ school.full_address }}</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Subtitle-end"/>
+  </w:pPr>
+  <w:r>
+    <w:t>(adres siedziby przedszkola, innej formy wychowania przedszkolnego, szkoły, ośrodka lub poradni)</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:rPr>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+  </w:pPr>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t>2) Wnioskodawca</w:t>
+  </w:r>
+  <w:r>
+    <w:rPr>
+      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+    <w:footnoteReference w:id="5"/>
+  </w:r>
+  <w:r>
+    <w:rPr>
+      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+    </w:rPr>
+    <w:t>)</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t xml:space="preserve">{{ applicants_data[0].full_name }}</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Subtitle-end"/>
+  </w:pPr>
+  <w:r>
+    <w:t>(imię i nazwisko)</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t xml:space="preserve">{{ applicants_data[0].full_address }}</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Subtitle-end"/>
+  </w:pPr>
+  <w:r>
+    <w:t>(adres zamieszkania albo adres do korespondencji – jeżeli jest inny niż adres zamieszkania)</w:t>
+  </w:r>
+</w:p>

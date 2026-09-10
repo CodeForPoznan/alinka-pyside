@@ -14,7 +14,7 @@
     </w:pPr>
     <w:r>
       {% if member == meeting_data.members[0] %}
-        <w:t>{{ member.name }} - Przewodniczący Zespołu Orzekającego</w:t>
+        <w:t>{{ member.name }} - przewodniczący zespołu orzekającego</w:t>
       {% else %}
         <w:t>{{ member.name }} - {{ member.function }}</w:t>
       {% endif %}

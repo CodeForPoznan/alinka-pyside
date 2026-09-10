@@ -176,7 +176,7 @@
         <w:t>ze względu na niepełnosprawność intelektualną w stopniu głębokim.</w:t>
       </w:r>
     </w:p>
-    {% with diagnosis_header="Zespół Orzekający przedstawia diagnozę funkcjonowania dziecka, z uwzględnieniem potencjału rozwojowego, mocnych stron dziecka oraz występujących w środowisku nauczania i wychowania barier i ograniczeń utrudniających jego funkcjonowanie:" %}"
+    {% with diagnosis_header="zespół orzekający przedstawia diagnozę funkcjonowania dziecka, z uwzględnieniem potencjału rozwojowego, mocnych stron dziecka oraz występujących w środowisku nauczania i wychowania barier i ograniczeń utrudniających jego funkcjonowanie:" %}"
       {% include "template_parts/diagnosis.xml" %}
     {% endwith %}
     {% include "template_parts/recommendations_header.xml" %}
@@ -198,7 +198,7 @@
         <w:pStyle w:val="newdocumentreason"/>
       </w:pPr>
       <w:r>
-        <w:t>W przypadku wydania nowego orzeczenia o potrzebie zajęć rewalidacyjno-wychowawczych należy wskazać okoliczności, które Zespół Orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowego orzeczenia</w:t>
+        <w:t>W przypadku wydania nowego orzeczenia o potrzebie zajęć rewalidacyjno-wychowawczych należy wskazać okoliczności, które zespół orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowego orzeczenia</w:t>
       </w:r>
       <w:r>
         <w:rPr>

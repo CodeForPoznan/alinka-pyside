@@ -72,7 +72,7 @@
         <w:footnoteRef/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> Wypełnia się w przypadkach, o których mowa w § 23 ust. 1 rozporządzenia Ministra Edukacji Narodowej z dnia 7 września 2017 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. z 2023 r. poz. 2061).</w:t>
+        <w:t xml:space="preserve"> Właściwe podkreślić. Jeżeli podkreślono odpowiedź TAK, należy wymienić wspomagające lub alternatywne metody komunikacji (AAC), którymi posługuje się dziecko.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
@@ -89,6 +89,22 @@
       </w:r>
       <w:r>
         <w:t xml:space="preserve"> Wypełnia się w przypadku wydania nowej opinii o potrzebie wczesnego wspomagania rozwoju dziecka.</w:t>
+      </w:r>
+    </w:p>
+  </w:footnote>
+  <w:footnote w:id="5">
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Footnote"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> Wnioskodawca określony zgodnie z § 6 ust. 1 pkt 12 rozporządzenia Ministra Edukacji z dnia 2 marca 2026 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. poz. 428); drugi z wnioskodawców zachowuje prawo do otrzymania kopii orzeczenia potwierdzonej za zgodność z oryginałem.</w:t>
       </w:r>
     </w:p>
   </w:footnote>

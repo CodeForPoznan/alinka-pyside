@@ -48,15 +48,17 @@ class ApplicationFooterContainer(QFrame):
         self.content_container.show_browser_container()
         self.footer_container.show_browser_footer_container()
 
-    def validate_document_data(self) -> None:
+    def validate_document_data(self) -> bool:
         if not self.content_container.validate_basic_settings():
             error_message = self.content_container.settings_container.error_message
             show_validation_error(self, error_message)
-            return
+            return False
         if not self.content_container.validate_application():
             error_message = self.content_container.application_container.error_message
             show_validation_error(self, error_message)
-            return
+            return False
+
+        return True
 
     def print_documents(self) -> None:
         application_container = self.content_container.application_container

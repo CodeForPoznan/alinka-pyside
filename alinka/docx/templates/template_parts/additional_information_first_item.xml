@@ -1,0 +1,34 @@
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+    <w:numPr>
+      <w:ilvl w:val="0"/>
+      <w:numId w:val="6"/>
+    </w:numPr>
+  </w:pPr>
+  <w:r>
+    <w:t xml:space="preserve">{{ additional_information_text }}</w:t>
+  </w:r>
+  <w:r>
+    <w:rPr>
+      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+      <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+      <w:lang w:val="pl-PL"/>
+    </w:rPr>
+    <w:footnoteReference w:id="{{ additional_information_footnote_id }}"/>
+  </w:r>
+  <w:r>
+    <w:rPr>
+      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+    </w:rPr>
+    <w:t>)</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="RecommendText"/>
+  </w:pPr>
+  <w:r>
+    <w:t>………………………………………………………………………………………………</w:t>
+  </w:r>
+</w:p>

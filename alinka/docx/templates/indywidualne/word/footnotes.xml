@@ -40,6 +40,12 @@
         <w:footnoteRef/>
       </w:r>
       <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
         <w:t xml:space="preserve">Nazwę zawodu wpisuje się wyłącznie w przypadku ucznia uczęszczającego do szkoły prowadzącej kształcenie zawodowe.</w:t>
       </w:r>
     </w:p>
@@ -54,6 +60,12 @@
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
         <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
       </w:r>
       <w:r>
         <w:t xml:space="preserve"> Zgodnie z art. 4 pkt 19 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe przez rodziców należy rozumieć także prawnych opiekunów dziecka oraz osoby (podmioty) sprawujące pieczę zastępczą nad dzieckiem.</w:t>
@@ -72,7 +84,13 @@
         <w:footnoteRef/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> Orzeczenie wydaje się na okres wychowania przedszkolnego, roku szkolnego albo etapu edukacyjnego. W przypadku ucznia szkoły ponadpodstawowej lub ponadgimnazjalnej termin ważności orzeczenia nie może przypadać później niż koniec roku szkolnego, w roku kalendarzowym, w którym uczeń kończy 24. rok życia.</w:t>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> Orzeczenie o potrzebie indywidualnego nauczania wydaje się na okres nie krótszy niż 30 dni i nie dłuższy niż jeden rok szkolny.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
@@ -86,6 +104,12 @@
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
         <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
       </w:r>
       <w:r>
         <w:t xml:space="preserve"> Niepotrzebne skreślić.</w:t>
@@ -104,7 +128,13 @@
         <w:footnoteRef/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> Wypełnia się w przypadkach, o których mowa w § 19 ust. 1 rozporządzenia Ministra Edukacji Narodowej z dnia 7 września 2017 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. z 2023 r. poz. 2061).</w:t>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> Właściwe podkreślić. Jeżeli podkreślono odpowiedź TAK, należy wymienić wspomagające lub alternatywne metody komunikacji (AAC) lub język migowy, którymi posługuje się uczeń.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
@@ -120,7 +150,57 @@
         <w:footnoteRef/>
       </w:r>
       <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> Wypełnia się w przypadkach, o których mowa w § 23 ust. 1 rozporządzenia Ministra Edukacji z dnia 2 marca 2026 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. poz. 428).</w:t>
+      </w:r>
+    </w:p>
+  </w:footnote>
+  <w:footnote w:id="7">
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Footnote"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
         <w:t xml:space="preserve"> Wypełnia się w przypadku wydania nowego orzeczenia o potrzebie indywidualnego nauczania.</w:t>
+      </w:r>
+    </w:p>
+  </w:footnote>
+  <w:footnote w:id="8">
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Footnote"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> Wnioskodawca określony zgodnie z § 6 ust. 1 pkt 1 i 2 rozporządzenia Ministra Edukacji z dnia … w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych; drugi z wnioskodawców zachowuje prawo do otrzymania kopii orzeczenia potwierdzonej za zgodność z oryginałem.</w:t>
       </w:r>
     </w:p>
   </w:footnote>

@@ -16,7 +16,10 @@ class ApplicantsTabContainer(ValidationMixin, QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(10)
         self.applicant_1_data_group = ApplicantDataGroup(
-            title="Wnioskodawca 1", parent=self, checkbox_description="Adres inny niż dziecka", initial_visible=True
+            title="Wnioskodawca 1 (otrzymuje gotowy dokument)",
+            parent=self,
+            checkbox_description="Adres inny niż dziecka",
+            initial_visible=True,
         )
         self.applicant_2_data_group = ApplicantDataGroup(
             title="Wnioskodawca 2",

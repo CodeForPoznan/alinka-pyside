@@ -1,0 +1,21 @@
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="DiagnosisList"/>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ diagnosis_item }}</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="diagnosis"/>
+  </w:pPr>
+  <w:r>
+    <w:t>……………………………………………………………………………………………….</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="diagnosis"/>
+  </w:pPr>
+</w:p>

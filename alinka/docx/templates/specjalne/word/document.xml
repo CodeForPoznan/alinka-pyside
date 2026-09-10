@@ -366,7 +366,7 @@
         <w:t>zagrożenie niedostosowaniem społecznym.</w:t>
       </w:r>
     </w:p>
-    {% with diagnosis_header="Zespół Orzekający przedstawia diagnozę funkcjonowania dziecka lub ucznia, z uwzględnieniem potencjału rozwojowego oraz mocnych stron i uzdolnień dziecka lub ucznia oraz występujących w środowisku nauczania i wychowania barier i ograniczeń utrudniających jego funkcjonowanie:" %}"
+    {% with diagnosis_header="zespół orzekający przedstawia diagnozę funkcjonowania dziecka lub ucznia, z uwzględnieniem potencjału rozwojowego oraz mocnych stron i uzdolnień dziecka lub ucznia oraz występujących w środowisku nauczania i wychowania barier i ograniczeń utrudniających jego funkcjonowanie:" %}"
       {% include "template_parts/diagnosis.xml" %}
     {% endwith %}
     {% include "template_parts/recommendations_header.xml" %}
@@ -376,7 +376,7 @@
     {% with recommendation="(należy określić zalecane cele rozwojowe i terapeutyczne do realizacji podczas zajęć wychowania przedszkolnego lub zajęć edukacyjnych, zajęć rewalidacyjnych, socjoterapeutycznych i resocjalizacyjnych oraz w ramach pomocy psychologiczno-pedagogicznej udzielanej dziecku lub uczniowi i, w zależności od potrzeb, jego rodzicom, przez przedszkole, inną formę wychowania przedszkolnego, szkołę, ośrodek lub placówkę, o których mowa w art. 2 pkt 7 i 8 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe, oraz poradnię, wraz ze wskazaniem zalecanych form pomocy psychologiczno-pedagogicznej, a w przypadku dzieci i uczniów niepełnosprawnych – również zalecanych rodzajów zajęć rewalidacyjnych, wraz z uzasadnieniem)" %}"
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić wszystkie możliwe formy kształcenia specjalnego, poczynając od najkorzystniejszej dla dziecka lub ucznia, według Zespołu Orzekającego, formy kształcenia specjalnego, wraz z uzasadnieniem)" %}"
+    {% with recommendation="(należy określić wszystkie możliwe formy kształcenia specjalnego, poczynając od najkorzystniejszej dla dziecka lub ucznia, według zespołu orzekającego, formy kształcenia specjalnego, wraz z uzasadnieniem)" %}"
       {% include "template_parts/recommendation.xml" %}
     {% endwith %}
     {% with recommendation="(należy określić potrzebę realizacji wybranych zajęć wychowania przedszkolnego lub zajęć edukacyjnych indywidualnie z dzieckiem lub uczniem lub w grupie liczącej do 5 dzieci lub uczniów – w przypadku dziecka lub ucznia napotykającego na trudności w funkcjonowaniu wspólnie z oddziałem przedszkolnym lub szkolnym, wraz z uzasadnieniem)" %}
@@ -427,7 +427,7 @@
         <w:pStyle w:val="newdocumentreason"/>
       </w:pPr>
       <w:r>
-        <w:t>W przypadku wydania nowego orzeczenia o potrzebie kształcenia specjalnego należy wskazać okoliczności, które Zespół Orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowego orzeczenia</w:t>
+        <w:t>W przypadku wydania nowego orzeczenia o potrzebie kształcenia specjalnego należy wskazać okoliczności, które zespół orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowego orzeczenia</w:t>
       </w:r>
       <w:r>
         <w:rPr>

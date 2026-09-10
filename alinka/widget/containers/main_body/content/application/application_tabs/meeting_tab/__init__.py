@@ -3,8 +3,8 @@ from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QDialog,
     QFrame,
-    QGroupBox,
     QHBoxLayout,
+    QLabel,
     QListView,
     QPushButton,
     QSizePolicy,
@@ -28,6 +28,54 @@ from alinka.widget.components import (
 )
 
 from .member_dialog import MemberDialog
+
+MEMBER_LIST_VIEW_STYLESHEET = """
+    QListView {
+        outline: none;
+        background-color: white;
+    }
+    QListView[validationState="valid"] {
+        border: 2px solid #10b981;
+    }
+    QListView[validationState="invalid"] {
+        border: 2px solid #ef4444;
+    }
+    QListView::item {
+        padding: 8px;
+        padding-left: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        min-height: 28px;
+    }
+    QListView::item {
+        background-color: white;
+    }
+    QListView::item:alternate {
+        background-color: #f9fafb;
+    }
+    QListView::item:hover {
+        background-color: #f3f4f6;
+    }
+    QListView::indicator {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #64748b;
+        border-radius: 3px;
+        background-color: white;
+        margin-right: 8px;
+    }
+    QListView::indicator:hover {
+        border: 2px solid #10b981;
+        background-color: white;
+    }
+    QListView::indicator:checked {
+        background-color: white;
+        border: 2px solid #10b981;
+    }
+    QListView::indicator:checked:hover {
+        background-color: white;
+        border: 2px solid #059669;
+    }
+"""
 
 
 class MeetingDatetimeFrame(ValidationMixin, QFrame):
@@ -73,7 +121,7 @@ class HandleMemberFrame(ValidationMixin, QFrame):
     def __init__(self, parent: QWidget):
         super().__init__(parent)
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(10, 8, 10, 8)
+        layout.setContentsMargins(0, 8, 0, 8)
         layout.setSpacing(8)
 
         self.show_new_member_inputs_btn = QPushButton("Dodaj", self)
@@ -152,17 +200,21 @@ class HandleMemberFrame(ValidationMixin, QFrame):
         return get_meeting_member_by_id(selected_members_id[0])
 
 
-class MeetingMemberGroup(ValidationMixin, QGroupBox):
+class MeetingMemberGroup(ValidationMixin, QFrame):
     # signal emitted when the selection changes
     # it should result in updating the meeting leader combobox
     selection_changed = Signal()
 
     def __init__(self, title: str, parent: QWidget):
-        super().__init__(title=title, parent=parent)
+        super().__init__(parent=parent)
         layout = QVBoxLayout(self)
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        layout.setContentsMargins(10, 24, 10, 5)
-        layout.setSpacing(5)
+        layout.setAlignment(Qt.AlignTop)
+        layout.setContentsMargins(12, 8, 12, 8)
+        layout.setSpacing(8)
+
+        title_label = QLabel(text=title, parent=self)
+        title_label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
+        layout.addWidget(title_label)
 
         self.model = QStandardItemModel()
         self.model.itemChanged.connect(self.item_changed)
@@ -181,49 +233,7 @@ class MeetingMemberGroup(ValidationMixin, QGroupBox):
         self.listView.setUniformItemSizes(True)
 
         # Add visible borders and styling
-        self.listView.setStyleSheet(
-            """
-            QListView {
-                outline: none;
-                background-color: white;
-            }
-            QListView::item {
-                padding: 8px;
-                padding-left: 12px;
-                border-bottom: 1px solid #e2e8f0;
-                min-height: 28px;
-            }
-            QListView::item {
-                background-color: white;
-            }
-            QListView::item:alternate {
-                background-color: #f9fafb;
-            }
-            QListView::item:hover {
-                background-color: #f3f4f6;
-            }
-            QListView::indicator {
-                width: 22px;
-                height: 22px;
-                border: 2px solid #64748b;
-                border-radius: 3px;
-                background-color: white;
-                margin-right: 8px;
-            }
-            QListView::indicator:hover {
-                border: 2px solid #10b981;
-                background-color: white;
-            }
-            QListView::indicator:checked {
-                background-color: white;
-                border: 2px solid #10b981;
-            }
-            QListView::indicator:checked:hover {
-                background-color: white;
-                border: 2px solid #059669;
-            }
-        """
-        )
+        self.listView.setStyleSheet(MEMBER_LIST_VIEW_STYLESHEET)
 
         # Set reasonable height for up to 7 team members
         self.listView.setMinimumHeight(80)
@@ -233,7 +243,13 @@ class MeetingMemberGroup(ValidationMixin, QGroupBox):
         self.handle_member_frame = HandleMemberFrame(self)
         self.handle_member_frame.team_member_changed.connect(self.populate_meeting_members)
 
+        # Label for error message
+        self.error_label = QLabel("", self)
+        self.error_label.setStyleSheet("color: red; font-size: 12px;")
+        self.error_label.setVisible(False)
+
         layout.addWidget(self.listView, 0)
+        layout.addWidget(self.error_label)
         layout.addWidget(self.handle_member_frame)
 
     @property
@@ -292,16 +308,21 @@ class MeetingMemberGroup(ValidationMixin, QGroupBox):
         return None
 
     def display_validation_result(self, validation_result: bool):
-        if validation_result:
-            self.listView.setProperty("validationState", "invalid")
-        else:
-            self.listView.setProperty("validationState", "valid")
+        state = "valid" if validation_result else "invalid"
+        self.listView.setProperty("validationState", state)
         self.listView.style().unpolish(self.listView)
         self.listView.style().polish(self.listView)
 
+        if validation_result:
+            self.error_label.setVisible(False)
+        else:
+            self.error_label.setVisible(True)
+            self.error_label.setText(self.error_message or "")
+
     def validate(self) -> bool:
-        self.display_validation_result(self.is_valid)
-        return self.is_valid
+        valid = self.is_valid
+        self.display_validation_result(valid)
+        return valid
 
     def clear_validation_state(self):
         self.listView.setProperty("validationState", "")
@@ -338,7 +359,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         self.meeting_member_group.populate_meeting_members()
 
         # Collect all components for validation
-        self.components = [self.meeting_datetime_frame, self.meeting_leader]
+        self.components = [self.meeting_datetime_frame, self.meeting_member_group, self.meeting_leader]
 
     def meeting_member_selection_changed(self) -> None:
         self.meeting_leader.combobox.clear()
@@ -360,7 +381,7 @@ class MeetingTabContainer(ValidationMixin, QWidget):
         return None
 
     def validate(self) -> bool:
-        results = [c.validate() for c in [self.meeting_datetime_frame, self.meeting_member_group, self.meeting_leader]]
+        results = [c.validate() for c in self.components]
         return all(results)
 
     def clear_validation_state(self):

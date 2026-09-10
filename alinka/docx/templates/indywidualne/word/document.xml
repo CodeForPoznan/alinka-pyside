@@ -22,7 +22,7 @@
         <w:pStyle w:val="LegalBasis"/>
       </w:pPr>
       <w:r>
-        <w:t>Działając na podstawie art. 127 ust. 10 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe (Dz. U. z 2023 r. poz. 900, 1672 i 1718),</w:t>
+        <w:t>Działając na podstawie art. 127 ust. 10 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe (Dz. U. z 2025 r. poz. 1043, z późn. zm.),</w:t>
       </w:r>
     </w:p>
     {% include "template_parts/on_request.xml" %}
@@ -37,7 +37,6 @@
       </w:r>
     </w:p>
     {% include "template_parts/child_name.xml" %}
-    {% include "template_parts/child_birth.xml" %}
     {% include "template_parts/pesel.xml" %}
     {% include "template_parts/child_address.xml" %}
     <w:p>
@@ -62,6 +61,9 @@
         <w:footnoteReference w:id="1"/>
       </w:r>
       <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
         <w:t>)</w:t>
       </w:r>
     </w:p>
@@ -87,7 +89,13 @@
         <w:footnoteReference w:id="2"/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> oraz adres ich zamieszkania)</w:t>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> oraz adres albo adresy ich zamieszkania)</w:t>
       </w:r>
     </w:p>
     <w:p>
@@ -103,6 +111,12 @@
           <w:rStyle w:val="Odwoanieprzypisudolnego"/>
         </w:rPr>
         <w:footnoteReference w:id="3"/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
       </w:r>
       <w:r>
         <w:rPr>
@@ -150,32 +164,93 @@
         <w:footnoteReference w:id="4"/>
       </w:r>
       <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
         <w:t xml:space="preserve"> </w:t>
       </w:r>
       <w:r>
         <w:t>uczęszczanie do szkoły.</w:t>
       </w:r>
     </w:p>
-    {% with diagnosis_header="Zespół Orzekający określa ograniczenia w funkcjonowaniu ucznia wynikające z przebiegu choroby lub procesu terapeutycznego:" %}"
-      {% include "template_parts/diagnosis.xml" %}
+
+<!-- Diagnosis -->
+
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Section"/>
+      </w:pPr>
+      <w:r>
+        <w:t>Diagnoza</w:t>
+      </w:r>
+    </w:p>
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Section-desc"/>
+      </w:pPr>
+      <w:r>
+        <w:t>Zespół orzekający określa diagnozę funkcjonowania ucznia:</w:t>
+      </w:r>
+    </w:p>
+    {% with diagnosis_item="przyczyny występujących trudności w uczeniu się lub funkcjonowaniu psychospołecznym ucznia wynikające  z przebiegu choroby lub procesu terapeutycznego, z uwzględnieniem wpływu występujących w środowisku nauczania i wychowania barier utrudniających jego funkcjonowanie:" %}
+      {% include "template_parts/diagnosis_list_item.xml" %}
     {% endwith %}
+    {% with diagnosis_item="mocne strony i uzdolnienia ucznia:" %}
+      {% include "template_parts/diagnosis_list_item.xml" %}
+    {% endwith %}
+    {% with diagnosis_item="indywidualne potrzeby rozwojowe i edukacyjne oraz możliwości psychofizyczne ucznia wynikające z przebiegu choroby lub procesu terapeutycznego, innych trudności oraz mocnych stron i uzdolnień:" %}
+      {% include "template_parts/diagnosis_list_item.xml" %}
+    {% endwith %}
+
+<!-- Recommendations -->
+
     {% include "template_parts/recommendations_header.xml" %}
-    {% with recommendation="(należy określić zalecane warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych ucznia, w tym warunki rozwijania jego potencjalnych możliwości i mocnych stron, wraz z uzasadnieniem)" %}
-      {% include "template_parts/recommendation.xml" %}
+    {% with recommendation="warunki i formy wsparcia umożliwiające realizację indywidualnych potrzeb rozwojowych i edukacyjnych oraz możliwości psychofizycznych ucznia w ramach:", level=0, dotted_line=False %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić zalecane działania sprzyjające integracji ucznia ze środowiskiem szkolnym oraz ułatwiające powrót ucznia do szkoły, wraz z uzasadnieniem)" %}
-      {% include "template_parts/recommendation.xml" %}
+    {% with recommendation="bieżącej pracy z uczniem, w tym organizowanej we współpracy z rodzicami:", level=1, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
     {% endwith %}
-    {% with recommendation="(należy określić zalecane, w zależności od potrzeb, cele rozwojowe i terapeutyczne do realizacji podczas zajęć indywidualnego nauczania oraz w ramach pomocy psychologiczno-pedagogicznej udzielanej uczniowi i, w zależności od potrzeb, jego rodzicom, przez szkołę oraz poradnię, wraz ze wskazaniem zalecanych form pomocy psychologiczno-pedagogicznej, wraz z uzasadnieniem)" %}
-      {% include "template_parts/recommendation.xml" %}
+    {% with recommendation="zintegrowanych działań nauczycieli i specjalistów:", level=1, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
     {% endwith %}
-    {% include "template_parts/aac_information.xml" %}
+    {% with recommendation="pomocy psychologiczno-pedagogicznej, ze wskazaniem zalecanych form tej pomocy udzielanej uczniowi oraz, w zależności od potrzeb, jego rodzicom, przez szkołę lub poradnię:", level=1, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="działania sprzyjające integracji ucznia ze środowiskiem szkolnym oraz ułatwiające powrót ucznia do szkoły:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="działania sprzyjające wzmacnianiu uczestnictwa ucznia w życiu szkoły:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="konieczność zapewnienia niezbędnego w procesie kształcenia sprzętu specjalistycznego i środków dydaktycznych - jeżeli zachodzi taka potrzeba:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+    {% with recommendation="możliwości dalszego kształcenia w zawodzie, w tym warunki realizacji praktycznej nauki zawodu - w przypadku ucznia szkoły prowadzącej kształcenie zawodowe:", level=0, dotted_line=True %}
+      {% include "template_parts/recommendation_indywidualne.xml" %}
+    {% endwith %}
+
+<!-- Additional informations -->
+
+    {% include "template_parts/additional_information_header.xml" %}
+    {% with additional_information_text="Dziecko posługuje się wspomagającą lub alternatywną metodą komunikacji (AAC) lub językiem migowym: TAK/NIE", additional_information_footnote_id=5 %}
+      {% include "template_parts/additional_information_first_item.xml" %}
+    {% endwith %}
+    {% with additional_information_text="Inne:" %}
+      {% include "template_parts/additional_information_item.xml" %}
+    {% endwith %}
+
+<!-- New decision -->
+
     <w:p>
       <w:pPr>
         <w:pStyle w:val="newdocumentreason"/>
       </w:pPr>
       <w:r>
-        <w:t>W przypadku wydania nowego orzeczenia o potrzebie indywidualnego nauczania należy wskazać okoliczności, które Zespół Orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowego orzeczenia</w:t>
+        <w:t>W przypadku wydania nowego orzeczenia o potrzebie indywidualnego nauczania należy wskazać okoliczności, które zespół orzekający uznał za istotne dla rozstrzygnięcia, oraz wyjaśnić powody, na podstawie których stwierdzono potrzebę wydania nowego orzeczenia</w:t>
       </w:r>
       <w:r>
         <w:rPr>
@@ -183,7 +258,13 @@
           <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:footnoteReference w:id="5"/>
+        <w:footnoteReference w:id="6"/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
       </w:r>
       <w:r>
         <w:rPr>
@@ -195,10 +276,28 @@
     </w:p>
     <w:p>
       <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+        <w:t>..........</w:t>
+      </w:r>
+    </w:p>
+
+<!-- Revocation -->
+
+    <w:p>
+      <w:pPr>
         <w:pStyle w:val="Revocation"/>
       </w:pPr>
       <w:r>
-        <w:t>Orzeczenie uchyla orzeczenie nr ...... o potrzebie indywidualnego nauczania z dnia .............. wydane przez .....................</w:t>
+        <w:t>Orzeczenie uchyla</w:t>
       </w:r>
       <w:r>
         <w:rPr>
@@ -206,9 +305,22 @@
           <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:footnoteReference w:id="6"/>
+        <w:footnoteReference w:id="7"/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:t>)</w:t>
+      </w:r>
+      <w:r>
+        <w:t xml:space="preserve"> orzeczenie nr ...... o potrzebie indywidualnego nauczania z dnia .............. wydane przez .....................</w:t>
       </w:r>
     </w:p>
+
+<!-- appeal -->
+
+  {% include "template_parts/appeal.xml" %}
     <w:p>
       <w:pPr>
         <w:rPr>
@@ -217,7 +329,14 @@
         </w:rPr>
       </w:pPr>
     </w:p>
-  {% include "template_parts/appeal.xml" %}
-  {% include "template_parts/director_signature.xml" %}
-  {% include "template_parts/recipients.xml" %}
+  {% include "template_parts/team_member_signature.xml" %}
+      <w:p>
+      <w:pPr>
+        <w:rPr>
+          <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+      </w:pPr>
+    </w:p>
+  {% include "template_parts/recipients_indywidualne.xml" %}
 {% endblock %}

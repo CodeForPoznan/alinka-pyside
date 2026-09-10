@@ -1,0 +1,23 @@
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recivers-main"/>
+  </w:pPr>
+  <w:r>
+    <w:t>Podpisy członków zespołu orzekającego:</w:t>
+  </w:r>
+</w:p>
+
+{% for member in meeting_data.members %}
+  <w:p>
+    <w:pPr>
+      <w:pStyle w:val="Recivers-main"/>
+    </w:pPr>
+    <w:r>
+      {% if member == meeting_data.members[0] %}
+        <w:t>………………………………………… - przewodniczący zespołu orzekającego</w:t>
+      {% else %}
+        <w:t>…………………………………………</w:t>
+      {% endif %}
+    </w:r>
+  </w:p>
+{% endfor %}

@@ -150,7 +150,7 @@
         <w:t>,</w:t>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"> zawiadamiam, że posiedzenie Zespołu Orzekającego, na którym będzie rozpatrywany złożony wniosek, odbędzie się w dniu</w:t>
+        <w:t xml:space="preserve"> zawiadamiam, że posiedzenie zespołu orzekającego, na którym będzie rozpatrywany złożony wniosek, odbędzie się w dniu</w:t>
       </w:r>
       <w:r>
         <w:rPr>
@@ -222,7 +222,7 @@
         <w:ind w:left="2880" w:firstLine="720" />
       </w:pPr>
       <w:r>
-        <w:t>(Przewodniczący Zespołu Orzekającego)</w:t>
+        <w:t>(przewodniczący zespołu orzekającego)</w:t>
       </w:r>
     </w:p>
     <w:p>

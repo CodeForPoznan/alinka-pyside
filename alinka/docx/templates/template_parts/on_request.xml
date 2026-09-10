@@ -26,6 +26,6 @@
     <w:pStyle w:val="Subtitle1"/>
     </w:pPr>
     <w:r>
-    <w:t>(imię i nazwisko wnioskodawcy)</w:t>
+    <w:t>(imię i nazwisko wnioskodawcy albo wnioskodawców)</w:t>
     </w:r>
 </w:p>

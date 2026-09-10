@@ -1,0 +1,20 @@
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="Recommend"/>
+    <w:numPr>
+      <w:ilvl w:val="0"/>
+      <w:numId w:val="6"/>
+    </w:numPr>
+  </w:pPr>
+  <w:r>
+    <w:t>{{ additional_information_text }}</w:t>
+  </w:r>
+</w:p>
+<w:p>
+  <w:pPr>
+    <w:pStyle w:val="RecommendText"/>
+  </w:pPr>
+  <w:r>
+    <w:t>………………………………………………………………………………………………</w:t>
+  </w:r>
+</w:p>
