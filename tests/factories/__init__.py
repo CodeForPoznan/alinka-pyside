@@ -182,12 +182,12 @@ class DecisionFactory(SQLAlchemyModelFactory):
     @lazy_attribute
     def meeting_time(self):
         """
-        Lets limit ourselelves to working hours and 5-minute increment.
+        Lets limit ourselves to working hours and 5-minute increment.
         """
         return time(
             hour=random.randint(7, 20),
-            minute=random.randint(0, 59 // 5) * 5,
-        ).isoformat()
+            minute=random.randint(0, 11) * 5,
+        ).strftime("%H:%M")
 
     @lazy_attribute
     def application_date(self):

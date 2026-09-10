@@ -135,7 +135,7 @@ decision_data = {
     "application_date": datetime(2023, 4, 5, tzinfo=timezone.utc),
     "file_no": "4455",
     "meeting_date": datetime(2023, 4, 19, tzinfo=timezone.utc),
-    "meeting_time": "8:15",
+    "meeting_time": "08:15",
     "meeting_members": [
         {"id": 1, "name": "Julian Oleksa", "function": "logopeda, pedagog"},
         {"id": 2, "name": "Natan Kulisz", "function": "tyflopedagog, logopeda"},
