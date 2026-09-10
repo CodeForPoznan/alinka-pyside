@@ -1,14 +1,22 @@
 import os
+import sys
+from pathlib import Path
 from zipfile import ZipFile
 
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from alinka.constants import DocumentsTypes
 from alinka.schemas import DocumentData
 
-# Use PackageLoader so resources are resolved correctly from the installed package
-# (works with Windows installer and PyInstaller)
-loader = PackageLoader("alinka.docx", "templates")
+
+def get_templates_base_path() -> Path:
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / "docx" / "templates"
+
+    return Path(__file__).resolve().parent / "templates"
+
+
+loader = FileSystemLoader(get_templates_base_path())
 environment = Environment(loader=loader)
 
 
