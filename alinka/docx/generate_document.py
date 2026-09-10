@@ -1,5 +1,6 @@
 import os
 import sys
+from pathlib import Path
 from zipfile import ZipFile
 
 from jinja2 import Environment, FileSystemLoader
@@ -7,10 +8,12 @@ from jinja2 import Environment, FileSystemLoader
 from alinka.constants import DocumentsTypes
 from alinka.schemas import DocumentData
 
-def get_templates_base_path() -> str:
-    if getattr(sys, "frozen", False):
-        return os.path.join(sys._MEIPASS, "docx", "templates")
-    return os.path.join(os.path.dirname(__file__), "templates")
+
+def get_templates_base_path() -> Path:
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / "docx" / "templates"
+
+    return Path(__file__).resolve().parent / "templates"
 
 
 loader = FileSystemLoader(get_templates_base_path())

@@ -3,6 +3,20 @@ on:
   push:
     branches:
     - develop
+  pull_request:
+    branches:
+    - develop
+    paths:
+    - 'alinka/docx/**'
+    - alinka.spec
+    - installer.iss
+    - package.sh
+    - Dockerfile
+    - 'docker-compose*.yml'
+    - pyproject.toml
+    - poetry.lock
+    - '.github/workflows/_build-*.yml'
+    - .github/workflows/build-develop.yml
   workflow_dispatch:
 
 jobs:
