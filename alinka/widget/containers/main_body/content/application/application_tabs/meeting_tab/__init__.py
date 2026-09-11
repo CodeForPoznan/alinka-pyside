@@ -23,7 +23,7 @@ from alinka.widget.components import (
     ConfirmationModal,
     LabeledComboBoxComponent,
     LabeledDateComponent,
-    LabeledInputComponent,
+    LabeledTimeComponent,
     ValidationMixin,
 )
 
@@ -88,8 +88,8 @@ class MeetingDatetimeFrame(ValidationMixin, QFrame):
 
         self.meeting_date = LabeledDateComponent("Data zespołu", self, required=True)
         self.meeting_date.date_input.setDate(QDate.currentDate())
-        self.meeting_time = LabeledInputComponent("Godzina zespołu", self, required=True)
-        self.meeting_time.line_edit.setPlaceholderText("np. 10:00")
+
+        self.meeting_time = LabeledTimeComponent("Godzina zespołu", self, required=True)
 
         layout.addWidget(self.meeting_date, 1)
         layout.addWidget(self.meeting_time, 1)

@@ -1,4 +1,4 @@
-from PySide6.QtCore import QLocale, Qt, Signal
+from PySide6.QtCore import QLocale, Qt, QTime, Signal
 from PySide6.QtGui import QColor, QPalette
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QMessageBox,
     QTableView,
+    QTimeEdit,
     QVBoxLayout,
     QWidget,
 )
@@ -451,3 +452,103 @@ class ConfirmationModal(QMessageBox):
     def confirm(self) -> bool:
         self.exec()
         return self.clickedButton() == self.yes_button
+
+
+class LabeledTimeComponent(ValidationMixin, QWidget):
+    def __init__(self, label: str, parent: QWidget, required=False):
+        super().__init__(parent)
+        self.required = required
+        self._user_interacted = False
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(4)
+
+        self._label = QLabel(label)
+        self._label.setStyleSheet("font-weight: 600; color: #000000; font-size: 13px;")
+
+        self.time_input = QTimeEdit(self)
+        self.time_input.setDisplayFormat("hh:mm")
+        self.time_input.setTime(QTime.currentTime())
+        self.time_input.setKeyboardTracking(False)
+
+        self._error_label = QLabel(self)
+        self._error_label.setStyleSheet("color: red; font-size: 12px;")
+        self._error_label.setVisible(False)
+
+        self.time_input.timeChanged.connect(self._on_time_changed)
+
+        layout.addWidget(self._label)
+        layout.addWidget(self._error_label)
+        layout.addWidget(self.time_input)
+
+    def _on_time_changed(self) -> None:
+        # Track interaction ONLY when the change originates from the user,
+        # which is determined by checking if the widget currently holds focus.
+        if self.time_input.hasFocus():
+            self._user_interacted = True
+            self.clear_validation_state()
+
+    @property
+    def text(self) -> str:
+        return self.time_input.time().toString("HH:mm")
+
+    @text.setter
+    def text(self, value: str) -> None:
+        q = QTime.fromString(value, "HH:mm")
+        if q.isValid():
+            # Block signals temporarily to prevent programmatic updates
+            # from being incorrectly flagged as user interactions.
+            self.time_input.blockSignals(True)
+            self.time_input.setTime(q)
+            self.time_input.blockSignals(False)
+
+            # When pre-populating existing data, consider the field
+            # as successfully populated and clear any previous validation errors.
+            self._user_interacted = True
+            self.clear_validation_state()
+
+    @property
+    def is_valid(self) -> bool:
+        if not self.required:
+            return True
+
+        return self._user_interacted
+
+    @property
+    def error_message(self) -> str | None:
+        if self.required and not self._user_interacted:
+            return "Proszę wybrać prawidłową godzinę."
+        return None
+
+    def validate(self) -> bool:
+        valid = self.is_valid
+        self.display_validation_result(valid)
+        return valid
+
+    def clear_validation_state(self) -> None:
+        self.time_input.setProperty("validationState", "")
+        self.time_input.style().unpolish(self.time_input)
+        self.time_input.style().polish(self.time_input)
+
+    def display_validation_result(self, is_valid: bool) -> None:
+        if is_valid:
+            self.time_input.setProperty("validationState", "valid")
+            self._error_label.setVisible(False)
+            self._error_label.setText("")
+        else:
+            self.time_input.setProperty("validationState", "invalid")
+            self._error_label.setText(self.error_message or "Błąd walidacji")
+            self._error_label.setVisible(True)
+
+        self.time_input.style().unpolish(self.time_input)
+        self.time_input.style().polish(self.time_input)
+        self.time_input.repaint()
+
+    def clear(self) -> None:
+        self.time_input.blockSignals(True)
+        self.time_input.setTime(QTime.currentTime())
+        self.time_input.blockSignals(False)
+
+        self._user_interacted = False
+        self.clear_validation_state()
