@@ -17,12 +17,6 @@
     </w:rPr>
     <w:footnoteReference w:id="{{ additional_information_footnote_id }}"/>
   </w:r>
-  <w:r>
-    <w:rPr>
-      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
-    </w:rPr>
-    <w:t>)</w:t>
-  </w:r>
 </w:p>
 <w:p>
   <w:pPr>

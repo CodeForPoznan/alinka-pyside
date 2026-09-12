@@ -25,7 +25,7 @@
 </w:p>
 <w:p>
   <w:pPr>
-    <w:pStyle w:val="Recivers-main"/>
+    <w:pStyle w:val="Recivers-desc"/>
   </w:pPr>
   <w:r>
     <w:t>1) Szkoła, do której uczęszcza uczeń</w:t>
@@ -73,7 +73,7 @@
 </w:p>
 <w:p>
   <w:pPr>
-    <w:pStyle w:val="Recivers-main"/>
+    <w:pStyle w:val="Recivers-desc"/>
   </w:pPr>
   <w:r>
     <w:t>2) Wnioskodawca</w:t>

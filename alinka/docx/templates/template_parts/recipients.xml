@@ -17,6 +17,7 @@
 </w:p>
 <w:p>
   <w:pPr>
+    <w:pStyle w:val="Recivers-desc"/>
     <w:rPr>
       <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
       <w:lang w:val="pl-PL"/>

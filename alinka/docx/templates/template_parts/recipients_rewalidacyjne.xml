@@ -28,7 +28,7 @@
     <w:pStyle w:val="Recivers-desc"/>
   </w:pPr>
   <w:r>
-    <w:t>1) Przedszkole, inna forma wychowania przedszkolnego, szkoła, ośrodek lub poradnia, w których dziecko zostanie objęte wczesnym wspomaganiem rozwoju</w:t>
+    <w:t>1) Przedszkole, szkoła lub ośrodek, o którym mowa w art. 2 pkt 7 ustawy z dnia 14 grudnia 2016 r. – Prawo oświatowe, w których dziecko uczestniczy w zajęciach rewalidacyjno-wychowawczych</w:t>
   </w:r>
 </w:p>
 <w:p>
@@ -44,7 +44,7 @@
     <w:pStyle w:val="Subtitle-end"/>
   </w:pPr>
   <w:r>
-    <w:t>(nazwa przedszkola, innej formy wychowania przedszkolnego, szkoły, ośrodka lub poradni)</w:t>
+    <w:t>(nazwa przedszkola, szkoły lub ośrodka)</w:t>
   </w:r>
 </w:p>
 <w:p>
@@ -60,7 +60,7 @@
     <w:pStyle w:val="Subtitle-end"/>
   </w:pPr>
   <w:r>
-    <w:t>(adres siedziby przedszkola, innej formy wychowania przedszkolnego, szkoły, ośrodka lub poradni)</w:t>
+    <w:t>(adres siedziby przedszkola, szkoły lub ośrodka)</w:t>
   </w:r>
 </w:p>
 <w:p>
@@ -84,13 +84,10 @@
       <w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman" w:cs="Times New Roman"/>
       <w:lang w:val="pl-PL"/>
     </w:rPr>
-    <w:footnoteReference w:id="5"/>
+    <w:footnoteReference w:id="10"/>
   </w:r>
   <w:r>
-    <w:rPr>
-      <w:rStyle w:val="Odwoanieprzypisudolnego"/>
-    </w:rPr>
-    <w:t>)</w:t>
+    <w:t>:</w:t>
   </w:r>
 </w:p>
 <w:p>
