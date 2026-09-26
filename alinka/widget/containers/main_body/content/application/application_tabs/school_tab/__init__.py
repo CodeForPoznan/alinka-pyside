@@ -1,6 +1,7 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QItemSelectionModel
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
+    QAbstractItemView,
     QFrame,
     QHBoxLayout,
     QHeaderView,
@@ -94,9 +95,9 @@ class HandleSchoolFrame(ValidationMixin, QFrame):
         if not selected_school:
             return
         if not ConfirmationModal(
-            self,
-            "Potwierdzenie usunięcia szkoły",
-            "Czy na pewno chcesz usunąć tę szkołę?",
+                self,
+                "Potwierdzenie usunięcia szkoły",
+                "Czy na pewno chcesz usunąć tę szkołę?",
         ).confirm():
             return
         delete_school(selected_school.id)
@@ -125,15 +126,17 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
         self.model = QStandardItemModel()
         self.model.setHorizontalHeaderLabels(["Nazwa Szkoły", "Typ Szkoły", "Adres", "Miejscowość"])
-        self.model.itemChanged.connect(self.on_checkbox_changed)
 
         self.table_view = QTableView(self)
         self.table_view.setModel(self.model)
         self.table_view.setEditTriggers(QTableView.NoEditTriggers)
-        self.table_view.setSelectionMode(QTableView.NoSelection)
+        self.table_view.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.table_view.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table_view.resizeColumnsToContents()
 
-        # Add modern styling to match the meeting tab
+        # Connect selection change
+        self.table_view.selectionModel().selectionChanged.connect(self.selection_changed)
+
         self.table_view.setStyleSheet(
             """
             QTableView {
@@ -156,11 +159,14 @@ class SchoolTabContainer(ValidationMixin, QWidget):
                 min-height: 28px;
             }
             QTableView::item:selected {
-                background-color: #dcfce7;
-                color: black;
+                background-color: #10b981; 
+                color: white;
             }
             QTableView::item:hover {
                 background-color: #f3f4f6;
+            }
+            QTableView::item:selected:hover {
+                background-color: #059669;
             }
             QHeaderView::section {
                 background-color: #f9fafb;
@@ -192,27 +198,14 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         # Add stretch to push all content to the top
         layout.addStretch()
 
-    def on_checkbox_changed(self, item):
-        """Handle checkbox state changes to ensure only one checkbox is selected at a time"""
-        if item.column() == 0 and item.checkState() == Qt.Checked:
-            # Uncheck all other checkboxes
-            for row in range(self.model.rowCount()):
-                if row != item.row():
-                    checkbox_item = self.model.item(row, 0)
-                    if checkbox_item and checkbox_item.checkState() == Qt.Checked:
-                        checkbox_item.setCheckState(Qt.Unchecked)
-
-        # Update button states
-        self.update_button_states()
-
     def update_button_states(self):
-        """Update the state of edit and remove buttons based on checkbox selection"""
-        is_selected = bool(self.get_selected_school())
+        """Update the state of edit and remove buttons based on row selection"""
+        is_selected = self.is_selected
         self.handle_school_frame.edit_school_btn.setEnabled(is_selected)
         self.handle_school_frame.remove_school_btn.setEnabled(is_selected)
 
-    def selection_changed(self):
-        is_selected = bool(self.get_selected_school())
+    def selection_changed(self, selected=None, deselected=None):
+        is_selected = self.is_selected
         self.handle_school_frame.edit_school_btn.setEnabled(is_selected)
         self.handle_school_frame.remove_school_btn.setEnabled(is_selected)
 
@@ -224,22 +217,18 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
     @property
     def is_selected(self) -> bool:
-        """Check if exactly one checkbox is selected"""
-        checked_count = 0
-        for row in range(self.model.rowCount()):
-            name_item = self.model.item(row, 0)
-            if name_item and name_item.checkState() == Qt.Checked:
-                checked_count += 1
-        return checked_count == 1
+        """Check if a row is selected"""
+        return self.table_view.selectionModel().hasSelection()
 
     def get_selected_school(self) -> SchoolDbSchema | None:
-        """Get the school data for the checked row"""
-        for row in range(self.model.rowCount()):
-            name_item = self.model.item(row, 0)
-            if name_item and name_item.checkState() == Qt.Checked:
-                school_id = name_item.data()  # School ID is stored in the name column
-                return get_school_by_id(school_id)
-        return None
+        """Get the school data for the selected row"""
+        indexes = self.table_view.selectionModel().selectedRows()
+        if not indexes:
+            return None
+
+        row = indexes[0].row()
+        school_id = self.model.item(row, 0).data()
+        return get_school_by_id(school_id)
 
     def populate_school_list(self):
         self.model.setRowCount(0)
@@ -248,10 +237,8 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         for school in schools:
             # Create name item with checkbox
             name_item = QStandardItem(school.name)
-            name_item.setCheckable(True)
-            name_item.setCheckState(Qt.Unchecked)
             name_item.setEditable(False)
-            name_item.setData(school.id)  # Store school ID in the name item
+            name_item.setData(school.id)
 
             row = [
                 name_item,
@@ -267,14 +254,12 @@ class SchoolTabContainer(ValidationMixin, QWidget):
             self.model.appendRow(row)
 
         self.table_view.resizeColumnsToContents()
+        self.table_view.clearSelection()
         self.update_button_states()
 
     def clear(self):
-        """Clear all checkbox selections"""
-        for row in range(self.model.rowCount()):
-            name_item = self.model.item(row, 0)
-            if name_item:
-                name_item.setCheckState(Qt.Unchecked)
+        """Clear row selections"""
+        self.table_view.clearSelection()
 
     @property
     def school_data(self) -> SchoolData | None:
