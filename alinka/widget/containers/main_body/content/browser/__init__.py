@@ -131,8 +131,7 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
                     # Restore graphical selection if the record is visible
                     index_to_select = self.table_model.index(row_to_select, 0)
                     self.selection_model.select(
-                        index_to_select,
-                        QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
+                        index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
                     )
 
     def showEvent(self, event):
