@@ -253,7 +253,6 @@ class SchoolTabContainer(ValidationMixin, QWidget):
 
             self.model.appendRow(row)
 
-        self.table_view.resizeColumnsToContents()
         self.table_view.clearSelection()
         self.update_button_states()
 
