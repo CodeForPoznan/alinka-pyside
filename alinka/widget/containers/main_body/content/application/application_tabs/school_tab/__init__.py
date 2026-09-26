@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, Signal, QItemSelectionModel
+from PySide6.QtCore import QItemSelectionModel, Qt, Signal
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
@@ -95,9 +95,9 @@ class HandleSchoolFrame(ValidationMixin, QFrame):
         if not selected_school:
             return
         if not ConfirmationModal(
-                self,
-                "Potwierdzenie usunięcia szkoły",
-                "Czy na pewno chcesz usunąć tę szkołę?",
+            self,
+            "Potwierdzenie usunięcia szkoły",
+            "Czy na pewno chcesz usunąć tę szkołę?",
         ).confirm():
             return
         delete_school(selected_school.id)
