@@ -116,3 +116,10 @@ class ContentContainer(ValidationMixin, QFrame):
         self.application_container.setVisible(False)
         self.browser_container.setVisible(True)
         header_container.set_breadcrumb("Wyszukaj dokument")
+
+    def validate_application(self) -> bool:
+        if hasattr(self.application_container, "validate"):
+            return self.application_container.validate()
+        elif hasattr(self.application_container, "is_valid"):
+            return self.application_container.is_valid
+        return True
