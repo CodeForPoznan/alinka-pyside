@@ -159,7 +159,7 @@ class SchoolTabContainer(ValidationMixin, QWidget):
                 min-height: 28px;
             }
             QTableView::item:selected {
-                background-color: #10b981; 
+                background-color: #10b981;
                 color: white;
             }
             QTableView::item:hover {
