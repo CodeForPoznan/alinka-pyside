@@ -1,26 +1,8 @@
-import sys
-import types
-import types as _types
+import os
+from types import SimpleNamespace
 
-# Provide minimal PySide6 stubs so tests can import the module without GUI bindings.
-Qt_stub = types.SimpleNamespace(DisplayRole=0, TextAlignmentRole=1)
-qtcore = _types.ModuleType("PySide6.QtCore")
-qtcore.QAbstractTableModel = object
-qtcore.QItemSelectionModel = type("QItemSelectionModel", (), {"ClearAndSelect": 1, "Rows": 2})
-qtcore.QModelIndex = object
-qtcore.Qt = Qt_stub
-qtwidgets = _types.ModuleType("PySide6.QtWidgets")
-qtwidgets.QAbstractItemView = object
-qtwidgets.QHeaderView = object
-qtwidgets.QTableView = object
-qtwidgets.QTabWidget = object
-qtwidgets.QVBoxLayout = object
-qtwidgets.QWidget = object
-
-sys.modules["PySide6"] = _types.ModuleType("PySide6")
-sys.modules["PySide6.QtCore"] = qtcore
-sys.modules["PySide6.QtWidgets"] = qtwidgets
-
+from PySide6.QtWidgets import QApplication, QWidget
+from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
 
 
 class DummyBtn:
@@ -31,92 +13,71 @@ class DummyBtn:
         self.enabled = val
 
 
-class DummyTable:
-    def __init__(self):
-        self.cleared = False
-        self.selected = None
+def make_container(monkeypatch, row_ids, prev_selected):
+    # Use offscreen platform to avoid GUI requirements
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    # Ensure QApplication exists
+    app = QApplication.instance() or QApplication([])
 
-    def clearSelection(self):
-        self.cleared = True
-
-    def selectRow(self, idx):
-        self.selected = idx
-
-
-class DummyModel:
-    def __init__(self, data):
-        # initial data that should be returned when cache is (re)built
-        self.filter_by = None
-        self._initial = data
-        self._cached_data = data
-        self.reset_called = False
-
-    def beginResetModel(self):
-        self.reset_called = True
-
-    def endResetModel(self):
-        pass
-
-    @property
-    def _data(self):
-        # mimic DecisionsTableModel memoization: if cache is None, rebuild from initial
-        if getattr(self, "_cached_data", None) is None:
-            self._cached_data = list(self._initial)
-        return self._cached_data
-
-
-def make_container(table_data, prev_selected):
-    # import the class after PySide6 stubs have been injected to sys.modules
-    from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
-
-    # create BrowseDecisionContainer instance without running __init__
-    c = object.__new__(BrowseDecisionContainer)
-
-    # build browser_container chain so that the create_new_btn property resolves
+    # Prepare parent QWidget with the footer->create_new_btn chain required by the container
+    parent = QWidget()
     dummy_btn = DummyBtn()
-    browser = types.SimpleNamespace(
-        content_container=types.SimpleNamespace(
-            main_body_container=types.SimpleNamespace(
-                footer_container=types.SimpleNamespace(
-                    browser_footer_container=types.SimpleNamespace(create_new_btn=dummy_btn)
-                )
+    parent.content_container = SimpleNamespace(
+        main_body_container=SimpleNamespace(
+            footer_container=SimpleNamespace(
+                browser_footer_container=SimpleNamespace(create_new_btn=dummy_btn)
             )
         )
     )
 
-    c.browser_container = browser
-    c.table_model = DummyModel(table_data)
-    c.decision_table = DummyTable()
+    # Monkeypatch DB query used by DecisionsTableModel to return rows with given ids
+    def fake_query(filter_by):
+        def make_decision(id_):
+            return SimpleNamespace(
+                id=id_,
+                child_pesel="",
+                child_full_name="",
+                child_town="",
+                child_address="",
+                created_at=None,
+            )
+
+        return [make_decision(rid) for rid in row_ids]
+
+    monkeypatch.setattr("alinka.db.queries.filter_decisions_by_pesel_child_name", fake_query)
+
+    # Instantiate real widget (runs real init) and return it with the dummy button
+    c = BrowseDecisionContainer(parent)
     c.selected_decision_id = prev_selected
     return c, dummy_btn
 
 
-def test_restore_selection_when_present():
-    row = ["123", "pesel", "name", "addr", "date"]
-    c, btn = make_container([row], "123")
+def test_restore_selection_when_present(monkeypatch):
+    c, btn = make_container(monkeypatch, ["123"], "123")
 
     c.entered_filter_by("query")
 
-    assert c.decision_table.selected == 0
+    selected = c.decision_table.selectionModel().selectedRows()
+    assert len(selected) == 1
+    assert selected[0].row() == 0
     assert btn.enabled is True
     assert c.selected_decision_id == "123"
 
 
-def test_disable_button_when_not_present():
-    row = ["456", "pesel", "name", "addr", "date"]
-    c, btn = make_container([row], "123")
+def test_disable_button_when_not_present(monkeypatch):
+    c, btn = make_container(monkeypatch, ["456"], "123")
 
     c.entered_filter_by("query")
 
-    assert c.decision_table.selected is None
+    selected = c.decision_table.selectionModel().selectedRows()
+    assert len(selected) == 0
     assert btn.enabled is False
     # ID should remain remembered
     assert c.selected_decision_id == "123"
 
 
-def test_disable_when_no_prev_selected():
-    row = ["456", "pesel", "name", "addr", "date"]
-    c, btn = make_container([row], None)
+def test_disable_when_no_prev_selected(monkeypatch):
+    c, btn = make_container(monkeypatch, ["456"], None)
 
     c.entered_filter_by("query")
 
