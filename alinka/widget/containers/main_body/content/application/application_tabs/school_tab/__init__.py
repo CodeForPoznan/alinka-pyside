@@ -1,4 +1,4 @@
-from PySide6.QtCore import QItemSelectionModel, Qt, Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
