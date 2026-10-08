@@ -18,7 +18,7 @@ def make_container(monkeypatch, row_ids, prev_selected):
     # Use offscreen platform to avoid GUI requirements
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     # Ensure QApplication exists
-    app = QApplication.instance() or QApplication([])
+    # app = QApplication.instance() or QApplication([])
 
     # Prepare parent QWidget with the footer->create_new_btn chain required by the container
     parent = QWidget()
