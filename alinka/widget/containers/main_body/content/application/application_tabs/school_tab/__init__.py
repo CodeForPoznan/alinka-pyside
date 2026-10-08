@@ -205,12 +205,10 @@ class SchoolTabContainer(ValidationMixin, QWidget):
         self.handle_school_frame.remove_school_btn.setEnabled(is_selected)
 
     def selection_changed(self, selected=None, deselected=None):
-        is_selected = self.is_selected
-        self.handle_school_frame.edit_school_btn.setEnabled(is_selected)
-        self.handle_school_frame.remove_school_btn.setEnabled(is_selected)
+        self.update_button_states()
 
         # Clear validation error if a school is selected
-        if is_selected:
+        if self.is_selected:
             current_state = self.table_view.property("validationState")
             if current_state == "invalid":
                 self.clear_validation_state()
