@@ -1,16 +1,9 @@
 from types import SimpleNamespace
 
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QPushButton, QWidget
 
 from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
-
-
-class DummyBtn:
-    def __init__(self):
-        self.enabled = None
-
-    def setEnabled(self, val):
-        self.enabled = val
 
 
 def make_container(monkeypatch, row_ids, prev_selected):
@@ -41,7 +34,7 @@ def make_container(monkeypatch, row_ids, prev_selected):
 
     # Patch the function where the module under test imported it
     monkeypatch.setattr(
-        "alinka.widget.containers.main_body.content.browser.filter_decisions_by_pesel_child_name",
+        "alinka.widget.containers.main_body.content.browser.filter_decision_summaries_by_pesel_child_name",
         fake_query,
         raising=True,
     )
@@ -53,43 +46,38 @@ def make_container(monkeypatch, row_ids, prev_selected):
 
 
 def test_restore_selection_when_present(monkeypatch):
-    c, btn = make_container(monkeypatch, ["123"], "123")
+    c, btn = make_container(monkeypatch, [123], 123)
 
     c.entered_filter_by("query")
-    # allow Qt to process selection change events
-    from PySide6.QtWidgets import QApplication
-
-    QApplication.processEvents()
+    QTest.qWait(c.FILTER_DEBOUNCE_MS + 50)
 
     selected = c.decision_table.selectionModel().selectedRows()
     assert len(selected) == 1
     assert selected[0].row() == 0
     # Use real QPushButton API
     assert btn.isEnabled() is True
-    assert c.selected_decision_id == "123"
+    assert c.selected_decision_id == 123
 
 
 def test_disable_button_when_not_present(monkeypatch):
-    c, btn = make_container(monkeypatch, ["456"], "123")
+    c, btn = make_container(monkeypatch, [456], 123)
 
     c.entered_filter_by("query")
-    # allow Qt to process selection change events
-    from PySide6.QtWidgets import QApplication
-
-    QApplication.processEvents()
+    QTest.qWait(c.FILTER_DEBOUNCE_MS + 50)
 
     selected = c.decision_table.selectionModel().selectedRows()
     assert len(selected) == 0
     # Use real QPushButton API
     assert btn.isEnabled() is False
     # ID should remain remembered
-    assert c.selected_decision_id == "123"
+    assert c.selected_decision_id == 123
 
 
 def test_disable_when_no_prev_selected(monkeypatch):
-    c, btn = make_container(monkeypatch, ["456"], None)
+    c, btn = make_container(monkeypatch, [456], None)
 
     c.entered_filter_by("query")
+    QTest.qWait(c.FILTER_DEBOUNCE_MS + 50)
 
     # Use real QPushButton API
     assert btn.isEnabled() is False
