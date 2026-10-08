@@ -2,6 +2,7 @@ import os
 from types import SimpleNamespace
 
 from PySide6.QtWidgets import QApplication, QWidget
+
 from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
 
 
@@ -24,9 +25,7 @@ def make_container(monkeypatch, row_ids, prev_selected):
     dummy_btn = DummyBtn()
     parent.content_container = SimpleNamespace(
         main_body_container=SimpleNamespace(
-            footer_container=SimpleNamespace(
-                browser_footer_container=SimpleNamespace(create_new_btn=dummy_btn)
-            )
+            footer_container=SimpleNamespace(browser_footer_container=SimpleNamespace(create_new_btn=dummy_btn))
         )
     )
 
