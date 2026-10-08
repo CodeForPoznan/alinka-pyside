@@ -142,9 +142,18 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
                     # Restore graphical selection if the record is visible
                     index_to_select = self.table_model.index(row_to_select, 0)
                     # Select via the selection model to ensure selectionModel reflects the change
+                    # Perform selection and also set current index to ensure selection is reflected
                     self.selection_model.select(
                         index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
                     )
+                    try:
+                        # setCurrentIndex may help in some environments to make selection visible
+                        self.selection_model.setCurrentIndex(
+                            index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
+                        )
+                    except Exception:
+                        pass
+
                     self.selected_decision_id = saved_id
                     self.create_new_btn.setEnabled(True)
                 else:

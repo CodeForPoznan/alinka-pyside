@@ -55,6 +55,10 @@ def test_restore_selection_when_present(monkeypatch):
     c, btn = make_container(monkeypatch, ["123"], "123")
 
     c.entered_filter_by("query")
+    # allow Qt to process selection change events
+    from PySide6.QtWidgets import QApplication
+
+    QApplication.processEvents()
 
     selected = c.decision_table.selectionModel().selectedRows()
     assert len(selected) == 1
@@ -67,6 +71,10 @@ def test_disable_button_when_not_present(monkeypatch):
     c, btn = make_container(monkeypatch, ["456"], "123")
 
     c.entered_filter_by("query")
+    # allow Qt to process selection change events
+    from PySide6.QtWidgets import QApplication
+
+    QApplication.processEvents()
 
     selected = c.decision_table.selectionModel().selectedRows()
     assert len(selected) == 0
