@@ -19,6 +19,8 @@ class DecisionsTableModel(QAbstractTableModel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.filter_by = None
+        # cache for _data to avoid repeated DB queries during view operations
+        self._cached_data = None
 
     @staticmethod
     def map_model_to_row_data(decision: DecisionDbSchema) -> list[str]:
@@ -32,8 +34,11 @@ class DecisionsTableModel(QAbstractTableModel):
 
     @property
     def _data(self):
-        decisions = filter_decisions_by_pesel_child_name(self.filter_by)
-        return [self.map_model_to_row_data(decision) for decision in decisions]
+        # Memoize data so repeated accesses (rowCount/data) don't re-query DB each time.
+        if getattr(self, "_cached_data", None) is None:
+            decisions = filter_decisions_by_pesel_child_name(self.filter_by)
+            self._cached_data = [self.map_model_to_row_data(decision) for decision in decisions]
+        return self._cached_data
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
         return len(self._data)
@@ -110,29 +115,42 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
             # Save id of the currently selected row before applying the filter
             saved_id = self.selected_decision_id
 
-            # Reset the model to load new filtered data
+            # Set new filter and invalidate cached data so the model will rebuild once
             self.table_model.filter_by = text
+            if hasattr(self.table_model, "_cached_data"):
+                self.table_model._cached_data = None
+
+            # Reset the model to load new filtered data
             self.table_model.beginResetModel()
             self.table_model.endResetModel()
 
-            # Try to restore the selection if it is still in the search results
+            # Clear graphical selection first
+            self.decision_table.clearSelection()
+
+            # Try to restore the selection if it is still in the search results (use cached data)
             if saved_id is not None:
                 self.selected_decision_id = saved_id
 
                 row_to_select = None
-                for row in range(self.table_model.rowCount()):
-                    # Search by hidden ID column (column 0)
-                    index = self.table_model.index(row, 0)
-                    if self.table_model.data(index, Qt.DisplayRole) == saved_id:
-                        row_to_select = row
+                for row_index, row in enumerate(self.table_model._data):
+                    # row[0] is the hidden id column
+                    if row and row[0] == saved_id:
+                        row_to_select = row_index
                         break
 
                 if row_to_select is not None:
                     # Restore graphical selection if the record is visible
-                    index_to_select = self.table_model.index(row_to_select, 0)
-                    self.selection_model.select(
-                        index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
-                    )
+                    # Use selectRow so tests with DummyTable pick up selection
+                    self.decision_table.selectRow(row_to_select)
+                    self.selected_decision_id = saved_id
+                    self.create_new_btn.setEnabled(True)
+                else:
+                    # Remember id but disable action because not visible
+                    self.selected_decision_id = saved_id
+                    self.create_new_btn.setEnabled(False)
+            else:
+                self.selected_decision_id = None
+                self.create_new_btn.setEnabled(False)
 
     def showEvent(self, event):
         self.table_model.beginResetModel()
