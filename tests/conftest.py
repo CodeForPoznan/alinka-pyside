@@ -1,15 +1,29 @@
-import copy
 import os
+import copy
 from unittest.mock import patch
 
 import pytest
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+
+from alinka.db.models import Base
+from tests.fixtures import common_data
+
+# Create in-memory DB and session for tests
+engine = create_engine("sqlite:///:memory:")
+# We may consider running Alembic migrations for tests
+# but it will require major change in how we setup & teardown test cases
+Base.metadata.create_all(engine)
+
+db_session = scoped_session(sessionmaker(bind=engine))
 
 
 @pytest.fixture(scope="session", autouse=True)
 def qapp():
     # Ensure headless Qt platform before importing PySide6
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-    # Import QApplication lazily so module-level imports remain at top (flake8 E402)
+    # Import QApplication lazily so PySide6 is imported after the environment is set
     from PySide6.QtWidgets import QApplication
 
     app = QApplication.instance() or QApplication([])
@@ -18,20 +32,6 @@ def qapp():
         app.quit()
     except Exception:
         pass
-
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-
-from alinka.db.models import Base
-from tests.fixtures import common_data
-
-engine = create_engine("sqlite:///:memory:")
-# We may consider running Alembic migrations for tests
-# but it will require major change in how we setup & teardown test cases
-Base.metadata.create_all(engine)
-
-db_session = scoped_session(sessionmaker(bind=engine))
 
 
 @pytest.fixture
