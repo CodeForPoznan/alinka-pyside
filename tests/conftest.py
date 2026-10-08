@@ -1,9 +1,8 @@
-import os
 import copy
+import os
 from unittest.mock import patch
 
 import pytest
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
