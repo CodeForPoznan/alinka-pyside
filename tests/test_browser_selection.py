@@ -1,7 +1,7 @@
 import os
 from types import SimpleNamespace
 
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QWidget
 
 from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
 
