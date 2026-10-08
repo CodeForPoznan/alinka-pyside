@@ -2,19 +2,16 @@ import copy
 import os
 from unittest.mock import patch
 
-# Ensure headless Qt platform before any PySide6 imports
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-
 import pytest
-
-# Provide a QApplication for tests that need real widgets. Using a single
-# session-scoped application prevents crashes caused by creating multiple
-# QApplications and avoids global sys.modules stubbing.
-from PySide6.QtWidgets import QApplication
 
 
 @pytest.fixture(scope="session", autouse=True)
 def qapp():
+    # Ensure headless Qt platform before importing PySide6
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+    # Import QApplication lazily so module-level imports remain at top (flake8 E402)
+    from PySide6.QtWidgets import QApplication
+
     app = QApplication.instance() or QApplication([])
     yield app
     try:
