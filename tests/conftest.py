@@ -9,6 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from alinka.db.models import Base
 from tests.fixtures import common_data
 
+
 # Create in-memory DB and session for tests
 engine = create_engine("sqlite:///:memory:")
 # We may consider running Alembic migrations for tests
