@@ -2,8 +2,6 @@ import sys
 import types
 import types as _types
 
-import pytest
-
 # Provide minimal PySide6 stubs so tests can import the module without GUI bindings.
 Qt_stub = types.SimpleNamespace(DisplayRole=0, TextAlignmentRole=1)
 qtcore = _types.ModuleType("PySide6.QtCore")
