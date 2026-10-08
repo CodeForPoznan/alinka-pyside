@@ -1,4 +1,3 @@
-import os
 from types import SimpleNamespace
 
 from PySide6.QtWidgets import QPushButton, QWidget
