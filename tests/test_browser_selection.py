@@ -21,7 +21,6 @@ sys.modules["PySide6"] = _types.ModuleType("PySide6")
 sys.modules["PySide6.QtCore"] = qtcore
 sys.modules["PySide6.QtWidgets"] = qtwidgets
 
-from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
 
 
 class DummyBtn:
@@ -67,6 +66,9 @@ class DummyModel:
 
 
 def make_container(table_data, prev_selected):
+    # import the class after PySide6 stubs have been injected to sys.modules
+    from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
+
     # create BrowseDecisionContainer instance without running __init__
     c = object.__new__(BrowseDecisionContainer)
 
