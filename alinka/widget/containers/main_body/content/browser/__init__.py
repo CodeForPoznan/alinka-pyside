@@ -140,8 +140,11 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
 
                 if row_to_select is not None:
                     # Restore graphical selection if the record is visible
-                    # Use selectRow so tests with DummyTable pick up selection
-                    self.decision_table.selectRow(row_to_select)
+                    index_to_select = self.table_model.index(row_to_select, 0)
+                    # Select via the selection model to ensure selectionModel reflects the change
+                    self.selection_model.select(
+                        index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
+                    )
                     self.selected_decision_id = saved_id
                     self.create_new_btn.setEnabled(True)
                 else:
