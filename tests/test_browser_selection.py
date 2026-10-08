@@ -1,13 +1,14 @@
 import sys
 import types
 import types as _types
+
 import pytest
 
 # Provide minimal PySide6 stubs so tests can import the module without GUI bindings.
 Qt_stub = types.SimpleNamespace(DisplayRole=0, TextAlignmentRole=1)
 qtcore = _types.ModuleType("PySide6.QtCore")
 qtcore.QAbstractTableModel = object
-qtcore.QItemSelectionModel = type('QItemSelectionModel', (), {'ClearAndSelect': 1, 'Rows': 2})
+qtcore.QItemSelectionModel = type("QItemSelectionModel", (), {"ClearAndSelect": 1, "Rows": 2})
 qtcore.QModelIndex = object
 qtcore.Qt = Qt_stub
 qtwidgets = _types.ModuleType("PySide6.QtWidgets")
@@ -18,9 +19,9 @@ qtwidgets.QTabWidget = object
 qtwidgets.QVBoxLayout = object
 qtwidgets.QWidget = object
 
-sys.modules['PySide6'] = _types.ModuleType('PySide6')
-sys.modules['PySide6.QtCore'] = qtcore
-sys.modules['PySide6.QtWidgets'] = qtwidgets
+sys.modules["PySide6"] = _types.ModuleType("PySide6")
+sys.modules["PySide6.QtCore"] = qtcore
+sys.modules["PySide6.QtWidgets"] = qtwidgets
 
 from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
 
