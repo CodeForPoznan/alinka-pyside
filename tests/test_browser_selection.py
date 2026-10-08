@@ -1,7 +1,7 @@
 import os
 from types import SimpleNamespace
 
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QPushButton, QWidget
 
 from alinka.widget.containers.main_body.content.browser import BrowseDecisionContainer
 
@@ -15,14 +15,11 @@ class DummyBtn:
 
 
 def make_container(monkeypatch, row_ids, prev_selected):
-    # Use offscreen platform to avoid GUI requirements
-    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-    # Ensure QApplication exists
-    # app = QApplication.instance() or QApplication([])
-
     # Prepare parent QWidget with the footer->create_new_btn chain required by the container
     parent = QWidget()
-    dummy_btn = DummyBtn()
+    # Use a real QPushButton so isEnabled() behaves like in production
+    dummy_btn = QPushButton()
+    dummy_btn.setEnabled(False)
     parent.content_container = SimpleNamespace(
         main_body_container=SimpleNamespace(
             footer_container=SimpleNamespace(browser_footer_container=SimpleNamespace(create_new_btn=dummy_btn))
@@ -43,7 +40,12 @@ def make_container(monkeypatch, row_ids, prev_selected):
 
         return [make_decision(rid) for rid in row_ids]
 
-    monkeypatch.setattr("alinka.db.queries.filter_decisions_by_pesel_child_name", fake_query)
+    # Patch the function where the module under test imported it
+    monkeypatch.setattr(
+        "alinka.widget.containers.main_body.content.browser.filter_decisions_by_pesel_child_name",
+        fake_query,
+        raising=True,
+    )
 
     # Instantiate real widget (runs real init) and return it with the dummy button
     c = BrowseDecisionContainer(parent)
@@ -63,7 +65,8 @@ def test_restore_selection_when_present(monkeypatch):
     selected = c.decision_table.selectionModel().selectedRows()
     assert len(selected) == 1
     assert selected[0].row() == 0
-    assert btn.enabled is True
+    # Use real QPushButton API
+    assert btn.isEnabled() is True
     assert c.selected_decision_id == "123"
 
 
@@ -78,7 +81,8 @@ def test_disable_button_when_not_present(monkeypatch):
 
     selected = c.decision_table.selectionModel().selectedRows()
     assert len(selected) == 0
-    assert btn.enabled is False
+    # Use real QPushButton API
+    assert btn.isEnabled() is False
     # ID should remain remembered
     assert c.selected_decision_id == "123"
 
@@ -88,5 +92,6 @@ def test_disable_when_no_prev_selected(monkeypatch):
 
     c.entered_filter_by("query")
 
-    assert btn.enabled is False
+    # Use real QPushButton API
+    assert btn.isEnabled() is False
     assert c.selected_decision_id is None
