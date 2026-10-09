@@ -19,3 +19,7 @@ help.spec
 *.db
 
 .idea/
+.vscode/
+.tmp_*/
+*.code-workspace
+.claude/
