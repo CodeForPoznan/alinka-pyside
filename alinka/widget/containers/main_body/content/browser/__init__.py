@@ -19,6 +19,8 @@ class DecisionsTableModel(QAbstractTableModel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.filter_by = None
+        # cache for _data to avoid repeated DB queries during view operations
+        self._cached_data = None
 
     @staticmethod
     def map_model_to_row_data(decision: DecisionDbSchema) -> list[str]:
@@ -32,8 +34,11 @@ class DecisionsTableModel(QAbstractTableModel):
 
     @property
     def _data(self):
-        decisions = filter_decisions_by_pesel_child_name(self.filter_by)
-        return [self.map_model_to_row_data(decision) for decision in decisions]
+        # Memoize data so repeated accesses (rowCount/data) don't re-query DB each time.
+        if getattr(self, "_cached_data", None) is None:
+            decisions = filter_decisions_by_pesel_child_name(self.filter_by)
+            self._cached_data = [self.map_model_to_row_data(decision) for decision in decisions]
+        return self._cached_data
 
     def rowCount(self, parent: QModelIndex = QModelIndex()) -> int:
         return len(self._data)
@@ -82,7 +87,7 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
         self.decision_table.resizeColumnsToContents()
         self.decision_table.setSelectionBehavior(QAbstractItemView.SelectRows)
 
-        # Configure header resize modes and sizes (including the new column index 4)
+        # Configure header resize modes and sizes
         header = self.decision_table.horizontalHeader()
 
         header.setSectionResizeMode(0, QHeaderView.Fixed)
@@ -106,16 +111,58 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
         return footer_container.browser_footer_container.create_new_btn
 
     def entered_filter_by(self, text):
-        # Filtering here clears whole model including selection
-        # It's reasonable select row using 'self.selected_decision_id'
-        # should be covered by https://github.com/CodeForPoznan/alinka-pyside/issues/148
-
         if self.table_model.filter_by != text:
+            # Save id of the currently selected row before applying the filter
+            saved_id = self.selected_decision_id
+
+            # Set new filter and invalidate cached data so the model will rebuild once
             self.table_model.filter_by = text
+            if hasattr(self.table_model, "_cached_data"):
+                self.table_model._cached_data = None
+
+            # Reset the model to load new filtered data
             self.table_model.beginResetModel()
             self.table_model.endResetModel()
+
+            # Clear graphical selection first
             self.decision_table.clearSelection()
-            self.selected_decision_id = None
+
+            # Try to restore the selection if it is still in the search results (use cached data)
+            if saved_id is not None:
+                self.selected_decision_id = saved_id
+
+                row_to_select = None
+                for row_index, row in enumerate(self.table_model._data):
+                    # row[0] is the hidden id column
+                    if row and row[0] == saved_id:
+                        row_to_select = row_index
+                        break
+
+                if row_to_select is not None:
+                    # Restore graphical selection if the record is visible
+                    index_to_select = self.table_model.index(row_to_select, 0)
+                    # Select via the selection model to ensure selectionModel reflects the change
+                    # Perform selection and also set current index to ensure selection is reflected
+                    self.selection_model.select(
+                        index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
+                    )
+                    try:
+                        # setCurrentIndex may help in some environments to make selection visible
+                        self.selection_model.setCurrentIndex(
+                            index_to_select, QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows
+                        )
+                    except Exception:
+                        pass
+
+                    self.selected_decision_id = saved_id
+                    self.create_new_btn.setEnabled(True)
+                else:
+                    # Remember id but disable action because not visible
+                    self.selected_decision_id = saved_id
+                    self.create_new_btn.setEnabled(False)
+            else:
+                self.selected_decision_id = None
+                self.create_new_btn.setEnabled(False)
 
     def showEvent(self, event):
         self.table_model.beginResetModel()
@@ -127,22 +174,16 @@ class BrowseDecisionContainer(ValidationMixin, QWidget):
 
     def decision_selected_event(self, index: QModelIndex):
         self.selected_decision_id = index.siblingAtColumn(0).data()
-        footer_container = self.browser_container.content_container.main_body_container.footer_container
-        footer_container.browser_footer_container.create_new_btn.setEnabled(True)
+        self.create_new_btn.setEnabled(True)
 
     def decision_selection_changed_event(self, selected, deselected) -> None:
-        selected_indexes = selected.indexes()
-        if not selected_indexes:
-            self.selected_decision_id = None
-            footer_container = self.browser_container.content_container.main_body_container.footer_container
-            footer_container.browser_footer_container.create_new_btn.setEnabled(False)
-            return
+        selected_indexes = self.selection_model.selectedRows()
 
+        if not selected_indexes:
+            # Disable button without clearing selected_decision_id to keep state between operations
+            self.create_new_btn.setEnabled(False)
         else:
             self.decision_selected_event(selected_indexes[0])
-            self.selected_decision_id = None
-            footer_container = self.browser_container.content_container.main_body_container.footer_container
-            footer_container.browser_footer_container.create_new_btn.setEnabled(True)
 
 
 class BrowserContainer(QTabWidget):
