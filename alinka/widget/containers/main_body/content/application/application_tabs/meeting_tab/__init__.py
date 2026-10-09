@@ -207,6 +207,7 @@ class MeetingMemberGroup(ValidationMixin, QFrame):
 
     def __init__(self, title: str, parent: QWidget):
         super().__init__(parent=parent)
+        self._validation_requested = False
         layout = QVBoxLayout(self)
         layout.setAlignment(Qt.AlignTop)
         layout.setContentsMargins(12, 8, 12, 8)
@@ -288,7 +289,8 @@ class MeetingMemberGroup(ValidationMixin, QFrame):
         self.handle_member_frame.edit_member_btn.setEnabled(len(self.selected_members_id) == 1)
         self.handle_member_frame.remove_member_btn.setEnabled(len(self.selected_members_id) == 1)
         self.selection_changed.emit()
-        self.clear_validation_state()
+        if self._validation_requested:
+            self.display_validation_result(self.is_valid)
 
     def get_meeting_members(self) -> dict:
         return [tm.model_dump() for tm in get_team_members()]
@@ -296,6 +298,7 @@ class MeetingMemberGroup(ValidationMixin, QFrame):
     def clear(self) -> None:
         self.populate_meeting_members()
         self.clear_selection()
+        self.clear_validation_state()
 
     @property
     def is_valid(self) -> bool:
@@ -315,17 +318,22 @@ class MeetingMemberGroup(ValidationMixin, QFrame):
 
         if validation_result:
             self.error_label.setVisible(False)
+            self.error_label.clear()
         else:
             self.error_label.setVisible(True)
             self.error_label.setText(self.error_message or "")
 
     def validate(self) -> bool:
+        self._validation_requested = True
         valid = self.is_valid
         self.display_validation_result(valid)
         return valid
 
     def clear_validation_state(self):
+        self._validation_requested = False
         self.listView.setProperty("validationState", "")
+        self.error_label.clear()
+        self.error_label.setVisible(False)
         self.listView.style().unpolish(self.listView)
         self.listView.style().polish(self.listView)
 
