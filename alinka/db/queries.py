@@ -4,6 +4,7 @@ from alinka.db.connection import db_session
 from alinka.db.models import Decision, School, SupportCenter, TeamMember
 from alinka.schemas import (
     DecisionDbSchema,
+    DecisionSummaryDbSchema,
     SchoolDbCreateSchema,
     SchoolDbSchema,
     SupportCenterDbSchema,
@@ -18,18 +19,23 @@ def get_decisions_list_from_db() -> list[DecisionDbSchema]:
         return [DecisionDbSchema.model_validate(decision) for decision in decisions]
 
 
-def filter_decisions_by_pesel_child_name(filter_by: str | None) -> list[DecisionDbSchema]:
-    if not filter_by:
-        return get_decisions_list_from_db()
-
+def filter_decision_summaries_by_pesel_child_name(filter_by: str | None) -> list[DecisionSummaryDbSchema]:
     with db_session() as db:
-        decisions = (
-            db.query(Decision)
-            .filter(or_(Decision.child_full_name.contains(filter_by), Decision.child_pesel.contains(filter_by)))
-            .order_by(Decision.created_at.desc())
-            .all()
+        query = db.query(
+            Decision.id,
+            Decision.child_pesel,
+            Decision.child_full_name,
+            Decision.child_town,
+            Decision.child_address,
+            Decision.created_at,
         )
-        return [DecisionDbSchema.model_validate(decision) for decision in decisions]
+        if filter_by:
+            query = query.filter(
+                or_(Decision.child_full_name.contains(filter_by), Decision.child_pesel.contains(filter_by))
+            )
+
+        decisions = query.order_by(Decision.created_at.desc()).all()
+        return [DecisionSummaryDbSchema.model_validate(decision._mapping) for decision in decisions]
 
 
 def get_decision_data_by_id(decision_id: int) -> DecisionDbSchema:
