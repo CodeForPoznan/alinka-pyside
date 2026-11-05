@@ -72,6 +72,15 @@ class DecisionDbSchema(BaseDbSchema):
     created_at: datetime | None = None
 
 
+class DecisionSummaryDbSchema(BaseDbSchema):
+    id: int
+    child_pesel: str
+    child_full_name: str
+    child_town: str
+    child_address: str
+    created_at: datetime | None = None
+
+
 class SchoolDbCreateSchema(BaseDbSchema):
     rspo_id: int | None = None
     rspo_type_id: int | None = None

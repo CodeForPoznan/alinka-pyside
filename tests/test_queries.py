@@ -2,7 +2,7 @@ import pytest
 
 from alinka.db.queries import (
     create_decision_in_db,
-    filter_decisions_by_pesel_child_name,
+    filter_decision_summaries_by_pesel_child_name,
     get_decision_data_by_id,
     get_decisions_list_from_db,
     get_support_center_data,
@@ -93,8 +93,20 @@ class TestQuery:
         DecisionFactory(child_full_name="xxx", child_pesel="94111076597")
         DecisionFactory(child_full_name="abc", child_pesel="74110952166")
 
-        result = filter_decisions_by_pesel_child_name(filter_by)
+        result = filter_decision_summaries_by_pesel_child_name(filter_by)
         assert set([r.id for r in result]) == set(expected_ids)
+        assert all(
+            set(decision.model_dump())
+            == {
+                "id",
+                "child_pesel",
+                "child_full_name",
+                "child_town",
+                "child_address",
+                "created_at",
+            }
+            for decision in result
+        )
 
 
 class TestQueryWithoutDecisions:
