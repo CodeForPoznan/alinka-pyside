@@ -4,6 +4,7 @@ import sys
 from alembic import command, config
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlcipher3 import dbapi2
 
 from alinka.config import settings
 
@@ -20,5 +21,5 @@ alembic_cfg = config.Config(os.path.join(alembic_dirname, "alembic.ini"))
 
 command.upgrade(alembic_cfg, "head")
 
-engine = create_engine(f"sqlite:///{settings.DB_PATH}")
+engine = create_engine(settings.SQLALCHEMY_URL, module=dbapi2)
 db_session = scoped_session(sessionmaker(bind=engine))
