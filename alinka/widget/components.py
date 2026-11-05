@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QTableView,
     QTimeEdit,
     QVBoxLayout,
-    QWidget,
+    QWidget, QPushButton,
 )
 
 from alinka import rspo_client
@@ -552,3 +552,90 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
 
         self._user_interacted = False
         self.clear_validation_state()
+
+
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
+
+
+class CacheStatusWidget(QWidget):
+    refresh_requested = Signal()
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)  # Więcej oddechu między elementami
+
+        layout.addStretch()  # Wypycha wszystko do prawej
+
+        # Sekcja tekstowa
+        text_layout = QVBoxLayout()
+        text_layout.setSpacing(2)  # Minimalny odstęp między liniami tekstu
+
+        self.label_title = QLabel("Dane pobrane:")
+        self.label_date = QLabel("Brak pobranych danych")
+
+        # Ustawienie szarego koloru dla daty, by wyglądało to czytelniej
+        self.label_title.setStyleSheet("font-size: 11px; color: #555;")
+        self.label_date.setStyleSheet("font-size: 11px; font-weight: bold;")
+
+        self.label_title.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.label_date.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+
+        text_layout.addWidget(self.label_title)
+        text_layout.addWidget(self.label_date)
+        layout.addLayout(text_layout)
+
+        # Separator pionowy
+        self.separator = QLabel("│")
+        self.separator.setStyleSheet("color: #ccc; font-size: 16px;")
+        layout.addWidget(self.separator)
+
+        # Przycisk odświeżania z wymuszonym stylem
+        self.refresh_btn = QPushButton("↻")
+        self.refresh_btn.setFixedSize(26, 26)
+        self.refresh_btn.setToolTip("Odśwież dane RSPO")
+        self.refresh_btn.setCursor(Qt.PointingHandCursor)
+
+        # Styl CSS naprawiający problem z pustym kwadratem i ucinaniem tekstu
+        self.refresh_btn.setStyleSheet("""
+            QPushButton {
+                font-size: 16px;
+                font-family: Arial, sans-serif;
+                padding: 0px;
+                margin: 0px;
+                border: 1px solid #bbb;
+                border-radius: 4px;
+                background-color: transparent;
+            }
+            QPushButton:hover {
+                background-color: #e0e0e0;
+            }
+            QPushButton:pressed {
+                background-color: #ccc;
+            }
+            QPushButton:disabled {
+                color: #aaa;
+                border-color: #eee;
+            }
+        """)
+        self.refresh_btn.clicked.connect(self.refresh_requested.emit)
+        layout.addWidget(self.refresh_btn)
+
+    def set_loading(self):
+        self.label_title.setText("Stan:")
+        self.label_date.setText("Odświeżanie w tle...")
+        self.refresh_btn.setEnabled(False)
+
+    def set_data(self, date_str: str | None, error: bool = False):
+        self.refresh_btn.setEnabled(True)
+        if error:
+            self.label_title.setText("RSPO niedostępne:")
+            self.label_date.setText(f"Ostatnie: {date_str}" if date_str else "Brak danych (Offline)")
+            self.label_date.setStyleSheet(
+                "font-size: 11px; font-weight: bold; color: #d32f2f;")  # Czerwony w razie błędu
+        else:
+            self.label_title.setText("Dane pobrane:")
+            self.label_date.setText(date_str if date_str else "Brak pobranych danych")
+            self.label_date.setStyleSheet("font-size: 11px; font-weight: bold; color: #2e7d32;")  # Zielony dla sukcesu
