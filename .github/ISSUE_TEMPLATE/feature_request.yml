@@ -1,0 +1,41 @@
+name: Feature request
+description: Nowa funkcjonalność lub rozszerzenie istniejącej
+title: ""
+labels: ["feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / potrzeba
+      description: Jaki problem rozwiązuje ta funkcjonalność? Dla kogo?
+      placeholder: "Jako [typ użytkownika] chcę [zrobić X], żeby [osiągnąć Y]."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proponowane rozwiązanie
+      description: Jak to powinno wyglądać lub działać? Możesz dołączyć mockup lub opis przepływu.
+    validations:
+      required: true
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Poza zakresem
+      description: Co NIE jest częścią tego zadania? Wpisz wprost, żeby uniknąć scope creep podczas implementacji.
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Kryteria akceptacji
+      description: Skąd wiemy że zadanie jest skończone?
+      placeholder: |
+        - [ ] Użytkownik może...
+        - [ ] Dane są zapisywane gdy...
+        - [ ] Edge case X jest obsłużony
+    validations:
+      required: true
