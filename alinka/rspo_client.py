@@ -34,7 +34,7 @@ def call(*, method: Literal["GET", "POST"], path: str):
                 params = params.model_dump(by_alias=True)
             formatted_path = path.format(**kwargs)
             url = os.path.join(settings.RSPO_DOMAIN, formatted_path)
-            response = request(method=method, url=url, params=params, json=body)
+            response = request(method=method, url=url, params=params, json=body, timeout=10)
             response.raise_for_status()
             return type_adapter.validate_python(response.json())
 
