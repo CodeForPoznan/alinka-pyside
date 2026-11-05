@@ -750,10 +750,27 @@
       <w:lang w:val="pl-PL"/>
     </w:rPr>
   </w:style>
+  <w:style w:type="paragraph" w:customStyle="1" w:styleId="Recivers-desc">
+    <w:name w:val="Recivers-desc"/>
+    <w:basedOn w:val="Recivers-main"/>
+    <w:link w:val="Recivers-descZnak"/>
+    <w:qFormat/>
+    <w:rPr>
+      <w:sz w:val="20"/>
+    </w:rPr>
+  </w:style>
   <w:style w:type="character" w:customStyle="1" w:styleId="Subtitle-endZnak">
     <w:name w:val="Subtitle-end Znak"/>
     <w:basedOn w:val="Subtitle1Znak"/>
     <w:link w:val="Subtitle-end"/>
+  </w:style>
+  <w:style w:type="character" w:customStyle="1" w:styleId="Recivers-descZnak">
+    <w:name w:val="Recivers-desc Znak"/>
+    <w:basedOn w:val="Recivers-mainZnak"/>
+    <w:link w:val="Recivers-desc"/>
+    <w:rPr>
+      <w:sz w:val="20"/>
+    </w:rPr>
   </w:style>
   <w:style w:type="paragraph" w:customStyle="1" w:styleId="Information">
     <w:name w:val="Information"/>

@@ -68,7 +68,7 @@
         <w:rPr>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:t xml:space="preserve"> W przypadku gdy dziecko nie uczęszcza na zajęcia rewalidacyjno-wychowawcze, należy wpisać „nie dotyczy”</w:t>
+        <w:t xml:space="preserve"> W przypadku gdy dziecko nie uczęszcza na zajęcia rewalidacyjno-wychowawcze, należy wpisać „nie dotyczy”.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
@@ -134,7 +134,7 @@
         <w:rPr>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:t xml:space="preserve"> Wypełnia się w przypadkach, o których mowa w § 18 ust. 1 rozporządzenia Ministra Edukacji Narodowej z dnia 7 września 2017 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. poz. 1743).</w:t>
+        <w:t xml:space="preserve"> Właściwe podkreślić i wymienić rodzaj i zakres tych zajęć.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
@@ -156,11 +156,55 @@
         <w:rPr>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:t xml:space="preserve"> Wypełnia się w przypadku wydania nowego orzeczenia o potrzebie zajęć rewalidacyjno-wychowawczych.</w:t>
+        <w:t xml:space="preserve"> Właściwe podkreślić. Jeżeli podkreślono odpowiedź TAK, należy wymienić wspomagające lub alternatywne metody komunikacji (AAC), którymi posługuje się dziecko lub uczeń.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
   <w:footnote w:id="7">
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Footnote"/>
+        <w:rPr>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+        <w:t xml:space="preserve"> Wypełnia się w przypadkach, o których mowa w § 21 ust. 1 rozporządzenia Ministra Edukacji z dnia 2 marca 2026 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych (Dz. U. poz. 428).</w:t>
+      </w:r>
+    </w:p>
+  </w:footnote>
+  <w:footnote w:id="8">
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Footnote"/>
+        <w:rPr>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:footnoteRef/>
+      </w:r>
+      <w:r>
+        <w:rPr>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+        <w:t xml:space="preserve"> Wypełnia się w przypadku wydania nowego orzeczenia o potrzebie zajęć rewalidacyjno-wychowawczych.</w:t>
+      </w:r>
+    </w:p>
+  </w:footnote>
+  <w:footnote w:id="9">
     <w:p>
       <w:pPr>
         <w:pStyle w:val="Footnote"/>
@@ -172,13 +216,32 @@
         <w:footnoteRef/>
       </w:r>
       <w:r>
-        <w:t xml:space="preserve"></w:t>
+        <w:rPr>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+        <w:t>Właściwe podkreślić.</w:t>
+      </w:r>
+    </w:p>
+  </w:footnote>
+  <w:footnote w:id="10">
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="Footnote"/>
+        <w:rPr>
+          <w:lang w:val="pl-PL"/>
+        </w:rPr>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:rStyle w:val="Odwoanieprzypisudolnego"/>
+        </w:rPr>
+        <w:footnoteRef/>
       </w:r>
       <w:r>
         <w:rPr>
           <w:lang w:val="pl-PL"/>
         </w:rPr>
-        <w:t>Właściwe podkreślić.</w:t>
+        <w:t xml:space="preserve"> Wnioskodawca określony zgodnie z § 6 ust. 1 pkt 12 rozporządzenia Ministra Edukacji z dnia 2 marca 2026 r. w sprawie orzeczeń i opinii wydawanych przez zespoły orzekające działające w publicznych poradniach psychologiczno-pedagogicznych; drugi z wnioskodawców zachowuje prawo do otrzymania kopii orzeczenia potwierdzonej za zgodność z oryginałem.</w:t>
       </w:r>
     </w:p>
   </w:footnote>
