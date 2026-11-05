@@ -458,7 +458,6 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
     def __init__(self, label: str, parent: QWidget, required=False):
         super().__init__(parent)
         self.required = required
-        self._user_interacted = False
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 12, 12, 12)
@@ -483,11 +482,7 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
         layout.addWidget(self.time_input)
 
     def _on_time_changed(self) -> None:
-        # Track interaction ONLY when the change originates from the user,
-        # which is determined by checking if the widget currently holds focus.
-        if self.time_input.hasFocus():
-            self._user_interacted = True
-            self.clear_validation_state()
+        self.clear_validation_state()
 
     @property
     def text(self) -> str:
@@ -503,21 +498,15 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
             self.time_input.setTime(q)
             self.time_input.blockSignals(False)
 
-            # When pre-populating existing data, consider the field
-            # as successfully populated and clear any previous validation errors.
-            self._user_interacted = True
             self.clear_validation_state()
 
     @property
     def is_valid(self) -> bool:
-        if not self.required:
-            return True
-
-        return self._user_interacted
+        return not self.required or self.time_input.time().isValid()
 
     @property
     def error_message(self) -> str | None:
-        if self.required and not self._user_interacted:
+        if not self.is_valid:
             return "Proszę wybrać prawidłową godzinę."
         return None
 
@@ -528,6 +517,8 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
 
     def clear_validation_state(self) -> None:
         self.time_input.setProperty("validationState", "")
+        self._error_label.clear()
+        self._error_label.setVisible(False)
         self.time_input.style().unpolish(self.time_input)
         self.time_input.style().polish(self.time_input)
 
@@ -549,6 +540,4 @@ class LabeledTimeComponent(ValidationMixin, QWidget):
         self.time_input.blockSignals(True)
         self.time_input.setTime(QTime.currentTime())
         self.time_input.blockSignals(False)
-
-        self._user_interacted = False
         self.clear_validation_state()

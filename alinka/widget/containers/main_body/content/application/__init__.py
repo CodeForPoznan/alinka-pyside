@@ -1,6 +1,14 @@
 import logging
 
-from PySide6.QtWidgets import QTabWidget, QWidget
+from PySide6.QtWidgets import (
+    QAbstractButton,
+    QAbstractItemView,
+    QComboBox,
+    QDateTimeEdit,
+    QLineEdit,
+    QTabWidget,
+    QWidget,
+)
 
 from alinka.constants.common import INVALID_FORM_MESSAGE, INVALID_TAB_TOOLTIP_MESSAGE
 from alinka.db.queries import get_support_center_data
@@ -68,6 +76,8 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
             self.application_tab_container,
             self.meeting_tab_container,
         ]
+
+        self._connect_validation_refresh()
 
     @property
     def is_valid(self) -> bool:
@@ -171,6 +181,50 @@ class ApplicationContainer(ValidationMixin, QTabWidget):
                 custom_tab_bar.setTabToolTip(index, tooltip)
             else:
                 custom_tab_bar.setTabToolTip(index, "")
+
+    def refresh_invalid_tab(self, tab: QWidget) -> None:
+        """Remove an existing tab error marker as soon as the tab becomes valid."""
+        index = self.indexOf(tab)
+        if index not in self._invalid_tabs or not tab.is_valid:
+            return
+
+        self._invalid_tabs.discard(index)
+        self._update_invalid_tabs_display()
+
+        if not self._invalid_tabs:
+            header_container = self.content_container.main_body_container.header_container
+            header_container.clear_message()
+
+    def _connect_validation_refresh(self) -> None:
+        """Recheck marked tabs whenever one of their form values changes."""
+        for tab in self.containers:
+
+            def refresh(*_, tab=tab):
+                self.refresh_invalid_tab(tab)
+
+            for line_edit in tab.findChildren(QLineEdit):
+                line_edit.textChanged.connect(refresh)
+
+            for combobox in tab.findChildren(QComboBox):
+                combobox.currentTextChanged.connect(refresh)
+
+            for button in tab.findChildren(QAbstractButton):
+                button.clicked.connect(refresh)
+
+            for date_time_edit in tab.findChildren(QDateTimeEdit):
+                date_time_edit.dateTimeChanged.connect(refresh)
+
+            connected_models = set()
+            for item_view in tab.findChildren(QAbstractItemView):
+                model = item_view.model()
+                if model is None or id(model) in connected_models:
+                    continue
+
+                model.dataChanged.connect(refresh)
+                model.modelReset.connect(refresh)
+                model.rowsInserted.connect(refresh)
+                model.rowsRemoved.connect(refresh)
+                connected_models.add(id(model))
 
     def finish_application_flow(self) -> None:
         """
