@@ -20,25 +20,21 @@ from tests.factories import (
 
 
 def populate_database():
-    print("Generate support center")
-    SupportCenterFactory()
-    print("Generate team memebrs")
-    for _ in trange(random.randint(3, 20)):
-        TeamMemberFactory()
-    print("Generate schools")
-    for _ in trange(random.randint(3, 100)):
-        SchoolFactory()
+    with db_session() as db:
+        print("Generate support center")
+        SupportCenterFactory()
+        print("Generate team members")
+        for _ in trange(random.randint(3, 20)):
+            TeamMemberFactory()
+        print("Generate schools")
+        for _ in trange(random.randint(3, 100)):
+            SchoolFactory()
 
-    # we have something wrong in the way
-    # we manage DB sessions, so I had to commit
-    # here before DecisionFactory will start
-    # choosing Schools and TeamMembers
-    db_session.commit()
+        print("Generate decisions")
+        for _ in trange(random.randint(10, 1000)):
+            DecisionFactory()
 
-    print("Generate decisions")
-    for _ in trange(random.randint(10, 1000)):
-        DecisionFactory()
-    db_session.commit()
+        db.commit()
 
 
 if __name__ == "__main__":

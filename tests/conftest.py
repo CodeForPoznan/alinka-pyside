@@ -9,14 +9,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from alinka.db.models import Base
 from tests.fixtures import common_data
 
-# Create in-memory DB and session for tests
-engine = create_engine("sqlite:///:memory:")
-# We may consider running Alembic migrations for tests
-# but it will require major change in how we setup & teardown test cases
-Base.metadata.create_all(engine)
-
-db_session = scoped_session(sessionmaker(bind=engine))
-
 
 @pytest.fixture(scope="session", autouse=True)
 def qapp():
@@ -38,16 +30,24 @@ def common_data_fixture():
     return copy.deepcopy(common_data)
 
 
-def pytest_configure(config):
-    mock_db_session = patch("alinka.db.queries.db_session", db_session)
-    mock_db_session.start()
+@pytest.fixture
+def db_session():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    session = scoped_session(sessionmaker(bind=engine))
+
+    try:
+        yield session
+    finally:
+        session.remove()
+        Base.metadata.drop_all(engine)
+        engine.dispose()
 
 
-def pytest_runtest_teardown(item):
-    from alinka.db.models import Base
-
-    with db_session() as db:
-        for table in reversed(Base.metadata.sorted_tables):
-            db.execute(table.delete())
-
-        db.commit()
+@pytest.fixture
+def mocked_db_session(db_session):
+    with (
+        patch("alinka.db.queries.db_session", db_session),
+        patch("tests.factories.db_session", db_session),
+    ):
+        yield db_session
