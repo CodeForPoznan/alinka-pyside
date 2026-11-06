@@ -13,14 +13,18 @@ from alinka.schemas.db_schema import SupportCenterDbSchema
 from tests.factories import DecisionFactory, SupportCenterFactory
 from tests.fixtures import decision_data
 
+pytestmark = pytest.mark.usefixtures("mocked_db_session")
+
 
 class TestQuery:
-    def setup_method(self):
+    @pytest.fixture(autouse=True)
+    def setup_method(self, mocked_db_session):
         DecisionFactory.create_batch(
             2,
             create_new_school=True,
             create_new_meeting_members=True,
         )
+        mocked_db_session.commit()
         self.decision_data = decision_data.copy()
         self.decision_1, self.decision_2 = get_decisions_list_from_db()
 
@@ -33,9 +37,9 @@ class TestQuery:
         assert decision == self.decision_1
 
     def test_create_decision_id_db(self):
-        del decision_data["id"], decision_data["created_at"], decision_data["modified_at"]
-        decision = create_decision_in_db(decision_data=decision_data)
-        assert decision.child_full_name == decision_data["child_full_name"]
+        del self.decision_data["id"], self.decision_data["created_at"], self.decision_data["modified_at"]
+        decision = create_decision_in_db(decision_data=self.decision_data)
+        assert decision.child_full_name == self.decision_data["child_full_name"]
 
     def test_update_decision_in_db(self):
         new_child_name = "new child name"

@@ -16,8 +16,8 @@ from faker import Faker
 from alinka import rspo_client
 from alinka.constants import ActivityForm, Issue, Reason
 from alinka.constants.common import RPSO_SUPPORT_CENTER_TYPE_ID
+from alinka.db.connection import db_session
 from alinka.db.models import Decision, School, SupportCenter, TeamMember
-from alinka.db.queries import db_session
 from alinka.schemas.rspo_schema import InstitutionRequestBody
 from alinka.widget.containers.main_body.content.application.application_tabs.school_tab.school_dialog.select_school_group import (  # noqa E501
     SelectSchoolGroup,
@@ -36,10 +36,20 @@ faker = Faker(locale="pl_PL")
 factory_faker._DEFAULT_LOCALE = "pl_PL"
 
 
-class DecisionFactory(SQLAlchemyModelFactory):
+def get_factory_session():
+    return db_session()
+
+
+class BaseFactory(SQLAlchemyModelFactory):
+    class Meta:
+        abstract = True
+        sqlalchemy_session_factory = get_factory_session
+        sqlalchemy_session_persistence = "flush"
+
+
+class DecisionFactory(BaseFactory):
     class Meta:
         model = Decision
-        sqlalchemy_session = db_session
         exclude = (
             "create_new_school",
             "_school",
@@ -145,7 +155,7 @@ class DecisionFactory(SQLAlchemyModelFactory):
     @lazy_attribute
     def meeting_members(self):
         desired_members = random.randint(3, 6)
-        db = DecisionFactory._meta.sqlalchemy_session()
+        db = get_factory_session()
 
         if self.create_new_meeting_members:
             members = TeamMemberFactory.create_batch(desired_members)
@@ -155,7 +165,6 @@ class DecisionFactory(SQLAlchemyModelFactory):
                 db.query(TeamMember).all(),
                 desired_members,
             )
-        db.commit()
         return [
             {
                 "id": member.id,
@@ -245,23 +254,12 @@ class DecisionFactory(SQLAlchemyModelFactory):
     def _school(self):
         if self.create_new_school:
             return SchoolFactory()
-        with DecisionFactory._meta.sqlalchemy_session() as db:
-            return random.choice(db.query(School).all())
-
-    @classmethod
-    def _save(cls, model_class, session, args, kwargs):
-        obj = model_class(*args, **kwargs)
-        with session() as db_session:
-            db_session.add(obj)
-            db_session.commit()
-
-        return obj
+        return random.choice(get_factory_session().query(School).all())
 
 
-class SupportCenterFactory(SQLAlchemyModelFactory):
+class SupportCenterFactory(BaseFactory):
     class Meta:
         model = SupportCenter
-        sqlalchemy_session = db_session
         sqlalchemy_get_or_create = ("id",)
         exclude = ("_rspo",)
 
@@ -317,10 +315,9 @@ class SupportCenterFactory(SQLAlchemyModelFactory):
         return f"Zespół Orzekający przy {self.name_genitive}"
 
 
-class TeamMemberFactory(SQLAlchemyModelFactory):
+class TeamMemberFactory(BaseFactory):
     class Meta:
         model = TeamMember
-        sqlalchemy_session = db_session
 
     name = NoPrefixFullName()
     function = fuzzy.FuzzyChoice(
@@ -334,10 +331,9 @@ class TeamMemberFactory(SQLAlchemyModelFactory):
     )
 
 
-class SchoolFactory(SQLAlchemyModelFactory):
+class SchoolFactory(BaseFactory):
     class Meta:
         model = School
-        sqlalchemy_session = db_session
         exclude = ("_rspo",)
 
     rspo_id = SelfAttribute("_rspo.id")
